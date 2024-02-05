@@ -1,5 +1,5 @@
-import { FormEvent, useEffect, useState } from 'react'
-import { supabase } from './supabaseClient'
+import { FormEvent, useEffect, useRef, useState } from 'react'
+import useSupabase from './hooks/useSupabase';
 
 interface AvatarProps {
     url: string
@@ -8,21 +8,22 @@ interface AvatarProps {
 }
 
 export default function Avatar({ url, size, onUpload }: AvatarProps) {
-    const [avatarUrl, setAvatarUrl] = useState<null | string>(null)
-    const [uploading, setUploading] = useState(false)
+    const [avatarUrl, setAvatarUrl] = useState<null | string>(null);
+    const [uploading, setUploading] = useState(false);
+    const downloadImageRef = useRef(downloadImage);
+    const supabase = useSupabase();
 
     useEffect(() => {
-        if (url) downloadImage(url)
+        if (url) downloadImageRef.current(url)
     }, [url])
 
     async function downloadImage(path: string) {
         try {
-        const { data, error } = await supabase.storage.from('avatars').download(path)
-        if (error) {
-            throw error
-        }
-        const url = URL.createObjectURL(data)
-        setAvatarUrl(url)
+            const { data, error } = await supabase.storage.from('avatars').download(path);
+            if (error) throw error;
+
+            const url = URL.createObjectURL(data);
+            setAvatarUrl(url);
         } catch (error) {
             if (error instanceof Error) {
                 alert(error.message);
@@ -69,10 +70,10 @@ export default function Avatar({ url, size, onUpload }: AvatarProps) {
         <div>
             {avatarUrl ? (
                 <img
-                src={avatarUrl}
-                alt="Avatar"
-                className="avatar image"
-                style={{ height: size, width: size }}
+                    src={avatarUrl}
+                    alt="Avatar"
+                    className="avatar image"
+                    style={{ height: size, width: size }}
                 />
             ) : (
                 <div className="avatar no-image" style={{ height: size, width: size }} />
@@ -82,7 +83,7 @@ export default function Avatar({ url, size, onUpload }: AvatarProps) {
                     {uploading ? 'Uploading ...' : 'Upload'}
                 </label>
                 <input
-                    style={{visibility: 'hidden', position: 'absolute'}}
+                    style={{ visibility: 'hidden', position: 'absolute' }}
                     type="file"
                     id="single"
                     accept="image/*"

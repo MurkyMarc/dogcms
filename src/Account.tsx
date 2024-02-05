@@ -1,68 +1,62 @@
-import { useState, useEffect, FormEvent } from 'react'
-import { supabase } from './supabaseClient'
+import { useState, FormEvent, useEffect } from 'react'
 import { Session } from "@supabase/gotrue-js/src/lib/types"
 import Avatar from './Avatar'
+import useSupabase from './hooks/useSupabase'
+import { useGetProfileById, useUpdateProfile } from './hooks/useProfile'
 
 export const Account: React.FC<{ session: Session }> = ({ session }) => {
-    const [loading, setLoading] = useState(true)
-    const [username, setUsername] = useState("")
-    const [website, setWebsite] = useState("")
-    const [avatar_url, setAvatarUrl] = useState("")
+    const supabase = useSupabase();
+    const updateProfileMutation = useUpdateProfile();
+    const { data: profile, error: profileError, isLoading: profileLoading } = useGetProfileById(session.user.id);
+    const [loading, setLoading] = useState(false);
+    const [username, setUsername] = useState("");
+    const [website, setWebsite] = useState("");
+    const [avatar_url, setAvatarUrl] = useState("");
 
     useEffect(() => {
-        let ignore = false
-        async function getProfile() {
-            setLoading(true)
-            const { user } = session
-
-            const { data, error } = await supabase
-                .from('profiles')
-                .select(`username, website, avatar_url`)
-                .eq('id', user.id)
-                .single()
-
-            if (!ignore) {
-                if (error) {
-                    console.warn(error)
-                } else if (data) {
-                    setUsername(data.username)
-                    setWebsite(data.website)
-                    setAvatarUrl(data.avatar_url)
-                }
-            }
-
-            setLoading(false)
-        }
-
-        getProfile()
-
-        return () => {
-            ignore = true
-        }
-    }, [session])
+        if (!profile) return;
+        setUsername(profile.username || "");
+        setWebsite(profile.website || "");
+        setAvatarUrl(profile.avatar_url || "");
+    }, [profile]);
 
     async function updateProfile(event: FormEvent, avatarUrl: string) {
-        event.preventDefault()
-
-        setLoading(true)
-        const { user } = session
-
+        event.preventDefault();
+        setLoading(true);
         const updates = {
-            id: user.id,
             username,
             website,
             avatar_url,
-            updated_at: new Date(),
-        }
+            updated_at: new Date().toISOString(),
+        };
 
-        const { error } = await supabase.from('profiles').upsert(updates)
-
-        if (error) {
-            alert(error.message)
-        } else {
+        try {
+            updateProfileMutation.mutate({
+                id: session.user.id,
+                data: updates
+            });
             setAvatarUrl(avatarUrl)
+        } catch (error) {
+            alert(error)
         }
         setLoading(false)
+    }
+
+    if (profileError) {
+        return (
+            <div>
+                <div>Error loading profile</div>
+                <div>{profileError.name}</div>
+                <div>{profileError.message}</div>
+                <div>{profileError.stack}</div>
+            </div>
+        )
+    }
+
+    if (profileLoading) {
+        return (
+            <div>Loading...</div>
+        )
     }
 
     return (
@@ -70,8 +64,8 @@ export const Account: React.FC<{ session: Session }> = ({ session }) => {
             <Avatar
                 url={avatar_url}
                 size={150}
-                onUpload={(event: FormEvent, url: string) => {updateProfile(event, url)}
-            }
+                onUpload={(event: FormEvent, url: string) => { updateProfile(event, url) }
+                }
             />
             <div>
                 <label htmlFor="email">Email</label>
@@ -83,7 +77,7 @@ export const Account: React.FC<{ session: Session }> = ({ session }) => {
                     id="username"
                     type="text"
                     required
-                    value={username || ''}
+                    value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </div>
@@ -92,7 +86,7 @@ export const Account: React.FC<{ session: Session }> = ({ session }) => {
                 <input
                     id="website"
                     type="url"
-                    value={website || ''}
+                    value={website}
                     onChange={(e) => setWebsite(e.target.value)}
                 />
             </div>

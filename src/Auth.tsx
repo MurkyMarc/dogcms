@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { supabase } from './supabaseClient.js'
+import useSupabase from './hooks/useSupabase';
 
 export const Auth: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
+    const supabase = useSupabase();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
