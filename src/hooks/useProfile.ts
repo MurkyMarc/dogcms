@@ -3,17 +3,17 @@ import { getProfileById, updateProfile } from "../queries/profileQueries";
 import { Tables } from "../utils/database.types";
 import useSupabase from "./useSupabase";
 
-export function useGetProfileById(profileId: string) {
+export function useGetProfileById(profileId: string, enabled?: boolean) {
     const client = useSupabase();
     const queryKey = ['profiles', profileId];
 
     const queryFn = async () => {
-        return getProfileById(client, profileId).then(
+        return await getProfileById(client, profileId).then(
             (result) => result.data
         );
     };
-
-    return useQuery({ queryKey, queryFn });
+    const isValidProfile = (profileId !== "" && enabled === true) ? true : false;
+    return useQuery({ queryKey, queryFn, enabled: isValidProfile });
 }
 
 export function useUpdateProfile() {
@@ -21,14 +21,14 @@ export function useUpdateProfile() {
     const queryClient = useQueryClient();
 
     const mutationFn = async (params: { id: string; data: Partial<Tables<'profiles'>>; }) => {
-        return updateProfile(client, params).then(
+        return await updateProfile(client, params).then(
             (result) => result.data
         );
     };
 
     return useMutation({
         mutationFn,
-        onSuccess: (_data, variables) => {
+        onSuccess: (_, variables) => {
             queryClient.setQueryData(['profiles', variables.id], { id: variables.id, ...variables.data });
         }
     });

@@ -1,40 +1,51 @@
 import useSupabase from "./useSupabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Session } from "@supabase/gotrue-js/src/lib/types"
-import { signInWithOTP, signOut, getSession } from "../queries/authQueries";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const queryKey = ['session'];
-export function useSignInWithOTP(email: string) {
+export function useSignInWithOTP() {
     const client = useSupabase();
 
-    const queryFn = async () => {
-        return signInWithOTP(client, email).then(
-            (result) => result.data.session
-        );
+    const signInWithOTP = async (email: string) => {
+        const { data, error } = await client.auth.signInWithOtp({ email });
+        return { data, error }
     };
 
-    return useQuery({ queryKey, queryFn });
-}
-
-export function useGetSession() {
-    const client = useSupabase();
-
-    const queryFn = async () => {
-        const { data: { session }, error } = await getSession(client);
-        return [session, error]
-    };
-
-    return useQuery({ queryKey, queryFn });
+    return signInWithOTP;
 }
 
 export function useSignOut() {
-    const client = useSupabase();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
-    queryClient.clear();
-    return signOut(client);
+    const client = useSupabase();
+
+    const signOut = async () => {
+        await client.auth.signOut();
+        queryClient.clear();
+        navigate('/');
+    };
+
+    return signOut;
 }
 
-export function useSetSession(session: Session) {
+export function useSession() {
+    const supabase = useSupabase();
     const queryClient = useQueryClient();
-    queryClient.setQueryData(queryKey, session);
+    const queryKey = ['session'];
+    
+    const queryFn = async () => {
+        const { data } = await supabase.auth.getSession();
+        return data.session;
+    }
+    const { data: session, ...queryInfo } = useQuery({ queryKey, queryFn });
+
+    useEffect(() => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            queryClient.setQueryData(['session'], session);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [supabase.auth, queryClient]);
+
+    return { session, ...queryInfo };
 }

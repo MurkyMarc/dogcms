@@ -1,36 +1,38 @@
 import useSupabase from "./useSupabase";
-import { getAvatar, uploadAvatar } from "../queries/avatarQueries";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteAvatar, uploadAvatar } from "../queries/avatarQueries";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Tables } from "../utils/database.types";
 
-export function useGetAvatar(url: string) {
-    const client = useSupabase();
-    const queryKey = ['avatars', url];
-
-    const queryFn = async () => {
-        return getAvatar(client, url).then(
-            (result) => result.data
-        );
-    };
-
-    return useQuery({ queryKey, queryFn });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useUploadAvatar(filePath: string, file: any) {
+export function useUploadAvatar() {
     const client = useSupabase();
     const queryClient = useQueryClient();
-    const queryKey = ['avatars', filePath];
 
-    const mutationFn = async () => {
-        return uploadAvatar(client, filePath, file).then(
-            (result) => result.data
-        );
-    };
+    const mutationFn = async ({ filePath, file }: { id: string, filePath: string, file: File | Blob }) => {
+        const { data, error } = await uploadAvatar(client, filePath, file);
+        return { data, error }
+    }
 
     return useMutation({
         mutationFn,
-        onSuccess: () => {
-            queryClient.setQueryData(queryKey, file);
-        }
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["profiles", variables.id] });
+        },
+    });
+}
+
+export function useDeleteAvatar() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async ({ filePath }: { profile: Partial<Tables<'profiles'>>, filePath: string }) => {
+        await deleteAvatar(client, filePath);
+    }
+
+    return useMutation({
+        mutationFn,
+        onSuccess: (_, variables) => {
+            const { profile } = variables;
+            queryClient.setQueryData(["profiles", profile.id], { ...profile, avatar_url: null });
+        },
     });
 }

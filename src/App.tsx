@@ -1,27 +1,23 @@
 import './App.css'
-import { useState, useEffect } from 'react'
-import { Auth } from './Auth'
-import { Account } from './Account'
-import { Session } from "@supabase/gotrue-js/src/lib/types"
-import useSupabase from './hooks/useSupabase'
+import { Account } from './pages/Account'
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Home } from './pages/Home';
+import { About } from './pages/About';
+import { Contact } from './pages/Contact';
+import { Login } from './pages/Login';
+import { Navbar } from './components/Navbar';
 
-export const App: React.FC = () => {
-  const [session, setSession] = useState<Session | null>(null)
-  const supabase = useSupabase();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [supabase.auth])
-
+export const App = () => {
   return (
-    <div className="container" style={{ padding: '50px 0 100px 0' }}>
-      {!session ? <Auth /> : <Account key={session.user.id} session={session} />}
-    </div>
+    <Routes>
+      <Route path="/" element={<Navbar />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/account/:id" element={<Account />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   )
 }

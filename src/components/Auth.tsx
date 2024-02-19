@@ -1,24 +1,25 @@
 import { useState } from 'react'
-import useSupabase from './hooks/useSupabase';
+import { useSignInWithOTP } from '../hooks/useAuth';
 
-export const Auth: React.FC = () => {
-    const [loading, setLoading] = useState(false)
-    const [email, setEmail] = useState('')
-    const supabase = useSupabase();
+export const Auth = () => {
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const signInWithOTP = useSignInWithOTP();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        setLoading(true)
-        const { error } = await supabase.auth.signInWithOtp({ email })
+        setLoading(true);
+        const { error } = await signInWithOTP(email);
 
         if (error) {
+            console.log(error);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            alert((error as any)?.error_description || error.message)
+            alert((error as any)?.error_description || error.message); // TODO - need to handle differently?
         } else {
-            alert('Check your email for the login link!')
+            alert('Check your email for the login link!');
         }
-        setLoading(false)
+        setLoading(false);
     }
 
     return (
