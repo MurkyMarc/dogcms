@@ -80,7 +80,7 @@ export default function ProfilePageAvatar({ isUpdating, profile }: props) {
                     {isLoading ? <span>Loading...</span> : <NoProfilePicComponent />}
                 </AvatarFallback>
                 < span className="absolute inset-0 flex items-center justify-center bg-gray-300 opacity-0 group-hover:opacity-80 transition-opacity duration-300" >
-                    +
+                    Upload a new picture
                 </span>
             </Avatar>
             < input className="hidden"

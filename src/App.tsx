@@ -1,5 +1,4 @@
 import './App.css'
-import { Account } from './pages/Account'
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Home } from './pages/Home';
 import { About } from './pages/About';
@@ -14,11 +13,10 @@ export const App = () => {
       <Route path="/" element={<PageContainer />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/search" element={<Contact />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/account/:id" element={<Account />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

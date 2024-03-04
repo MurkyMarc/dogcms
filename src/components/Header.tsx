@@ -19,7 +19,7 @@ export default function Header() {
                 {session ?
                     <Link
                         className="mr-4 px-4 py-2 text-sm font-medium rounded-md bg-white border border-gray-200 shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
-                        to={`/profile/${session.user.id}`}
+                        to={`/profile`}
                     >
                         My Account
                     </Link> : null
