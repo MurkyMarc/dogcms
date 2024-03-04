@@ -15,7 +15,7 @@ export const Auth = () => {
         if (error) {
             console.log(error);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            alert((error as any)?.error_description || error.message); // TODO - need to handle differently?
+            alert((error as any)?.error_description || error.message); // TODO - need to handle differently
         } else {
             alert('Check your email for the login link!');
         }
