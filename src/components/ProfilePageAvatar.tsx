@@ -77,7 +77,7 @@ export default function ProfilePageAvatar({ isUpdating, profile }: props) {
             <Avatar className="h-20 w-20 relative group" >
                 <AvatarImage alt="profile picture" src={avatarUrl} width={200} height={200}/>
                 <AvatarFallback>
-                    {isLoading ? <span>Loading...</span> : <NoProfilePicComponent />}
+                    {isLoading ? <span>Loading...</span> : <NoProfilePicComponent height={200} width={200}/>}
                 </AvatarFallback>
                 < span className="absolute inset-0 flex items-center justify-center bg-gray-300 opacity-0 group-hover:opacity-80 transition-opacity duration-300" >
                     Upload a new picture
