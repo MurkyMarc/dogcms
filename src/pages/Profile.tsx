@@ -9,6 +9,7 @@ import { ProfileAddress } from "../components/ProfileAddress"
 import { ProfileEmergencyContacts } from "../components/ProfileEmergencyContacts"
 import { ProfilePaymentInfo } from "../components/ProfilePaymentInfo"
 import ProfilePageAvatar from "../components/ProfilePageAvatar"
+import { LoadingSpinner } from "../components/ui/LoadingSpinner"
 
 export const Profile = () => {
     const navigate = useNavigate();
@@ -24,8 +25,8 @@ export const Profile = () => {
         if (profileError) navigate("/login");
     }, [session, navigate, profileLoading, profileError]);
 
-    if (profileLoading || !profile) return <div>Loading...</div> // TODO - add loading fallback
-    if (!session) return <div>Loading...</div>; // TODO - add loading fallback
+    if (profileLoading || !profile) return <LoadingSpinner />
+    if (!session) return <LoadingSpinner />
 
     return (
         <div className="flex flex-col items-center space-y-4 mt-24">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSignInWithOTP } from '../hooks/useAuth';
+import { LoadingSpinner } from './ui/LoadingSpinner';
 
 export const Auth = () => {
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export const Auth = () => {
                     </div>
                     <div>
                         <button className={'button block'} disabled={loading}>
-                            {loading ? <span>Loading</span> : <span>Send magic link</span>}
+                            {loading ? <LoadingSpinner /> : <span>Send magic link</span>}
                         </button>
                     </div>
                 </form>

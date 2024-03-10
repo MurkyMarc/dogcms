@@ -7,6 +7,7 @@ import { NoProfilePicComponent } from './ui/icons/NoProfilePicComponent';
 import { useUploadAvatar, useDeleteAvatar } from '../hooks/useAvatar';
 import { useUpdateProfile } from '../hooks/useProfile';
 import { Tables } from '../utils/database.types';
+import { LoadingSpinner } from './ui/LoadingSpinner';
 
 interface props {
     isUpdating: boolean;
@@ -71,13 +72,13 @@ export default function ProfilePageAvatar({ isUpdating, profile }: props) {
             alert((error as Error).message);
         }
     }
-    // Todo - create loading fallback
+
     return (
         <label className="relative cursor-pointer" htmlFor="avatar-upload" title="Click to upload a new picture" >
             <Avatar className="h-20 w-20 relative group" >
                 <AvatarImage alt="profile picture" src={avatarUrl} width={200} height={200}/>
                 <AvatarFallback>
-                    {isLoading ? <span>Loading...</span> : <NoProfilePicComponent height={200} width={200}/>}
+                    {isLoading ? <LoadingSpinner /> : <NoProfilePicComponent height={200} width={200}/>}
                 </AvatarFallback>
                 < span className="absolute inset-0 flex items-center justify-center bg-gray-300 opacity-0 group-hover:opacity-80 transition-opacity duration-300" >
                     Upload a new picture

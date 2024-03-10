@@ -15,10 +15,10 @@ export default function Header() {
                 <span className="ml-2 text-xl font-bold">Uptown Dogs</span>
             </Link>
             <div className="flex items-center">
-                <span className="ml-2 text-xl font-bold">{profile ? <div>Welcome, {profile.username}</div> : null}</span>
+                <span className="px-4 ml-2 text-xl font-bold">{profile ? <div>Welcome, {profile.username}</div> : null}</span>
                 {session ?
                     <Link
-                        className="mr-4 px-4 py-2 text-sm font-medium rounded-md bg-white border border-gray-200 shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                        className="px-4 inline-block text-sm font-medium transition-colors hover:text-gray-500 dark:hover:text-gray-400" 
                         to={`/profile`}
                     >
                         My Account
@@ -26,7 +26,7 @@ export default function Header() {
                 }
                 {session ? null :
                     <Link
-                        className="px-4 py-2 text-sm font-medium rounded-md bg-white border border-gray-200 shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                        className="px-4 inline-block text-sm font-medium transition-colors hover:text-gray-500 dark:hover:text-gray-400"
                         to="/login"
                     >
                         Login
@@ -34,7 +34,7 @@ export default function Header() {
                 }
                 {session ? null :
                     <Link
-                        className="px-4 py-2 text-sm font-medium rounded-md bg-white border border-gray-200 shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                        className="px-4 inline-block text-sm font-medium transition-colors hover:text-gray-500 dark:hover:text-gray-400" 
                         to="/signup"
                     >
                         Sign Up
@@ -42,7 +42,7 @@ export default function Header() {
                 }
                 {session ?
                     <Link
-                        className="px-4 py-2 text-sm font-medium rounded-md bg-white border border-gray-200 shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                        className="px-4 inline-block text-sm font-medium transition-colors hover:text-gray-500 dark:hover:text-gray-400" 
                         to="/search"
                     >
                         Search
@@ -50,7 +50,7 @@ export default function Header() {
                 }
                 {session ?
                     <button
-                        className="px-4 py-2 text-sm font-medium rounded-md bg-white border border-gray-200 shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                        className="px-4 inline-block text-sm font-medium transition-colors hover:text-gray-500 dark:hover:text-gray-400" 
                         onClick={signOut}
                     >
                         Sign Out

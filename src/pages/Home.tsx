@@ -2,18 +2,22 @@ import { Link } from "react-router-dom"
 import { ClockIcon } from "../components/ui/icons/ClockIcon"
 import { DogIcon } from "../components/ui/icons/DogIcon"
 import { MapPinIcon } from "../components/ui/icons/MapPinIcon"
+import { CameraIcon } from "../components/ui/icons/CameraIcon";
+import { ChatIcon } from "../components/ui/icons/ChatIcon";
+import dogImage from '/public/walkingdog.jpeg';
+import nySkyline from '/public/nyskyline.jpeg';
 
 export const Home = () => {
     return (
         <div>
-            <section className="py-12 lg:py-24 xl:py-32 bg-blue-100">
+            <section className="py-24 lg:py-24 xl:py-36 bg-blue-100" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.30)), url(${dogImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="container px-4 md:px-6">
                     <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
-                        <div className="space-y-4">
-                            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                        <div className="space-y-2">
+                            <h2 className="text-white text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                                 Book Your Dog's Next Adventure
                             </h2>
-                            <p className="text-gray-500 md:text-xl dark:text-gray-400">
+                            <p className="text-white md:text-xl dark:text-gray-400">
                                 Professional dogwalkers at your service. Schedule walks whenever you need. Track your dog's journey.
                             </p>
                             <Link
@@ -64,7 +68,7 @@ export const Home = () => {
                                         </div>
                                     </li>
                                     <li className="flex items-start space-x-4">
-                                        <MapPinIcon className="w-6 h-6 flex-shrink-0 text-2xl" />
+                                        <CameraIcon className="w-6 h-6 flex-shrink-0 text-2xl" />
                                         <div className="space-y-1.5">
                                             <h3 className="text-lg font-semibold">Photo Updates</h3>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -73,7 +77,7 @@ export const Home = () => {
                                         </div>
                                     </li>
                                     <li className="flex items-start space-x-4">
-                                        <MapPinIcon className="w-6 h-6 flex-shrink-0 text-2xl" />
+                                        <ChatIcon className="w-6 h-6 flex-shrink-0 text-2xl" />
                                         <div className="space-y-1.5">
                                             <h3 className="text-lg font-semibold">Chat with Your Dog Walker</h3>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -167,7 +171,16 @@ export const Home = () => {
                     </div>
                 </div>
             </section>
-            
+            <section className="w-full py-16 md:py-24 lg:py-32" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${nySkyline})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <div className="container flex flex-col items-center justify-center space-y-8 px-4 text-center md:space-y-10 md:px-6">
+                    <div className="space-y-4">
+                        <h2 className="text-white text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Located in NYC</h2>
+                        <p className="mx-auto max-w-3xl text-lg text-white md:text-xl dark:text-gray-400">
+                            Book a walk today!
+                        </p>
+                    </div>
+                </div>
+            </section>
         </div>
     )
 }
