@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { MountainIcon } from "./ui/icons/MountainIcon";
 import { useSession, useSignOut } from "../hooks/useAuth";
 import { useGetProfileById } from "../hooks/useProfile";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 export default function Header() {
     const { session } = useSession();
@@ -41,7 +41,7 @@ export default function Header() {
                                 <Link to="#" className="block w-full">Dashboard</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <Link to="/profile" className="block w-full">My Account</Link>
+                                <Link to="/account" className="block w-full">My Account</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <Link to="#" className="block w-full">My Dogs</Link>

@@ -2,12 +2,12 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 import useSupabase from '../hooks/useSupabase';
 import { getAvatarURL } from '../queries/avatarQueries';
 import { fileTypeSupported, generateFilePath } from '../utils/helpers';
-import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { NoProfilePicComponent } from './ui/icons/NoProfilePicComponent';
 import { useUploadAvatar, useDeleteAvatar } from '../hooks/useAvatar';
 import { useUpdateProfile } from '../hooks/useProfile';
 import { Tables } from '../utils/database.types';
 import { LoadingSpinner } from './ui/LoadingSpinner';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 interface props {
     isUpdating: boolean;
