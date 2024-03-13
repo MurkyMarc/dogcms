@@ -8,7 +8,7 @@ import { ProfileUserInfo } from "../components/ProfileUserInfo"
 import { ProfileAddress } from "../components/ProfileAddress"
 import { ProfileEmergencyContacts } from "../components/ProfileEmergencyContacts"
 import { ProfilePaymentInfo } from "../components/ProfilePaymentInfo"
-import ProfilePageAvatar from "../components/ProfilePageAvatar"
+import { ProfilePageAvatar } from "../components/ProfilePageAvatar"
 import { LoadingSpinner } from "../components/ui/LoadingSpinner"
 
 export const Profile = () => {

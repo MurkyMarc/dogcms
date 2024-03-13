@@ -6,6 +6,7 @@ import { CameraIcon } from "../components/ui/icons/CameraIcon";
 import { ChatIcon } from "../components/ui/icons/ChatIcon";
 import dogImage from '/public/walkingdog.jpeg';
 import nySkyline from '/public/nyskyline.jpeg';
+import { Card, CardContent } from "../components/ui/card";
 
 export const Home = () => {
     return (
@@ -91,7 +92,7 @@ export const Home = () => {
                     </div>
                 </div>
             </section>
-            <section className="w-full py-12 bg-green-100 md:py-24 lg:py-32 dark:bg-gray-800">
+            <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50 dark:bg-gray-800">
                 <div className="container flex flex-col items-center justify-center space-y-8 px-4 text-center md:space-y-10 md:px-6">
                     <div className="space-y-4">
                         <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Happy Paws, Happy Customers</h2>
@@ -101,72 +102,85 @@ export const Home = () => {
                     </div>
                     <div className="grid gap-8 lg:grid-cols-3 lg:gap-12">
                         <div className="flex flex-col items-center space-y-4">
-                            <div className="rounded-full overflow-hidden w-24 h-24">
-                                <img
-                                    alt="User 1"
-                                    className="rounded-full object-cover object-center"
-                                    height="120"
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "120/120",
-                                        objectFit: "cover",
-                                    }}
-                                    width="120"
-                                />
-                            </div>
-                            <div className="text-center">
-                                <h3 className="text-lg font-bold">Linda Smith</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Dog Lover</p>
-                            </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                "My dog is always excited when the dog walker arrives. I can tell that they really care about the dogs."
-                            </p>
+                            <Card className="w-full max-w-sm p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+                                <CardContent>
+                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto">
+                                        <img
+                                            alt="User 1"
+                                            className="rounded-full object-cover object-center"
+                                            height="120"
+                                            src="/placeholder.svg"
+                                            style={{
+                                                aspectRatio: "120/120",
+                                                objectFit: "cover",
+                                            }}
+                                            width="120"
+                                        />
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50">Linda Smith</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Dog Lover</p>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        “My dog is always excited when the dog walker arrives. I can tell that they really care about the
+                                        dogs.“
+                                    </p>
+                                </CardContent>
+                            </Card>
                         </div>
                         <div className="flex flex-col items-center space-y-4">
-                            <div className="rounded-full overflow-hidden w-24 h-24">
-                                <img
-                                    alt="User 2"
-                                    className="rounded-full object-cover object-center"
-                                    height="120"
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "120/120",
-                                        objectFit: "cover",
-                                    }}
-                                    width="120"
-                                />
-                            </div>
-                            <div className="text-center">
-                                <h3 className="text-lg font-bold">Brian Johnson</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Dog Owner</p>
-                            </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                “The dog walking service is fantastic. My dog is always happy and tired after the walk. Highly
-                                recommended!“
-                            </p>
+                            <Card className="w-full max-w-sm p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+                                <CardContent>
+                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto">
+                                        <img
+                                            alt="User 2"
+                                            className="rounded-full object-cover object-center"
+                                            height="120"
+                                            src="/placeholder.svg"
+                                            style={{
+                                                aspectRatio: "120/120",
+                                                objectFit: "cover",
+                                            }}
+                                            width="120"
+                                        />
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50">Brian Johnson</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Dog Owner</p>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        “The dog walking service is fantastic. My dog is always happy and tired after the walk. Highly
+                                        recommended!“
+                                    </p>
+                                </CardContent>
+                            </Card>
                         </div>
                         <div className="flex flex-col items-center space-y-4">
-                            <div className="rounded-full overflow-hidden w-24 h-24">
-                                <img
-                                    alt="User 3"
-                                    className="rounded-full object-cover object-center"
-                                    height="120"
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "120/120",
-                                        objectFit: "cover",
-                                    }}
-                                    width="120"
-                                />
-                            </div>
-                            <div className="text-center">
-                                <h3 className="text-lg font-bold">Emily White</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Dog Owner</p>
-                            </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                “The dog walker is always on time and takes great care of my dog. I feel at ease knowing my dog is in good
-                                hands.“
-                            </p>
+                            <Card className="w-full max-w-sm p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+                                <CardContent>
+                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto">
+                                        <img
+                                            alt="User 3"
+                                            className="rounded-full object-cover object-center"
+                                            height="120"
+                                            src="/placeholder.svg"
+                                            style={{
+                                                aspectRatio: "120/120",
+                                                objectFit: "cover",
+                                            }}
+                                            width="120"
+                                        />
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50">Emily White</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Dog Owner</p>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        “The dog walker is always on time and takes great care of my dog. I feel at ease knowing my dog is in
+                                        good hands.“
+                                    </p>
+                                </CardContent>
+                            </Card>
                         </div>
                     </div>
                 </div>

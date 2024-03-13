@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { Login } from './pages/Login';
+import { SignUp } from './pages/SignUp';
 import { PageContainer } from './components/PageContainer';
 import { Profile } from './pages/Profile';
 
@@ -17,6 +18,7 @@ export const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/search" element={<Contact />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

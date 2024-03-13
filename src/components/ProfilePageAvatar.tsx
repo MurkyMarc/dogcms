@@ -14,7 +14,7 @@ interface props {
     profile: Tables<'profiles'>;
 }
 
-export default function ProfilePageAvatar({ isUpdating, profile }: props) {
+export const ProfilePageAvatar = ({ isUpdating, profile }: props) => {
     const supabase = useSupabase();
     const downloadImageRef = useRef(downloadImage);
     const [avatarUrl, setAvatarUrl] = useState<string>("");

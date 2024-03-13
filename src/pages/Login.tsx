@@ -1,5 +1,5 @@
-import { Auth } from "../components/Auth";
+import { LoginContainer } from "../components/LoginContainer";
 
 export const Login = () => {
-    return (<Auth />)
+    return (<LoginContainer />)
 }
