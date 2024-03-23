@@ -11,9 +11,6 @@ export const theme = {
   container: {
     center: true,
     padding: "2rem",
-    screens: {
-      "2xl": "1400px",
-    },
   },
   extend: {
     colors: {
@@ -69,6 +66,10 @@ export const theme = {
     animation: {
       "accordion-down": "accordion-down 0.2s ease-out",
       "accordion-up": "accordion-up 0.2s ease-out",
+    },
+    screens: {
+      "2xl": "1400px",
+      "xs": "435px"
     },
   },
 };

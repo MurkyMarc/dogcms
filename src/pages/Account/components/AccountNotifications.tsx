@@ -1,5 +1,5 @@
-import { NotificationsForm } from "./forms/AccountNotifications";
-import { Separator } from "./ui/separator";
+import { NotificationsForm } from "../../../components/forms/AccountNotifications";
+import { Separator } from "../../../components/ui/separator";
 
 export default function SettingsNotificationsPage() {
     return (

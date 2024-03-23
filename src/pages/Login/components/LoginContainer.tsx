@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSignInWithOTP } from '../hooks/useAuth';
+import { useSignInWithOTP } from '../../../hooks/useAuth';
 import loginBanner from '/public/loginBanner.jpeg';
 
 export const LoginContainer = () => {

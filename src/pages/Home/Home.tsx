@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom"
-import { ClockIcon } from "../components/ui/icons/ClockIcon"
-import { DogIcon } from "../components/ui/icons/DogIcon"
-import { MapPinIcon } from "../components/ui/icons/MapPinIcon"
-import { CameraIcon } from "../components/ui/icons/CameraIcon";
-import { ChatIcon } from "../components/ui/icons/ChatIcon";
+import { ClockIcon } from "../../components/ui/icons/ClockIcon"
+import { DogIcon } from "../../components/ui/icons/DogIcon"
+import { MapPinIcon } from "../../components/ui/icons/MapPinIcon"
+import { CameraIcon } from "../../components/ui/icons/CameraIcon";
+import { ChatIcon } from "../../components/ui/icons/ChatIcon";
 import dogImage from '/public/walkingdog.jpeg';
 import nySkyline from '/public/nyskyline.jpeg';
-import { Card, CardContent } from "../components/ui/card";
+import { Card, CardContent } from "../../components/ui/card";
 
 export const Home = () => {
     return (
@@ -104,7 +104,7 @@ export const Home = () => {
                         <div className="flex flex-col items-center space-y-4">
                             <Card className="w-full max-w-sm p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                                 <CardContent>
-                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto">
+                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto mt-4 mb-8">
                                         <img
                                             alt="User 1"
                                             className="rounded-full object-cover object-center"
@@ -131,7 +131,7 @@ export const Home = () => {
                         <div className="flex flex-col items-center space-y-4">
                             <Card className="w-full max-w-sm p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                                 <CardContent>
-                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto">
+                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto mt-4 mb-8">
                                         <img
                                             alt="User 2"
                                             className="rounded-full object-cover object-center"
@@ -158,7 +158,7 @@ export const Home = () => {
                         <div className="flex flex-col items-center space-y-4">
                             <Card className="w-full max-w-sm p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                                 <CardContent>
-                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto">
+                                    <div className="rounded-full overflow-hidden w-24 h-24 flex items-center justify-center mx-auto mt-4 mb-8">
                                         <img
                                             alt="User 3"
                                             className="rounded-full object-cover object-center"

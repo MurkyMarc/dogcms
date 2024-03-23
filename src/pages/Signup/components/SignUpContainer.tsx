@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSignInWithOTP } from '../hooks/useAuth';
+import { useSignInWithOTP } from '../../../hooks/useAuth';
 
 export const SignUpContainer = () => {
     const [loading, setLoading] = useState(false);

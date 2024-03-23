@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useGetProfileById, useUpdateProfile } from '../hooks/useProfile'
-import { useDeleteAvatar, useUploadAvatar } from '../hooks/useAvatar'
-import { useSession } from '../hooks/useAuth'
+import { useGetProfileById, useUpdateProfile } from '../../hooks/useProfile'
+import { useDeleteAvatar, useUploadAvatar } from '../../hooks/useAvatar'
+import { useSession } from '../../hooks/useAuth'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { LoadingSpinner } from "../components/ui/LoadingSpinner"
-import { Separator } from "../components/ui/separator"
-import { SidebarNav } from '../components/ProfileSidebarNav'
+import { LoadingSpinner } from "../../components/ui/LoadingSpinner"
+import { Separator } from "../../components/ui/separator"
+import { SidebarNav } from '../../components/ProfileSidebarNav'
 
 const sidebarNavItems = [
     {

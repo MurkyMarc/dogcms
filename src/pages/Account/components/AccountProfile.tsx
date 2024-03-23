@@ -1,5 +1,5 @@
-import { Separator } from "../components/ui/separator"
-import { ProfileForm } from './forms/ProfileForms'
+import { Separator } from "../../../components/ui/separator"
+import { ProfileForm } from '../../../components/forms/ProfileForms'
 
 export const AccountProfile = () => {
     return (

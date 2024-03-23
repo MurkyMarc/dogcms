@@ -1,5 +1,5 @@
-import { AccountForm } from "./forms/AccountForm";
-import { Separator } from "./ui/separator";
+import { AccountForm } from "../../../components/forms/AccountForm";
+import { Separator } from "../../../components/ui/separator";
 
 export default function AccountRoot() {
     return (
