@@ -13,7 +13,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     setTab: (tab: SetStateAction<string>) => void
 }
 
-export default function DashboardMyWalks({ setTab }: Props) {
+export default function DashboardSchedules({ setTab }: Props) {
     return (
         <>
             <div className="flex items-center justify-between">
@@ -24,9 +24,9 @@ export default function DashboardMyWalks({ setTab }: Props) {
                         </Button>
                     </MenuDrawer>
                     <h2 className="text-2xl font-semibold tracking-tight">
-                        My Walks
+                        My Schedules
                         <p className="hidden xs:block text-sm text-muted-foreground">
-                            Your scheduled walks
+                            Your schedules
                         </p>
                     </h2>
                 </div>

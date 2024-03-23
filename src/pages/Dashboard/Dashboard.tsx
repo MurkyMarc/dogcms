@@ -1,95 +1,40 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons"
-import { AlbumArtwork } from "./components/album-artwork"
 import { Sidebar } from "./components/sidebar"
-import { listenNowAlbums, madeForYouAlbums } from "./data/albums"
 import { Tabs, TabsContent } from "../../components/ui/tabs"
-import { Button } from "../../components/ui/button"
-import { Separator } from "../../components/ui/separator"
-import { ScrollArea, ScrollBar } from "../../components/ui/scroll-area"
-import { MenuIcon } from "../../components/ui/icons/MenuIcon"
-import { MenuDrawer } from "../../components/ui/menu-drawer"
+import DashboardMyDogs from "./components/DashboardMyDogs"
+import DashboardMyWalks from "./components/DashboardWalks"
+import DashboardSchedules from "./components/DashboardSchedules"
+import { SetStateAction, useState } from "react"
 
 export default function Dashboard() {
+    const [activeTab, setActiveTab] = useState("mydogs");
+    const setTab = (tab: SetStateAction<string>) => setActiveTab(tab);
+
     return (
         <div className="block">
             <div className="border-t">
                 <div className="bg-background">
                     <div className="md:grid md:grid-cols-6">
-                        <Sidebar className="hidden lg:block lg:col-span-1" />
+                        <Sidebar setTab={setTab} className="hidden lg:block lg:col-span-1" />
                         <div className="md:col-span-6 lg:col-span-5 border-l">
                             <div className="h-full px-4 py-4 lg:px-8">
-                                <Tabs defaultValue="music" className="h-full space-y-6">
+                                <Tabs value={activeTab} className="h-full space-y-6">
                                     <TabsContent
-                                        value="music"
+                                        value="mydogs"
                                         className="border-none p-0 outline-none"
                                     >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex space-y-1">
-                                                <MenuDrawer>
-                                                    <Button className="lg:hidden p-1 h-auto mr-6 border-purple-500" variant={"link"}>
-                                                        <MenuIcon className="h-7 w-8" />
-                                                    </Button>
-                                                </MenuDrawer>
-                                                <h2 className="text-2xl font-semibold tracking-tight">
-                                                    My Dogs
-                                                <p className="hidden xs:block text-sm text-muted-foreground">
-                                                    The dogs uploaded to your profile
-                                                </p>
-                                                </h2>
-                                            </div>
-                                            <div className="space-between flex items-center">
-                                                <div className="ml-auto">
-                                                    <Button>
-                                                        <PlusCircledIcon className="mr-2 h-4 w-4" />
-                                                        Add New
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <Separator className="my-4" />
-                                        <div className="relative">
-                                            <ScrollArea>
-                                                <div className="flex space-x-4 pb-4">
-                                                    {listenNowAlbums.map((album) => (
-                                                        <AlbumArtwork
-                                                            key={album.name}
-                                                            album={album}
-                                                            className="w-[6rem] md:w-[9.5rem] lg:w-[12.5rem]"
-                                                            aspectRatio="portrait"
-                                                            width={250}
-                                                            height={330}
-                                                        />
-                                                    ))}
-                                                </div>
-                                                <ScrollBar orientation="horizontal" />
-                                            </ScrollArea>
-                                        </div>
-                                        <div className="mt-6 space-y-1">
-                                            <h2 className="text-2xl font-semibold tracking-tight">
-                                                Test
-                                            </h2>
-                                            <p className="text-sm text-muted-foreground">
-                                                Test description
-                                            </p>
-                                        </div>
-                                        <Separator className="my-4" />
-                                        <div className="relative">
-                                            <ScrollArea>
-                                                <div className="flex space-x-4 pb-4">
-                                                    {madeForYouAlbums.map((album) => (
-                                                        <AlbumArtwork
-                                                            key={album.name}
-                                                            album={album}
-                                                            className="md:w-[150px]"
-                                                            aspectRatio="square"
-                                                            width={150}
-                                                            height={150}
-                                                        />
-                                                    ))}
-                                                </div>
-                                                <ScrollBar orientation="horizontal" />
-                                            </ScrollArea>
-                                        </div>
+                                        <DashboardMyDogs setTab={setTab} />
+                                    </TabsContent>
+                                    <TabsContent
+                                        value="walks"
+                                        className="border-none p-0 outline-none"
+                                    >
+                                        <DashboardMyWalks setTab={setTab} />
+                                    </TabsContent>
+                                    <TabsContent
+                                        value="schedules"
+                                        className="border-none p-0 outline-none"
+                                    >
+                                        <DashboardSchedules setTab={setTab} />
                                     </TabsContent>
                                 </Tabs>
                             </div>
