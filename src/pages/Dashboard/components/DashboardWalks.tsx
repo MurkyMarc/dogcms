@@ -4,7 +4,7 @@ import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Separator } from "../../../components/ui/separator";
-import { AlbumArtwork } from "./album-artwork";
+import { DogProfile } from "./dog-profiles";
 
 import { listenNowAlbums, madeForYouAlbums } from "../data/albums"
 import { SetStateAction } from "react";
@@ -44,7 +44,7 @@ export default function DashboardMyWalks({ setTab }: Props) {
                 <ScrollArea>
                     <div className="flex space-x-4 pb-4">
                         {listenNowAlbums.map((album) => (
-                            <AlbumArtwork
+                            <DogProfile
                                 key={album.name}
                                 album={album}
                                 className="w-[6rem] md:w-[9.5rem] lg:w-[12.5rem]"
@@ -69,7 +69,7 @@ export default function DashboardMyWalks({ setTab }: Props) {
                 <ScrollArea>
                     <div className="flex space-x-4 pb-4">
                         {madeForYouAlbums.map((album) => (
-                            <AlbumArtwork
+                            <DogProfile
                                 key={album.name}
                                 album={album}
                                 className="md:w-[150px]"

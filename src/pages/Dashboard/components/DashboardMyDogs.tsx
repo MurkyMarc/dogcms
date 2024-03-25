@@ -2,11 +2,10 @@ import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Button } from "../../../components/ui/button";
 import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../../components/ui/menu-drawer";
-import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Separator } from "../../../components/ui/separator";
-import { AlbumArtwork } from "./album-artwork";
+import { DogProfile } from "./dog-profiles";
 
-import { listenNowAlbums, madeForYouAlbums } from "../data/albums"
+import { listenNowAlbums } from "../data/albums"
 import { SetStateAction } from "react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -40,46 +39,18 @@ export default function DashboardMyDogs({ setTab }: Props) {
                 </div>
             </div>
             <Separator className="my-4" />
-            <div className="relative">
-                <ScrollArea>
-                    <div className="flex space-x-4 pb-4">
-                        {listenNowAlbums.map((album) => (
-                            <AlbumArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[6rem] md:w-[9.5rem] lg:w-[12.5rem]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330} />
-                        ))}
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-            </div>
-            <div className="mt-6 space-y-1">
-                <h2 className="text-2xl font-semibold tracking-tight">
-                    Test
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                    Test description
-                </p>
-            </div>
-            <Separator className="my-4" />
-            <div className="relative">
-                <ScrollArea>
-                    <div className="flex space-x-4 pb-4">
-                        {madeForYouAlbums.map((album) => (
-                            <AlbumArtwork
-                                key={album.name}
-                                album={album}
-                                className="md:w-[150px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150} />
-                        ))}
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
+            <div className="">
+                <div className="flex flex-wrap gap-4">
+                    {listenNowAlbums.map((album) => (
+                        <DogProfile
+                            key={album.name}
+                            album={album}
+                            className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"
+                            aspectRatio="portrait"
+                            width={250}
+                            height={330} />
+                    ))}
+                </div>
             </div>
         </>
     );
