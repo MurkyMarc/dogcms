@@ -11,6 +11,10 @@ import { AccountProfile } from './pages/Account/components/AccountProfile';
 import AccountNotifications from './pages/Account/components/AccountNotifications';
 import AccountRoot from './pages/Account/components/AccountRoot';
 import Dashboard from './pages/Dashboard/Dashboard';
+import MyDogs from './pages/Dashboard/components/MyDogs';
+import MyWalks from './pages/Dashboard/components/Walks';
+import Schedules from './pages/Dashboard/components/Schedules';
+import { DogProfile } from './pages/DogProfile/DogProfile';
 
 export const App = () => {
   return (
@@ -28,7 +32,10 @@ export const App = () => {
           <Route path="/account/notifications" element={<AccountNotifications />} />
         </Route>
         <Route path="/dashboard" element={<Dashboard/>}>
-
+          <Route path="/dashboard" element={<MyDogs />} />
+          <Route path="/dashboard/dogs/:id" element={<DogProfile />} />
+          <Route path="/dashboard/walks" element={<MyWalks />} />
+          <Route path="/dashboard/schedules" element={<Schedules />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

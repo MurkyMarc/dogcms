@@ -1,7 +1,6 @@
-
-
-
+import { useParams } from 'react-router-dom';
 
 export const DogProfile = () => {
-    return (<div>Contact Page</div>)
+    const { id } = useParams();
+    return <div>Dog ID: {id}</div>;
 }

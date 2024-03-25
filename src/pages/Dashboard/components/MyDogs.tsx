@@ -6,18 +6,13 @@ import { Separator } from "../../../components/ui/separator";
 import { DogProfile } from "./dog-profiles";
 
 import { listenNowAlbums } from "../data/albums"
-import { SetStateAction } from "react";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    setTab: (tab: SetStateAction<string>) => void
-}
-
-export default function DashboardMyDogs({ setTab }: Props) {
+export default function MyDogs() {
     return (
         <>
             <div className="flex items-center justify-between">
                 <div className="flex space-y-1">
-                    <MenuDrawer setTab={setTab}>
+                    <MenuDrawer>
                         <Button className="lg:hidden p-1 h-auto mr-6 border-purple-500" variant={"link"}>
                             <MenuIcon className="h-7 w-8" />
                         </Button>

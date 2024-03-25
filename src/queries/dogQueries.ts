@@ -22,7 +22,6 @@ export async function updateDog(
 export async function getDogById(client: TypedSupabaseClient, id: number) {
     return await client
         .from('dogs')
-        // .select(`username, website, avatar_url`)
         .select(`*`)
         .eq('id', id)
         .throwOnError()

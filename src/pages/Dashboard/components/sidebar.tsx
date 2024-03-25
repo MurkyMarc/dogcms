@@ -1,12 +1,9 @@
-import { SetStateAction } from "react"
 import { Button } from "../../../components/ui/button"
 import { cn } from "../../../utils/cn"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-    setTab: (tab: SetStateAction<string>) => void
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Sidebar({ className, setTab }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
     return (
         <div className={cn("pb-12", className)}>
             <div className="space-y-4 py-4">
@@ -15,7 +12,7 @@ export function Sidebar({ className, setTab }: SidebarProps) {
                         Menu
                     </h2>
                     <div className="space-y-1">
-                        <Button variant="ghost" className="w-full justify-start" onClick={() => setTab("mydogs")}>
+                        <Button variant="ghost" className="w-full justify-start">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
@@ -31,7 +28,7 @@ export function Sidebar({ className, setTab }: SidebarProps) {
                             </svg>
                             My Dogs
                         </Button>
-                        <Button variant="ghost" className="w-full justify-start" onClick={() => setTab("walks")}>
+                        <Button variant="ghost" className="w-full justify-start">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
@@ -49,7 +46,7 @@ export function Sidebar({ className, setTab }: SidebarProps) {
                             </svg>
                             Walks
                         </Button>
-                        <Button variant="ghost" className="w-full justify-start" onClick={() => setTab("schedules")}>
+                        <Button variant="ghost" className="w-full justify-start">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"

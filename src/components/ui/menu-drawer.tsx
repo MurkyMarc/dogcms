@@ -1,13 +1,11 @@
-import { SetStateAction } from "react";
 import { Button } from "./button";
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "./drawer";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
-    setTab: (tab: SetStateAction<string>) => void
 }
 
-export function MenuDrawer({ children, setTab }: Props) {
+export function MenuDrawer({ children }: Props) {
     return (
         <Drawer direction="left">
             <DrawerTrigger asChild>
@@ -21,7 +19,7 @@ export function MenuDrawer({ children, setTab }: Props) {
                     <div className="p-4 pb-0">
                         <div className="">
                             <DrawerClose asChild>
-                                <Button variant="ghost" className="w-full justify-start" onClick={() => setTab("mydogs")}>
+                                <Button variant="ghost" className="w-full justify-start">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 24 24"
@@ -39,7 +37,7 @@ export function MenuDrawer({ children, setTab }: Props) {
                                 </Button>
                             </DrawerClose>
                             <DrawerClose asChild>
-                                <Button variant="ghost" className="w-full justify-start" onClick={() => setTab("walks")}>
+                                <Button variant="ghost" className="w-full justify-start">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 24 24"
@@ -59,7 +57,7 @@ export function MenuDrawer({ children, setTab }: Props) {
                                 </Button>
                             </DrawerClose>
                             <DrawerClose asChild>
-                                <Button variant="ghost" className="w-full justify-start" onClick={() => setTab("schedules")}>
+                                <Button variant="ghost" className="w-full justify-start">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 24 24"
