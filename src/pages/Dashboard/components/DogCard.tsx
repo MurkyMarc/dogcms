@@ -1,10 +1,11 @@
-import { Dog } from "../data/albums"
+
 import { cn } from "../../../utils/cn"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../../../components/ui/context-menu"
 import { Link } from "react-router-dom"
+import { Tables } from "../../../utils/database.types"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    dog: Dog
+    dog: Tables<'dogs'>
     aspectRatio?: "portrait" | "square"
     width?: number
     height?: number
@@ -25,8 +26,8 @@ export function DogCard({
                 <ContextMenuTrigger>
                     <div>
                         <img
-                            src={dog.cover}
-                            alt={dog.name}
+                            src={dog.image || ""}
+                            alt={dog.name || ""}
                             width={width}
                             height={height}
                             className={cn(

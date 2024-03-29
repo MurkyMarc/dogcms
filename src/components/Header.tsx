@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { MountainIcon } from "./ui/icons/MountainIcon";
-import { useSession, useSignOut } from "../hooks/useAuth";
 import { useGetProfileById } from "../hooks/useProfile";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Session } from "@supabase/supabase-js";
+import { useQuery } from "@tanstack/react-query";
+import { useSignOut } from "../hooks/useAuth";
 
 export default function Header() {
-    const { session } = useSession();
     const signOut = useSignOut();
+    const { data: session } = useQuery<Session>({ queryKey: ['session'] });
     const { data: profile } = useGetProfileById(session?.user.id || "", !!session?.user.id);
 
     return (

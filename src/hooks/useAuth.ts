@@ -1,7 +1,22 @@
 import useSupabase from "./useSupabase";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+export function AuthStateListener() {
+    const supabase = useSupabase();
+    const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            queryClient.setQueryData(['session'], session);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [supabase.auth, queryClient]);
+
+    return null;
+}
 
 export function useSignInWithOTP() {
     const client = useSupabase();
@@ -28,24 +43,26 @@ export function useSignOut() {
     return signOut;
 }
 
-export function useSession() {
-    const supabase = useSupabase();
-    const queryClient = useQueryClient();
-    const queryKey = ['session'];
+// export function useSession() {
+//     const supabase = useSupabase();
+//     const queryClient = useQueryClient();
+//     const queryKey = ['session'];
     
-    const queryFn = async () => {
-        const { data } = await supabase.auth.getSession();
-        return data.session;
-    }
-    const { data: session, ...queryInfo } = useQuery({ queryKey, queryFn });
+//     const queryFn = async () => {
+//         const { data } = await supabase.auth.getSession();
+//         return data.session;
+//     }
+//     const { data: session, ...queryInfo } = useQuery({ queryKey, queryFn });
 
-    useEffect(() => {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            queryClient.setQueryData(['session'], session);
-        });
+//     useEffect(() => {
+//         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+//             queryClient.setQueryData(['session'], session);
+//         });
 
-        return () => subscription.unsubscribe();
-    }, [supabase.auth, queryClient]);
+//         return () => subscription.unsubscribe();
+//     }, [supabase.auth, queryClient]);
 
-    return { session, ...queryInfo };
-}
+//     return { session, ...queryInfo };
+// }
+
+// TODO - when someone updates their profile - revalidate session

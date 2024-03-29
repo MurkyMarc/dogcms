@@ -5,10 +5,15 @@ import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
+import { useQuery } from "@tanstack/react-query";
+import { Session } from "@supabase/supabase-js";
+import { useDogsByOwner } from "../../../hooks/useDog";
 
-import { listenNowAlbums, madeForYouAlbums } from "../data/albums"
+export default function Schedules() {
+    const { data: session, isLoading } = useQuery<Session>({ queryKey: ['session'] });
+    const { data: dogs } = useDogsByOwner(session?.user.id || "");
+    if (isLoading) { return "loading..." }
 
-export default function MyWalks() {
     return (
         <>
             <div className="flex items-center justify-between">
@@ -38,12 +43,12 @@ export default function MyWalks() {
             <div className="relative">
                 <ScrollArea>
                     <div className="flex space-x-4 pb-4">
-                        {listenNowAlbums.map((dog) => (
+                        {dogs?.map((dog) => (
                             <DogCard
-                                id={dog.id}
+                                id={`${dog.id}`}
                                 key={dog.name}
                                 dog={dog}
-                                className="w-[6rem] md:w-[9.5rem] lg:w-[12.5rem]"
+                                className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"
                                 aspectRatio="portrait"
                                 width={250}
                                 height={330} />
@@ -64,9 +69,9 @@ export default function MyWalks() {
             <div className="relative">
                 <ScrollArea>
                     <div className="flex space-x-4 pb-4">
-                        {madeForYouAlbums.map((dog) => (
+                        {dogs?.map((dog) => (
                             <DogCard
-                                id={dog.id}
+                                id={`${dog.id}`}
                                 key={dog.name}
                                 dog={dog}
                                 className="md:w-[150px]"

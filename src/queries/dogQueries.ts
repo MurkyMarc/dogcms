@@ -33,5 +33,5 @@ export async function getDogsByOwnerId(client: TypedSupabaseClient, id: string) 
         .from('dogs')
         .select(`*`)
         .eq('owner', id)
-        .throwOnError();
+        .throwOnError() || [];
 }

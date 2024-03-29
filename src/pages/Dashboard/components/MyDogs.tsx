@@ -4,15 +4,15 @@ import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
-
-import { listenNowAlbums } from "../data/albums"
 import { useDogsByOwner } from "../../../hooks/useDog";
-import { useSession } from "../../../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { Session } from "@supabase/supabase-js";
 
 export default function MyDogs() {
-    const { session } = useSession();
-    const { data } = useDogsByOwner(session?.user.id || "");
-    console.log(data);
+    const { data: session, isLoading } = useQuery<Session>({ queryKey: ['session'] });
+    const { data: dogs } = useDogsByOwner(session?.user.id || "");
+    if (isLoading) {return "loading..."}
+
     return (
         <>
             <div className="flex items-center justify-between">
@@ -41,9 +41,9 @@ export default function MyDogs() {
             <Separator className="my-4" />
             <div className="">
                 <div className="flex flex-wrap gap-4">
-                    {listenNowAlbums.map((dog) => (
+                    {dogs?.map((dog) => (
                         <DogCard
-                            id={dog.id}
+                            id={`${dog.id}`}
                             key={dog.name}
                             dog={dog}
                             className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"

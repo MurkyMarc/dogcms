@@ -2,7 +2,6 @@ import { TabsTrigger, TabsList, TabsContent, Tabs } from "../components/ui/tabs"
 import { useEffect } from 'react'
 import { useGetProfileById, useUpdateProfile } from '../hooks/useProfile'
 import { useDeleteAvatar, useUploadAvatar } from '../hooks/useAvatar'
-import { useSession } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { ProfileUserInfo } from "../components/ProfileUserInfo"
 import { ProfileAddress } from "../components/ProfileAddress"
@@ -10,13 +9,15 @@ import { ProfileEmergencyContacts } from "../components/ProfileEmergencyContacts
 import { ProfilePaymentInfo } from "../components/ProfilePaymentInfo"
 import { ProfilePageAvatar } from "../components/ProfilePageAvatar"
 import { LoadingSpinner } from "../components/ui/LoadingSpinner"
+import { Session } from "@supabase/supabase-js"
+import { useQuery } from "@tanstack/react-query"
 
 export const Profile = () => {
     const navigate = useNavigate();
-    const { session } = useSession();
     const uploadAvatarQuery = useUploadAvatar();
     const deleteAvatarQuery = useDeleteAvatar();
     const updateProfileQuery = useUpdateProfile();
+    const { data: session } = useQuery<Session>({ queryKey: ['session'] });
     const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
     const { data: profile, error: profileError, isLoading: profileLoading } = useGetProfileById(session?.user.id || '', !!session?.user.id);
 
