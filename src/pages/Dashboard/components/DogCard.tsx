@@ -1,17 +1,17 @@
-import { Album } from "../data/albums"
+import { Dog } from "../data/albums"
 import { cn } from "../../../utils/cn"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../../../components/ui/context-menu"
 import { Link } from "react-router-dom"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    album: Album
+    dog: Dog
     aspectRatio?: "portrait" | "square"
     width?: number
     height?: number
 }
 
-export function DogProfile({
-    album,
+export function DogCard({
+    dog,
     aspectRatio = "portrait",
     width,
     height,
@@ -20,13 +20,13 @@ export function DogProfile({
 }: Props) {
     return (
         <div className={cn("space-y-3", className)} {...props}>
-            <Link to="/">
+            <Link to={`/dashboard/dogs/${dog.id}`}>
             <ContextMenu>
                 <ContextMenuTrigger>
                     <div>
                         <img
-                            src={album.cover}
-                            alt={album.name}
+                            src={dog.cover}
+                            alt={dog.name}
                             width={width}
                             height={height}
                             className={cn(
@@ -45,7 +45,7 @@ export function DogProfile({
                 </ContextMenuContent>
             </ContextMenu>
             <div className="space-y-1 text-sm">
-                <h3 className="font-medium leading-none pt-2">{album.name}</h3>
+                <h3 className="font-medium leading-none pt-2">{dog.name}</h3>
                 {/* <p className="text-xs text-muted-foreground">{album.artist}</p> */}
             </div>
             </Link>

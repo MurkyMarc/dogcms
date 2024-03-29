@@ -4,7 +4,7 @@ import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Separator } from "../../../components/ui/separator";
-import { DogProfile } from "./dog-profiles";
+import { DogCard } from "./DogCard";
 
 import { listenNowAlbums, madeForYouAlbums } from "../data/albums"
 
@@ -38,10 +38,11 @@ export default function MyWalks() {
             <div className="relative">
                 <ScrollArea>
                     <div className="flex space-x-4 pb-4">
-                        {listenNowAlbums.map((album) => (
-                            <DogProfile
-                                key={album.name}
-                                album={album}
+                        {listenNowAlbums.map((dog) => (
+                            <DogCard
+                                id={dog.id}
+                                key={dog.name}
+                                dog={dog}
                                 className="w-[6rem] md:w-[9.5rem] lg:w-[12.5rem]"
                                 aspectRatio="portrait"
                                 width={250}
@@ -63,10 +64,11 @@ export default function MyWalks() {
             <div className="relative">
                 <ScrollArea>
                     <div className="flex space-x-4 pb-4">
-                        {madeForYouAlbums.map((album) => (
-                            <DogProfile
-                                key={album.name}
-                                album={album}
+                        {madeForYouAlbums.map((dog) => (
+                            <DogCard
+                                id={dog.id}
+                                key={dog.name}
+                                dog={dog}
                                 className="md:w-[150px]"
                                 aspectRatio="square"
                                 width={150}

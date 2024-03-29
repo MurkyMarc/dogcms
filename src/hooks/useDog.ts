@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getDogById, updateDog } from "../queries/dogQueries";
+import { getDogById, getDogsByOwnerId, updateDog } from "../queries/dogQueries";
 import { Tables } from "../utils/database.types";
 import useSupabase from "./useSupabase";
 
-export function useGetDogById(id: number, enabled?: boolean) {
+export function useGetDogById(id: string, enabled = true) {
     const client = useSupabase();
     const queryKey = ['dogs', id];
 
@@ -20,7 +20,7 @@ export function useUpdateDog() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (params: { id: number; data: Partial<Tables<'dogs'>>; }) => {
+    const mutationFn = async (params: { id: string; data: Partial<Tables<'dogs'>>; }) => {
         return await updateDog(client, params).then(
             (result) => result.data
         );
@@ -32,4 +32,34 @@ export function useUpdateDog() {
             queryClient.setQueryData(['dogs', variables.id], { id: variables.id, ...variables.data });
         }
     });
+}
+
+export function useGetOwnersDogsById(id: string) {
+    const client = useSupabase();
+    const queryKey = ['dogs', id];
+
+    const queryFn = async () => {
+        return await getDogsByOwnerId(client, id).then(
+            (result) => result.data
+        );
+    };
+
+    return useQuery({ queryKey, queryFn });
+}
+
+export function useDogsByOwner(ownerId: string) {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['mydogs'],
+        queryFn: () => getDogsByOwnerId(client, ownerId)
+            .then(result => {
+                const dogs = result.data || [];
+                dogs.map(dog => queryClient.setQueryData(['dog', dog.id], dog));
+                return dogs;
+            }),
+        enabled: !!ownerId,
+    });
+    return { data, isLoading, error };
 }

@@ -3,7 +3,7 @@ import { getProfileById, updateProfile } from "../queries/profileQueries";
 import { Tables } from "../utils/database.types";
 import useSupabase from "./useSupabase";
 
-export function useGetProfileById(profileId: string, enabled?: boolean) {
+export function useGetProfileById(profileId: string, enabled = true) {
     const client = useSupabase();
     const queryKey = ['profiles', profileId];
 

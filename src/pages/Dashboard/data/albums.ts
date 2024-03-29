@@ -1,11 +1,11 @@
-export interface Album {
+export interface Dog {
     id: string,
     name: string
     artist: string
     cover: string
 }
 
-export const listenNowAlbums: Album[] = [
+export const listenNowAlbums: Dog[] = [
     {
         id: "1",
         name: "Bailey",
@@ -71,7 +71,7 @@ export const listenNowAlbums: Album[] = [
     }
 ]
 
-export const madeForYouAlbums: Album[] = [
+export const madeForYouAlbums: Dog[] = [
     {
         id: "1",
         name: "Thinking Components",
