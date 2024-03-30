@@ -6,13 +6,13 @@ import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
 import { Session } from "@supabase/supabase-js";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDogsByOwner } from "../../../hooks/useDog";
 
 export default function Schedules() {
-    const { data: session, isLoading } = useQuery<Session>({ queryKey: ['session'] });
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
     const { data: dogs } = useDogsByOwner(session?.user.id || "");
-    if (isLoading) { return "loading..." }
 
     return (
         <>

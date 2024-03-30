@@ -5,13 +5,13 @@ import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
 import { useDogsByOwner } from "../../../hooks/useDog";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
 
 export default function MyDogs() {
-    const { data: session, isLoading } = useQuery<Session>({ queryKey: ['session'] });
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
     const { data: dogs } = useDogsByOwner(session?.user.id || "");
-    if (isLoading) {return "loading..."}
 
     return (
         <>

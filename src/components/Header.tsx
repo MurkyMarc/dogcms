@@ -4,13 +4,14 @@ import { useGetProfileById } from "../hooks/useProfile";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Session } from "@supabase/supabase-js";
-import { useQuery } from "@tanstack/react-query";
 import { useSignOut } from "../hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
     const signOut = useSignOut();
-    const { data: session } = useQuery<Session>({ queryKey: ['session'] });
-    const { data: profile } = useGetProfileById(session?.user.id || "", !!session?.user.id);
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
+    const { data: profile } = useGetProfileById(session?.user.id || "", !!session, 'myprofile');
 
     return (
         <header className="flex items-center justify-between w-full h-14 px-4 border-b gap-4 lg:px-6">

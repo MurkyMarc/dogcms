@@ -3,9 +3,8 @@ import { getProfileById, updateProfile } from "../queries/profileQueries";
 import { Tables } from "../utils/database.types";
 import useSupabase from "./useSupabase";
 
-export function useGetProfileById(profileId: string, enabled = true) {
+export function useGetProfileById(profileId: string, enabled = true, queryKey = 'profiles') {
     const client = useSupabase();
-    const queryKey = ['profiles', profileId];
 
     const queryFn = async () => {
         return await getProfileById(client, profileId).then(
@@ -13,7 +12,7 @@ export function useGetProfileById(profileId: string, enabled = true) {
         );
     };
     const isValidProfile = (profileId !== "" && enabled === true) ? true : false;
-    return useQuery({ queryKey, queryFn, enabled: isValidProfile });
+    return useQuery({ queryKey: [queryKey, profileId], queryFn, enabled: isValidProfile });
 }
 
 export function useUpdateProfile() {

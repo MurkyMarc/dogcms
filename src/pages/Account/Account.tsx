@@ -6,7 +6,7 @@ import { LoadingSpinner } from "../../components/ui/LoadingSpinner"
 import { Separator } from "../../components/ui/separator"
 import { SidebarNav } from '../../components/ProfileSidebarNav'
 import { Session } from '@supabase/supabase-js'
-import { useQuery } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const sidebarNavItems = [
     {
@@ -28,10 +28,11 @@ export const Account = () => {
     const uploadAvatarQuery = useUploadAvatar();
     const deleteAvatarQuery = useDeleteAvatar();
     const updateProfileQuery = useUpdateProfile();
-    const { data: session } = useQuery<Session>({ queryKey: ['session'] });
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
-    const { data: profile, error: profileError, isLoading: profileLoading } = useGetProfileById(session?.user.id || '', !!session?.user.id);
+    const { data: profile, error: profileError, isLoading: profileLoading } = useGetProfileById(session?.user.id || "", !!session);
 
     useEffect(() => {
         if ((!session) && !profileLoading) navigate("/login");

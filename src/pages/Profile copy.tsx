@@ -10,14 +10,15 @@ import { ProfilePaymentInfo } from "../components/ProfilePaymentInfo"
 import { ProfilePageAvatar } from "../components/ProfilePageAvatar"
 import { LoadingSpinner } from "../components/ui/LoadingSpinner"
 import { Session } from "@supabase/supabase-js"
-import { useQuery } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 
 export const Profile = () => {
     const navigate = useNavigate();
     const uploadAvatarQuery = useUploadAvatar();
     const deleteAvatarQuery = useDeleteAvatar();
     const updateProfileQuery = useUpdateProfile();
-    const { data: session } = useQuery<Session>({ queryKey: ['session'] });
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
     const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
     const { data: profile, error: profileError, isLoading: profileLoading } = useGetProfileById(session?.user.id || '', !!session?.user.id);
 

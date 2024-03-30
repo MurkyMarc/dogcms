@@ -1,7 +1,21 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { Sidebar } from "./components/Sidebar"
+import { useEffect } from "react";
+import { Session } from "@supabase/supabase-js";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Dashboard() {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
+    console.log("dash")
+    console.log(session);
+    console.log("dash")
+
+    useEffect(() => {
+        if (!session) navigate("/login");
+    }, [session, navigate]);
+
     return (
         <div className="block border-t bg-background">
             <div className="md:grid md:grid-cols-6">

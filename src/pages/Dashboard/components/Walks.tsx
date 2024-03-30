@@ -5,14 +5,14 @@ import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
 import { useDogsByOwner } from "../../../hooks/useDog";
 
 export default function Schedules() {
-    const { data: session, isLoading } = useQuery<Session>({ queryKey: ['session'] });
+    const queryClient = useQueryClient();
+    const session = queryClient.getQueryData<Session>(['session']);
     const { data: dogs } = useDogsByOwner(session?.user.id || "");
-    if (isLoading) { return "loading..." }
 
     return (
         <>

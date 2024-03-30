@@ -8,6 +8,12 @@ export function AuthStateListener() {
     const queryClient = useQueryClient();
 
     useEffect(() => {
+        const fetchInitialSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            queryClient.setQueryData(['session'], session);
+        };
+
+        fetchInitialSession();
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             queryClient.setQueryData(['session'], session);
         });
@@ -23,6 +29,8 @@ export function useSignInWithOTP() {
 
     const signInWithOTP = async (email: string) => {
         const { data, error } = await client.auth.signInWithOtp({ email });
+        console.log(data)
+        console.log(error)
         return { data, error }
     };
 
