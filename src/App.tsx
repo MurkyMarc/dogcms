@@ -15,6 +15,7 @@ import MyDogs from './pages/Dashboard/components/MyDogs';
 import MyWalks from './pages/Dashboard/components/Walks';
 import Schedules from './pages/Dashboard/components/Schedules';
 import { DogProfile } from './pages/DogProfile/DogProfile';
+import { Profile } from './pages/Profile copy';
 
 export const App = () => {
   return (
@@ -22,6 +23,7 @@ export const App = () => {
       <Route path="/" element={<PageContainer />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/avatar" element={<Profile />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/search" element={<Contact />} />
         <Route path="/login" element={<Login />} />

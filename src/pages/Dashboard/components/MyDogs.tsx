@@ -4,14 +4,15 @@ import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
-import { useDogsByOwner } from "../../../hooks/useDog";
+import { useGetDogsByOwner } from "../../../hooks/useDog";
 import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
+import { DogCardPlaceholder } from "./DogCardPlaceholder";
 
 export default function MyDogs() {
     const queryClient = useQueryClient();
     const session = queryClient.getQueryData<Session>(['session']);
-    const { data: dogs } = useDogsByOwner(session?.user.id || "");
+    const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
 
     return (
         <>
@@ -39,18 +40,22 @@ export default function MyDogs() {
                 </div>
             </div>
             <Separator className="my-4" />
-            <div className="">
+            <div className="lg:mx-auto">
                 <div className="flex flex-wrap gap-4">
-                    {dogs?.map((dog) => (
+                    {dogs ? dogs.map((dog) => (
                         <DogCard
                             id={`${dog.id}`}
                             key={dog.name}
                             dog={dog}
-                            className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"
-                            aspectRatio="portrait"
-                            width={250}
-                            height={330} />
-                    ))}
+                            className="hover:scale-105 space-y-3 min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-2"
+                        >
+                            <div className="text-sm">
+                                <h3 className="font-medium leading-none">{dog.name}</h3>
+                            </div>
+                        </ DogCard>
+                    )) :
+                        <DogCardPlaceholder />
+                    }
                 </div>
             </div>
         </>

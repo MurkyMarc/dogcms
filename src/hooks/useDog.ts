@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getDogById, getDogsByOwnerId, updateDog } from "../queries/dogQueries";
+import { deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
 import { Tables } from "../utils/database.types";
 import useSupabase from "./useSupabase";
 
@@ -20,16 +20,14 @@ export function useUpdateDog() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (params: { id: string; data: Partial<Tables<'dogs'>>; }) => {
-        return await updateDog(client, params).then(
-            (result) => result.data
-        );
+    const mutationFn = (dog: Tables<'dogs'>) => {
+        return updateDog(client, dog);
     };
 
     return useMutation({
         mutationFn,
-        onSuccess: (_, variables) => {
-            queryClient.setQueryData(['dogs', variables.id], { id: variables.id, ...variables.data });
+        onSuccess: (_, dog) => {
+            queryClient.setQueryData(['dogs', `${dog.id}`], dog);
         }
     });
 }
@@ -38,20 +36,18 @@ export function useGetOwnersDogsById(id: string) {
     const client = useSupabase();
     const queryKey = ['dogs', id];
 
-    const queryFn = async () => {
-        return await getDogsByOwnerId(client, id).then(
-            (result) => result.data
-        );
+    const queryFn = () => {
+        return getDogsByOwnerId(client, id);
     };
 
     return useQuery({ queryKey, queryFn });
 }
 
-export function useDogsByOwner(ownerId: string) {
+export function useGetDogsByOwner(ownerId: string) {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const { data, isLoading, error } = useQuery({
+    return useQuery({
         queryKey: ['mydogs'],
         queryFn: () => getDogsByOwnerId(client, ownerId)
             .then(result => {
@@ -61,5 +57,24 @@ export function useDogsByOwner(ownerId: string) {
             }),
         enabled: !!ownerId,
     });
-    return { data, isLoading, error };
+}
+
+export function useUploadDogImage() {
+    const client = useSupabase();
+
+    const mutationFn = ({ filePath, file }: { filePath: string, file: File | Blob }) => {
+        return uploadDogImage(client, filePath, file);
+    }
+
+    return useMutation({ mutationFn });
+}
+
+export function useDeleteDogImage() {
+    const client = useSupabase();
+
+    const mutationFn = ({ filePath }: { filePath: string }) => {
+        return deleteDogImage(client, filePath);
+    }
+
+    return useMutation({ mutationFn });
 }

@@ -7,7 +7,9 @@ export const generateFilePath = (event: ChangeEvent<HTMLInputElement>) => {
     }
 
     const file = event.target.files[0];
-    const filePath = `${uuid()}`;
+    const fileParts = file.name.split(".");
+    const fileType = fileParts[fileParts.length - 1];
+    const filePath = `${uuid()}.${fileType}`;
     return { file, filePath };
 }
 
@@ -113,8 +115,10 @@ export function fileTypeSupported(event: ChangeEvent<HTMLInputElement>) {
 
     const allowedTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp"];
 
-    if (allowedTypes.includes(fileType)) {
-        return true;
+    if (!allowedTypes.includes(fileType)) {
+        throw new Error("Only PNG, JPEG, HEIF, HEIC, and WebP files are allowed");
     }
-    return false;
+
+    // Todo - add a filesize check? and other checks like making sure they only select on image etc
+    return true
 }

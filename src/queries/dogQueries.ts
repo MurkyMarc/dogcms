@@ -7,15 +7,13 @@ export async function upsertDog(client: TypedSupabaseClient, dog: Tables<'dogs'>
 
 export async function updateDog(
     client: TypedSupabaseClient,
-    params: {
-        id: string;
-        data: Partial<Tables<'dogs'>>;
-    }
+    updates: Tables<'dogs'>
 ) {
+    const {id, ...data} = updates;
     return await client
         .from('dogs')
-        .update({ ...params.data })
-        .eq('id', params.id)
+        .update({ ...data })
+        .eq('id', id)
         .throwOnError()
 }
 
@@ -34,4 +32,47 @@ export async function getDogsByOwnerId(client: TypedSupabaseClient, id: string) 
         .select(`*`)
         .eq('owner', id)
         .throwOnError() || [];
+}
+
+export async function getDogImageURL(client: TypedSupabaseClient, path: string) {
+    const { data, error } = await client.storage.from('dogs').download(path);
+    if (error || data == null) return { url: null, error }
+
+    const objectUrl = URL.createObjectURL(data);
+    return { url: objectUrl, error }
+}
+
+export async function getDogImage(client: TypedSupabaseClient, dog: Tables<'dogs'>) {
+    if (!dog.image) {
+        return { url: null, error: `dog: ${dog.id} does not have an image` }
+    }
+    const { data, error } = await client.storage.from('dogs').download(dog.image);
+    if (error || data == null) return { url: null, error }
+
+    const objectUrl = URL.createObjectURL(data);
+    return { url: objectUrl, error }
+}
+
+export async function uploadDogImage(client: TypedSupabaseClient, url: string, file: Blob | File) {
+    return await client.storage.from('dogs').upload(url, file);
+}
+
+export async function deleteDogImage(client: TypedSupabaseClient, url: string) {
+    return client.storage.from('dogs').remove([url]);
+}
+
+export async function getDogImageURLs(client: TypedSupabaseClient, paths: string[]) {
+    const fetchPromises = paths.map(async (path) => {
+        try {
+            const { data, error } = await client.storage.from('dogs').download(path);
+            if (error) throw new Error(error.message);
+            const objectUrl = URL.createObjectURL(data);
+            return { path, objectUrl, error: null };
+        } catch (error) {
+            console.error(`Failed to fetch image at ${path}:`, error);
+            return { path, objectUrl: null, error };
+        }
+    });
+
+    return await Promise.all(fetchPromises);
 }

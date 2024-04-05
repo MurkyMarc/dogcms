@@ -8,9 +8,6 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const session = queryClient.getQueryData<Session>(['session']);
-    console.log("dash")
-    console.log(session);
-    console.log("dash")
 
     useEffect(() => {
         if (!session) navigate("/login");

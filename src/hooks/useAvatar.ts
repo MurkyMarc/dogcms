@@ -24,8 +24,8 @@ export function useDeleteAvatar() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async ({ filePath }: { profile: Partial<Tables<'profiles'>>, filePath: string }) => {
-        await deleteAvatar(client, filePath);
+    const mutationFn = ({ filePath }: { profile: Partial<Tables<'profiles'>>, filePath: string }) => {
+        return deleteAvatar(client, filePath);
     }
 
     return useMutation({

@@ -4,8 +4,8 @@ import { DogIcon } from "../../components/ui/icons/DogIcon"
 import { MapPinIcon } from "../../components/ui/icons/MapPinIcon"
 import { CameraIcon } from "../../components/ui/icons/CameraIcon";
 import { ChatIcon } from "../../components/ui/icons/ChatIcon";
-import dogImage from '/public/walkingdog.jpeg';
-import nySkyline from '/public/nyskyline.jpeg';
+import dogImage from '/walkingdog.jpeg';
+import nySkyline from '/nyskyline.jpeg';
 import { Card, CardContent } from "../../components/ui/card";
 
 export const Home = () => {

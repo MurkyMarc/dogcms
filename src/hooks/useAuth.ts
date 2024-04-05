@@ -29,8 +29,6 @@ export function useSignInWithOTP() {
 
     const signInWithOTP = async (email: string) => {
         const { data, error } = await client.auth.signInWithOtp({ email });
-        console.log(data)
-        console.log(error)
         return { data, error }
     };
 

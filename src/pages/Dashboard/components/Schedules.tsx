@@ -7,12 +7,12 @@ import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
 import { Session } from "@supabase/supabase-js";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDogsByOwner } from "../../../hooks/useDog";
+import { useGetDogsByOwner } from "../../../hooks/useDog";
 
 export default function Schedules() {
     const queryClient = useQueryClient();
     const session = queryClient.getQueryData<Session>(['session']);
-    const { data: dogs } = useDogsByOwner(session?.user.id || "");
+    const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
 
     return (
         <>
@@ -49,7 +49,6 @@ export default function Schedules() {
                                 key={dog.name}
                                 dog={dog}
                                 className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"
-                                aspectRatio="portrait"
                                 width={250}
                                 height={330} />
                         ))}
@@ -75,7 +74,6 @@ export default function Schedules() {
                                 key={dog.name}
                                 dog={dog}
                                 className="md:w-[150px]"
-                                aspectRatio="square"
                                 width={150}
                                 height={150} />
                         ))}

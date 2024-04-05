@@ -84,7 +84,7 @@ export const ProfilePageAvatar = ({ isUpdating, profile }: props) => {
                     Upload a new picture
                 </span>
             </Avatar>
-            < input className="hidden"
+            <input className="hidden"
                 id="avatar-upload"
                 type="file"
                 accept="image/*"

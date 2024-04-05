@@ -3,53 +3,69 @@ import { cn } from "../../../utils/cn"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../../../components/ui/context-menu"
 import { Link } from "react-router-dom"
 import { Tables } from "../../../utils/database.types"
+import useSupabase from "../../../hooks/useSupabase"
+import { getDogImageURL } from "../../../queries/dogQueries"
+import { useEffect, useRef, useState } from "react"
+import { DogCardPlaceholder } from "./DogCardPlaceholder"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     dog: Tables<'dogs'>
-    aspectRatio?: "portrait" | "square"
-    width?: number
-    height?: number
+    children?: React.ReactNode
 }
 
 export function DogCard({
     dog,
-    aspectRatio = "portrait",
-    width,
-    height,
     className,
+    children,
     ...props
 }: Props) {
+    const supabase = useSupabase();
+    const [imageUrl, setImageUrl] = useState("/placeholder.svg");
+    const [loading, setLoading] = useState<boolean>(false);
+    const downloadImageRef = useRef(downloadImage);
+
+    async function downloadImage(path: string) {
+        try {
+            setLoading(true);
+            const { url, error } = await getDogImageURL(supabase, path);
+            if (error) throw error;
+            setImageUrl(url);
+        } catch (error) {
+            alert((error as Error).message); // TODO - toast
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        if (dog.image) downloadImageRef.current(dog.image);
+    }, [dog.image, downloadImageRef])
+
     return (
-        <div className={cn("space-y-3", className)} {...props}>
+        <div className={cn(className)} {...props}>
             <Link to={`/dashboard/dogs/${dog.id}`}>
-            <ContextMenu>
-                <ContextMenuTrigger>
-                    <div>
-                        <img
-                            src={dog.image || ""}
-                            alt={dog.name || ""}
-                            width={width}
-                            height={height}
-                            className={cn(
-                                " rounded-md md:h-auto md:w-auto object-cover transition-all hover:scale-105",
-                                aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
-                            )}
-                        />
-                    </div>
-                </ContextMenuTrigger>
-                <ContextMenuContent className="w-40">
-                    <ContextMenuItem>Open</ContextMenuItem>
-                    <ContextMenuItem>Edit</ContextMenuItem>
-                    <ContextMenuSeparator />
-                    <ContextMenuItem>Delete</ContextMenuItem>
-                    <ContextMenuItem>Share</ContextMenuItem>
-                </ContextMenuContent>
-            </ContextMenu>
-            <div className="space-y-1 text-sm">
-                <h3 className="font-medium leading-none pt-2">{dog.name}</h3>
-                {/* <p className="text-xs text-muted-foreground">{album.artist}</p> */}
-            </div>
+                <ContextMenu>
+                    <ContextMenuTrigger>
+                        <div>
+                            {loading ? <DogCardPlaceholder className="mb-2" loading /> :
+                                <img
+                                    src={imageUrl}
+                                    alt={dog.name || ""}
+                                    className={cn(
+                                        "rounded-md object-cover transition-all aspect-[3/4]"
+                                    )}
+                                />}
+                        </div>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent className="w-40">
+                        <ContextMenuItem>Open</ContextMenuItem>
+                        <ContextMenuItem>Edit</ContextMenuItem>
+                        <ContextMenuSeparator />
+                        <ContextMenuItem>Delete</ContextMenuItem>
+                        <ContextMenuItem>Share</ContextMenuItem>
+                    </ContextMenuContent>
+                </ContextMenu>
             </Link>
+            {children}
         </div>
     )
 }
