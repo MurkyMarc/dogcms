@@ -49,8 +49,7 @@ export default function Schedules() {
                                 key={dog.name}
                                 dog={dog}
                                 className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"
-                                width={250}
-                                height={330} />
+                            />
                         ))}
                     </div>
                     <ScrollBar orientation="horizontal" />
@@ -74,8 +73,7 @@ export default function Schedules() {
                                 key={dog.name}
                                 dog={dog}
                                 className="md:w-[150px]"
-                                width={150}
-                                height={150} />
+                            />
                         ))}
                     </div>
                     <ScrollBar orientation="horizontal" />
