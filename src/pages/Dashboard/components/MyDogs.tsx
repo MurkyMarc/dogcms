@@ -7,7 +7,7 @@ import { DogCard } from "./DogCard";
 import { useGetDogsByOwner } from "../../../hooks/useDog";
 import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
-import { DogCardPlaceholder } from "./DogCardPlaceholder";
+import { CardPlaceholder } from "./CardPlaceholder";
 
 export default function MyDogs() {
     const queryClient = useQueryClient();
@@ -47,14 +47,14 @@ export default function MyDogs() {
                             id={`${dog.id}`}
                             key={dog.name}
                             dog={dog}
-                            className="hover:scale-105 space-y-3 min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-2"
+                            className="space-y-3 aspect-[3/4] min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-2"
                         >
                             <div className="text-sm">
                                 <h3 className="font-medium leading-none">{dog.name}</h3>
                             </div>
                         </ DogCard>
                     )) :
-                        <DogCardPlaceholder />
+                        <CardPlaceholder className="space-y-3 min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-2" loading={false} />
                     }
                 </div>
             </div>

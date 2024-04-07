@@ -109,10 +109,11 @@ function calculateDynamicQuality(width: number, height: number, fileSize: number
 }
 
 export function fileTypeSupported(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target?.files) throw new Error("Error uploading your file");
+    if (!event.target?.files) return
+    if (event.target.files?.length > 1) throw new Error("Please only select one file");
+
     const file = event.target.files[0];
     const fileType = file.type;
-
     const allowedTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp"];
 
     if (!allowedTypes.includes(fileType)) {

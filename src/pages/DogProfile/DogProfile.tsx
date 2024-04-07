@@ -6,8 +6,8 @@ import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Separator } from '../../components/ui/separator';
 import { DogCard } from '../Dashboard/components/DogCard';
-import { DogCardPlaceholder } from '../Dashboard/components/DogCardPlaceholder';
-import { ChangeEvent, FormEvent } from 'react';
+import { CardPlaceholder } from '../Dashboard/components/CardPlaceholder';
+import { ChangeEvent } from 'react';
 import { fileTypeSupported, generateFilePath } from '../../utils/helpers';
 
 export const DogProfile = () => {
@@ -30,12 +30,11 @@ export const DogProfile = () => {
         }
     }
 
-    async function updateDogImage(event: FormEvent<Element>) {
-        event.preventDefault();
+    async function updateDogImage(event: ChangeEvent<HTMLInputElement>) {
         try {
             if (dog) {
                 const oldImage = dog?.image || "";
-                const { file, filePath } = generateFilePath(event as ChangeEvent<HTMLInputElement>);
+                const { file, filePath } = generateFilePath(event);
                 const newDog = { ...dog, image: filePath, updated_at: new Date().toISOString() };
 
                 const { error: uploadError } = await uploadDogImageQuery.mutateAsync({ filePath: filePath, file });
@@ -62,9 +61,9 @@ export const DogProfile = () => {
                         id={`${dog.id}`}
                         key={dog?.name}
                         dog={dog}
-                        className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-4"
+                        className="aspect-[3/4] min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-4"
                     />
-                    : <DogCardPlaceholder className="mb-4" loading={true} />
+                    : <CardPlaceholder className="aspect-[3/4] min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-4" loading={true} />
                 }
                 <label className="relative cursor-pointer" htmlFor="dogImageUploadInput" title="Click to upload a new picture">
                     <Button className="" size="sm" variant="outline" disabled={!isFetched && !isUpdating} onClick={handleUploadImageButton}>
