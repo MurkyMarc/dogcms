@@ -1,6 +1,5 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Button } from "../../../components/ui/button";
-import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../../components/ui/menu-drawer";
 import { Separator } from "../../../components/ui/separator";
 import { DogCard } from "./DogCard";
@@ -8,6 +7,7 @@ import { useGetDogsByOwner } from "../../../hooks/useDog";
 import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
 import { CardPlaceholder } from "./CardPlaceholder";
+import { Menu } from "lucide-react";
 
 export default function MyDogs() {
     const queryClient = useQueryClient();
@@ -15,12 +15,12 @@ export default function MyDogs() {
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
 
     return (
-        <>
+        <div className="px-4 py-4 mb-4">
             <div className="flex items-center justify-between">
                 <div className="flex space-y-1">
                     <MenuDrawer>
-                        <Button className="lg:hidden p-1 h-auto mr-6 border-purple-500" variant={"link"}>
-                            <MenuIcon className="h-7 w-8" />
+                        <Button className="px-2 lg:hidden h-auto mr-4" variant={"ghost"}>
+                            <Menu className="h-8 w-8" />
                         </Button>
                     </MenuDrawer>
                     <h2 className="text-2xl font-semibold tracking-tight">
@@ -58,7 +58,7 @@ export default function MyDogs() {
                     }
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

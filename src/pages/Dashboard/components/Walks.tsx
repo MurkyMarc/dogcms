@@ -15,7 +15,7 @@ export default function Schedules() {
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
 
     return (
-        <>
+        <div className="px-4 py-4">
             <div className="flex items-center justify-between">
                 <div className="flex space-y-1">
                     <MenuDrawer>
@@ -79,7 +79,7 @@ export default function Schedules() {
                     <ScrollBar orientation="horizontal" />
                 </ScrollArea>
             </div>
-        </>
+        </div>
     );
 }
 

@@ -6,7 +6,7 @@ export const PageContainer = () => {
     return (
         <>
             <Header />
-            <div className="min-h-[49.5rem]">
+            <div className="min-h-[50rem]">
                 <Outlet />
             </div>
             <Footer />

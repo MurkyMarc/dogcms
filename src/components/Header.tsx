@@ -14,7 +14,7 @@ export default function Header() {
     const { data: profile } = useGetProfileById(session?.user.id || "", !!session, 'myprofile');
 
     return (
-        <header className="flex items-center justify-between w-full h-14 px-4 border-b gap-4 lg:px-6">
+        <header className="flex items-center justify-between w-full h-14 px-4 border-b gap-4 lg:px-6 bg-sky-100">
             <Link className="flex items-center" to="/">
                 <MountainIcon className="h-6 w-6" />
                 <span className="hidden xs:block ml-2 text-xl font-bold">Uptown Dogs</span>

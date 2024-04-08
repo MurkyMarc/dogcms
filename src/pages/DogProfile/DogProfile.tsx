@@ -54,7 +54,7 @@ export const DogProfile = () => {
     }
 
     return (
-        <div className="mx-auto max-w-3xl px-4 space-y-8 pb-4">
+        <div className="my-8 mx-auto max-w-3xl space-y-8">
             <div className="items-center">
                 {dog ?
                     <DogCard
