@@ -1,13 +1,13 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Button } from "../../../components/ui/button";
-import { MenuIcon } from "../../../components/ui/icons/MenuIcon";
-import { MenuDrawer } from "../../../components/ui/menu-drawer";
-import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
-import { Separator } from "../../../components/ui/separator";
-import { DogCard } from "./DogCard";
+import { Button } from "../../components/ui/button";
+import { MenuIcon } from "../../components/ui/icons/MenuIcon";
+import { MenuDrawer } from "../../components/ui/menu-drawer";
+import { ScrollArea, ScrollBar } from "../../components/ui/scroll-area";
+import { Separator } from "../../components/ui/separator";
+import { DogCard } from "./components/DogCard";
 import { Session } from "@supabase/supabase-js";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGetDogsByOwner } from "../../../hooks/useDog";
+import { useGetDogsByOwner } from "../../hooks/useDog";
 
 export default function Schedules() {
     const queryClient = useQueryClient();

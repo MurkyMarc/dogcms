@@ -11,12 +11,12 @@ import { AccountProfile } from './pages/Account/components/AccountProfile';
 import AccountNotifications from './pages/Account/components/AccountNotifications';
 import AccountRoot from './pages/Account/components/AccountRoot';
 import Dashboard from './pages/Dashboard/Dashboard';
-import MyDogs from './pages/Dashboard/components/MyDogs';
-import MyWalks from './pages/Dashboard/components/Walks';
-import Schedules from './pages/Dashboard/components/Schedules';
-import { DogProfile } from './pages/DogProfile/DogProfile';
+import MyDogs from './pages/Dashboard/MyDogs';
+import MyWalks from './pages/Dashboard/Walks';
+import Schedules from './pages/Dashboard/Schedules';
+import { DogProfile } from './pages/Dashboard/DogProfile';
 import { Profile } from './pages/Profile copy';
-import { Messages } from './pages/Messages/Messages';
+import { Messages } from './pages/Dashboard/Messages/Messages';
 
 export const App = () => {
   return (

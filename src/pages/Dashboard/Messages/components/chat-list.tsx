@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Message, UserData } from "../data";
-import { cn } from "../../../utils/cn";
-import { Avatar, AvatarImage } from "../../../components/ui/avatar";
+import { cn } from "../../../../utils/cn";
+import { Avatar, AvatarImage } from "../../../../components/ui/avatar";
 import ChatBottombar from "./chat-bottombar";
 
 interface ChatListProps {

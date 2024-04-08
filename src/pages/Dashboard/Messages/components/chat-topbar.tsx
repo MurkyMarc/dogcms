@@ -1,10 +1,10 @@
 
 import { Link } from 'react-router-dom';
 import { Search, Phone } from 'lucide-react';
-import { cn } from '../../../utils/cn';
-import { buttonVariants } from '../../../components/ui/button';
+import { cn } from '../../../../utils/cn';
+import { buttonVariants } from '../../../../components/ui/button';
 import { useRef, useState } from 'react';
-import { Textarea } from '../../../components/ui/textarea';
+import { Textarea } from '../../../../components/ui/textarea';
 import { UserData } from '../data';
 import { ChatTopbarAvatar } from './chat-topbar-avatar';
 

@@ -1,7 +1,7 @@
 
 import { cn } from "../../../utils/cn"
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface CardPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
     loading?: boolean
 }
 
@@ -10,7 +10,7 @@ export function CardPlaceholder({
     children,
     loading = false,
     ...props
-}: Props) {
+}: CardPlaceholderProps) {
     return (
         <div className={cn("flex items-center justify-center", className, loading && "bg-gray-300 animate-pulse")} {...props}>
             <img

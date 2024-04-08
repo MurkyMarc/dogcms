@@ -1,12 +1,12 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Button } from "../../../components/ui/button";
-import { MenuDrawer } from "../../../components/ui/menu-drawer";
-import { Separator } from "../../../components/ui/separator";
-import { DogCard } from "./DogCard";
-import { useGetDogsByOwner } from "../../../hooks/useDog";
+import { Button } from "../../components/ui/button";
+import { MenuDrawer } from "../../components/ui/menu-drawer";
+import { Separator } from "../../components/ui/separator";
+import { DogCard } from "./components/DogCard";
+import { useGetDogsByOwner } from "../../hooks/useDog";
 import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
-import { CardPlaceholder } from "./CardPlaceholder";
+import { CardPlaceholder } from "./components/CardPlaceholder";
 import { Menu } from "lucide-react";
 
 export default function MyDogs() {

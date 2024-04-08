@@ -5,8 +5,8 @@ import { Label } from '../../components/ui/label';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Separator } from '../../components/ui/separator';
-import { DogCard } from '../Dashboard/components/DogCard';
-import { CardPlaceholder } from '../Dashboard/components/CardPlaceholder';
+import { DogCard } from './components/DogCard';
+import { CardPlaceholder } from './components/CardPlaceholder';
 import { ChangeEvent } from 'react';
 import { fileTypeSupported, generateFilePath } from '../../utils/helpers';
 

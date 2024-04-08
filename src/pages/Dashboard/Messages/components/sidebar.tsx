@@ -1,10 +1,10 @@
 import { SquarePen } from "lucide-react";
 import { User, userData } from "../data";
-import { buttonVariants } from "../../../components/ui/button";
+import { buttonVariants } from "../../../../components/ui/button";
 import { Link } from "react-router-dom";
-import { cn } from "../../../utils/cn";
-import { Avatar, AvatarImage } from "../../../components/ui/avatar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip";
+import { cn } from "../../../../utils/cn";
+import { Avatar, AvatarImage } from "../../../../components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../components/ui/tooltip";
 
 interface SidebarProps {
     isCollapsed: boolean;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../components/ui/resizable";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../../components/ui/resizable";
 import { Sidebar } from "./components/sidebar";
-import { cn } from "../../utils/cn";
+import { cn } from "../../../utils/cn";
 import { Chat } from "./components/chat";
 import { User, userData } from "./data";
 import Cookies from "js-cookie";

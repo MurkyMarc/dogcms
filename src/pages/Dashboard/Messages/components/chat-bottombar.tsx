@@ -7,9 +7,9 @@ import { Message, loggedInUserData } from "../data";
 import { EmojiPicker } from "./emoji-picker";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { cn } from "../../../utils/cn";
-import { buttonVariants } from "../../../components/ui/button";
-import { Textarea } from "../../../components/ui/textarea";
+import { cn } from "../../../../utils/cn";
+import { buttonVariants } from "../../../../components/ui/button";
+import { Textarea } from "../../../../components/ui/textarea";
 
 
 interface ChatBottombarProps {
