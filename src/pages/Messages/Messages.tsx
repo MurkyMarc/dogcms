@@ -49,7 +49,6 @@ export function Messages() {
                 <Sidebar
                     isCollapsed={isCollapsed || isMobile}
                     users={userData}
-                    isMobile={isMobile}
                     selectedUser={selectedUser}
                     setSelectedUser={setSelectedUser}
                 />

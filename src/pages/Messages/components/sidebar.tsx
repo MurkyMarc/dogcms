@@ -12,11 +12,9 @@ interface SidebarProps {
     onClick?: () => void;
     selectedUser: User;
     setSelectedUser: React.Dispatch<React.SetStateAction<User>>
-    isMobile: boolean;
 }
 
-export function Sidebar({ users, isCollapsed, isMobile, selectedUser, setSelectedUser }: SidebarProps) {
-    console.log(isMobile);
+export function Sidebar({ users, isCollapsed, selectedUser, setSelectedUser }: SidebarProps) {
     return (
         <div
             data-collapsed={isCollapsed}

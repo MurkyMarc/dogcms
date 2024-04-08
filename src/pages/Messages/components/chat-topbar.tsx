@@ -45,7 +45,6 @@ export default function ChatTopbar({ selectedUser, isMobile }: ChatTopbarProps) 
         if (searchInputRef.current) {
             searchInputRef.current.focus();
         }
-        console.log(searchString)
     }
 
     return (
