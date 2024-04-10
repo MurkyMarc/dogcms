@@ -14,10 +14,10 @@ export default function Dashboard() {
     }, [session, navigate]);
 
     return (
-        <div className="block border-t bg-background">
-            <div className="md:grid md:grid-cols-6 min-h-[50rem]">
-                <Sidebar className="hidden lg:block lg:col-span-1" />
-                <div className="h-full md:col-span-6 lg:col-span-5 border-l">
+        <div className="block bg-background">
+            <div className="grid min-h-screen w-full lg:grid-cols-[16rem_1fr]">
+                <Sidebar />
+                <div className="h-full flex flex-col">
                     <Outlet />
                 </div>
             </div>

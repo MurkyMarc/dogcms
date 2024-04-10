@@ -52,7 +52,7 @@ export function useGetDogsByOwner(ownerId: string) {
         queryFn: () => getDogsByOwnerId(client, ownerId)
             .then(result => {
                 const dogs = result.data || [];
-                dogs.map(dog => queryClient.setQueryData(['dog', dog.id], dog));
+                dogs.map(dog => queryClient.setQueryData(['dog', `${dog.id}`], dog));
                 return dogs;
             }),
         enabled: !!ownerId,
