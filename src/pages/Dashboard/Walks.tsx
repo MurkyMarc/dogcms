@@ -1,6 +1,5 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Button } from "../../components/ui/button";
-import { MenuIcon } from "../../components/ui/icons/MenuIcon";
 import { MenuDrawer } from "../../components/ui/menu-drawer";
 import { ScrollArea, ScrollBar } from "../../components/ui/scroll-area";
 import { Separator } from "../../components/ui/separator";
@@ -8,6 +7,7 @@ import { DogCard } from "./components/DogCard";
 import { useQueryClient } from "@tanstack/react-query";
 import { Session } from "@supabase/supabase-js";
 import { useGetDogsByOwner } from "../../hooks/useDog";
+import { Menu } from "lucide-react";
 
 export default function Schedules() {
     const queryClient = useQueryClient();
@@ -20,7 +20,7 @@ export default function Schedules() {
                 <div className="flex space-y-1">
                     <MenuDrawer>
                         <Button className="lg:hidden p-1 h-auto mr-6 border-purple-500" variant={"link"}>
-                            <MenuIcon className="h-7 w-8" />
+                            <Menu className="h-7 w-8" />
                         </Button>
                     </MenuDrawer>
                     <h2 className="text-2xl font-semibold tracking-tight">

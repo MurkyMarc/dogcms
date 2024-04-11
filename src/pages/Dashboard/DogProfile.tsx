@@ -56,7 +56,7 @@ export const DogProfile = () => {
 
     return (
         <>
-            <Header title={`${dog?.name}` || ""} />
+            <Header title={dog?.name ? dog.name : ""} />
             <div className="p-6 max-w-3xl space-y-8">
                 <div className="items-center">
                     {dog ?

@@ -11,6 +11,10 @@ import { Button } from "../ui/button"
 import { cn } from "../../utils/cn"
 import { Calendar } from "../ui/calendar"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
+import { useQueryClient } from "@tanstack/react-query"
+import { useUploadAvatar, useDeleteAvatar } from "../../hooks/useAvatar"
+import { useUpdateProfile } from "../../hooks/useProfile"
+import { Tables } from "../../utils/database.types"
 
 const languages = [
     { label: "English", value: "en" },
@@ -50,6 +54,13 @@ const defaultValues: Partial<AccountFormValues> = {
 }
 
 export function AccountForm() {
+    const queryClient = useQueryClient();
+    const uploadAvatarQuery = useUploadAvatar();
+    const deleteAvatarQuery = useDeleteAvatar();
+    const updateProfileQuery = useUpdateProfile();
+    const profile = queryClient.getQueryData<Tables<'profiles'>>(['myprofile']);
+    const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
+
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountFormSchema),
         defaultValues,
@@ -76,7 +87,7 @@ export function AccountForm() {
                         <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Your name" {...field} />
+                                <Input placeholder={profile?.username || "Your name"} {...field} />
                             </FormControl>
                             <FormDescription>
                                 This is the name that will be displayed on your profile and in
@@ -191,7 +202,7 @@ export function AccountForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Update account</Button>
+                <Button disabled={isUpdating} type="submit">Update account</Button>
             </form>
         </Form>
     )

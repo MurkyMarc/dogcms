@@ -3,7 +3,7 @@ import { getProfileById, updateProfile } from "../queries/profileQueries";
 import { Tables } from "../utils/database.types";
 import useSupabase from "./useSupabase";
 
-export function useGetProfileById(profileId: string, enabled = true, queryKey = 'profiles') {
+export function useGetMyProfileById(profileId: string, enabled = true) {
     const client = useSupabase();
 
     const queryFn = async () => {
@@ -12,7 +12,19 @@ export function useGetProfileById(profileId: string, enabled = true, queryKey = 
         );
     };
     const isValidProfile = (profileId !== "" && enabled === true) ? true : false;
-    return useQuery({ queryKey: [queryKey, profileId], queryFn, enabled: isValidProfile });
+    return useQuery({ queryKey: ['myprofile'], queryFn, enabled: isValidProfile });
+}
+
+export function useGetProfileById(profileId: string, enabled = true) {
+    const client = useSupabase();
+
+    const queryFn = async () => {
+        return await getProfileById(client, profileId).then(
+            (result) => result.data
+        );
+    };
+    const isValidProfile = (profileId !== "" && enabled === true) ? true : false;
+    return useQuery({ queryKey: ['profiles', profileId], queryFn, enabled: isValidProfile });
 }
 
 export function useUpdateProfile() {

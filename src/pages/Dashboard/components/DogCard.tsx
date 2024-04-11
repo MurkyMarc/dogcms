@@ -26,12 +26,10 @@ export function DogCard({
     const downloadImage = useCallback(async (path: string) => {
         try {
             setLoading(true);
-            const { url, error } = await getDogImageURL(supabase, path);
-            if (error) throw error;
-            setImageUrl(url);
+            const { url } = await getDogImageURL(supabase, path);
+            if(url) setImageUrl(url);
         } catch (error) {
-            // alert((error as Error).message); // TODO - toast
-            console.log("image not found")
+            alert((error as Error).message); // TODO - toast
         }
         setLoading(false);
     }, [supabase])

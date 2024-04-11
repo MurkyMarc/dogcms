@@ -1,22 +1,22 @@
 import { Link } from "react-router-dom";
-import { MountainIcon } from "./ui/icons/MountainIcon";
-import { useGetProfileById } from "../hooks/useProfile";
+import { useGetMyProfileById } from "../hooks/useProfile";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Session } from "@supabase/supabase-js";
 import { useSignOut } from "../hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import { Mountain } from "lucide-react";
 
 export default function Header() {
     const signOut = useSignOut();
     const queryClient = useQueryClient();
     const session = queryClient.getQueryData<Session>(['session']);
-    const { data: profile } = useGetProfileById(session?.user.id || "", !!session, 'myprofile');
+    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
 
     return (
         <header className="flex items-center justify-between w-full h-14 px-4 border-b gap-4 lg:px-6 bg-sky-100">
             <Link className="flex items-center" to="/">
-                <MountainIcon className="h-6 w-6" />
+                <Mountain className="h-6 w-6" />
                 <span className="hidden xs:block ml-2 text-xl font-bold">Uptown Dogs</span>
             </Link>
             {session ? (

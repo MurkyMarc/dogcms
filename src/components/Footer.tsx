@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
-import { FacebookIcon } from "./ui/icons/FacebookIcon";
-import { InstagramIcon } from "./ui/icons/InstagramIcon";
-import { TwitterIcon } from "./ui/icons/TwitterIcon";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 
 export default function Footer() {
     return (
@@ -47,13 +45,13 @@ export default function Footer() {
                 <div className="flex py-5 m-auto text-gray-800 text-sm flex-col items-center border-t max-w-screen-xl">
                     <div className="md:flex-auto md:flex-row-reverse mt-2 flex-row flex">
                         <Link to="#" className="w-6 mx-1">
-                            <FacebookIcon />
+                            <Facebook />
                         </Link>
                         <Link to="#" className="w-6 mx-1">
-                            <InstagramIcon />
+                            <Instagram />
                         </Link>
                         <Link to="#" className="w-6 mx-1">
-                            <TwitterIcon />
+                            <Twitter />
                         </Link>
                     </div>
                     <div className="my-5">© Copyright 2023. All Rights Reserved.</div>
