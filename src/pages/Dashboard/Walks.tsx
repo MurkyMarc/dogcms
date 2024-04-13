@@ -1,85 +1,137 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Button } from "../../components/ui/button";
-import { MenuDrawer } from "../../components/ui/menu-drawer";
-import { ScrollArea, ScrollBar } from "../../components/ui/scroll-area";
-import { Separator } from "../../components/ui/separator";
-import { DogCard } from "./components/DogCard";
-import { useQueryClient } from "@tanstack/react-query";
-import { Session } from "@supabase/supabase-js";
-import { useGetDogsByOwner } from "../../hooks/useDog";
-import { Menu } from "lucide-react";
+import { Header } from "./components/Header"
+import { Button } from "../../components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "../../components/ui/pagination"
 
-export default function Schedules() {
-    const queryClient = useQueryClient();
-    const session = queryClient.getQueryData<Session>(['session']);
-    const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
-
+export default function Walks() {
     return (
-        <div className="px-4 py-4">
-            <div className="flex items-center justify-between">
-                <div className="flex space-y-1">
-                    <MenuDrawer>
-                        <Button className="lg:hidden p-1 h-auto mr-6 border-purple-500" variant={"link"}>
-                            <Menu className="h-7 w-8" />
-                        </Button>
-                    </MenuDrawer>
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                        My Walks
-                        <p className="hidden xs:block text-sm text-muted-foreground">
-                            Your scheduled walks
-                        </p>
-                    </h2>
+        <>
+            <Header title="Walks" showSearch={true} />
+            <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+                <div className="flex items-center">
+                    <h1 className="font-semibold text-lg md:text-2xl">Upcoming Walks</h1>
+                    <Button className="ml-auto" size="sm">
+                        Schedule new walk
+                    </Button>
                 </div>
-                <div className="space-between flex items-center">
-                    <div className="ml-auto">
-                        <Button>
-                            <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add New
-                        </Button>
-                    </div>
+                <div className="border shadow-sm rounded-lg">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="">Date</TableHead>
+                                <TableHead className="">Time</TableHead>
+                                <TableHead className="hidden md:table-cell">Dog's Name</TableHead>
+                                <TableHead className="hidden md:table-cell">Walker's Name</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-medium">2022-04-01</TableCell>
+                                <TableCell>10:00 AM</TableCell>
+                                <TableCell className="hidden md:table-cell">Bailey</TableCell>
+                                <TableCell className="hidden md:table-cell">Emma Thompson</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">2022-04-02</TableCell>
+                                <TableCell>11:30 AM</TableCell>
+                                <TableCell className="hidden md:table-cell">Max</TableCell>
+                                <TableCell className="hidden md:table-cell">Oliver Smith</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">2022-04-03</TableCell>
+                                <TableCell>09:45 AM</TableCell>
+                                <TableCell className="hidden md:table-cell">Luna</TableCell>
+                                <TableCell className="hidden md:table-cell">Chloe Wilson</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">2022-04-04</TableCell>
+                                <TableCell>01:15 PM</TableCell>
+                                <TableCell className="hidden md:table-cell">Rocky</TableCell>
+                                <TableCell className="hidden md:table-cell">Jack Brown</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">2022-04-05</TableCell>
+                                <TableCell>03:30 PM</TableCell>
+                                <TableCell className="hidden md:table-cell">Daisy</TableCell>
+                                <TableCell className="hidden md:table-cell">Mia Johnson</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </div>
-            </div>
-            <Separator className="my-4" />
-            <div className="relative">
-                <ScrollArea>
-                    <div className="flex space-x-4 pb-4">
-                        {dogs?.map((dog) => (
-                            <DogCard
-                                id={`${dog.id}`}
-                                key={dog.name}
-                                dog={dog}
-                                className="min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md pb-2"
-                            />
-                        ))}
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-            </div>
-            <div className="mt-6 space-y-1">
-                <h2 className="text-2xl font-semibold tracking-tight">
-                    Test
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                    Test description
-                </p>
-            </div>
-            <Separator className="my-4" />
-            <div className="relative">
-                <ScrollArea>
-                    <div className="flex space-x-4 pb-4">
-                        {dogs?.map((dog) => (
-                            <DogCard
-                                id={`${dog.id}`}
-                                key={dog.name}
-                                dog={dog}
-                                className="md:w-[150px]"
-                            />
-                        ))}
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-            </div>
-        </div>
-    );
+                <div className="flex items-center mt-8">
+                    <h1 className="font-semibold text-lg md:text-2xl">Recurring Walks</h1>
+                </div>
+                <div className="border shadow-sm rounded-lg">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="">Day(s)</TableHead>
+                                <TableHead className="">Time</TableHead>
+                                <TableHead className="hidden md:table-cell">Dog's Name</TableHead>
+                                <TableHead className="hidden md:table-cell">Walker's Name</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-medium">Mon, Wed, Fri</TableCell>
+                                <TableCell>10:00 AM</TableCell>
+                                <TableCell className="hidden md:table-cell">Bailey</TableCell>
+                                <TableCell className="hidden md:table-cell">Emma Thompson</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Tue, Thu</TableCell>
+                                <TableCell>11:30 AM</TableCell>
+                                <TableCell className="hidden md:table-cell">Max</TableCell>
+                                <TableCell className="hidden md:table-cell">Oliver Smith</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Mon - Fri</TableCell>
+                                <TableCell>09:45 AM</TableCell>
+                                <TableCell className="hidden md:table-cell">Luna</TableCell>
+                                <TableCell className="hidden md:table-cell">Chloe Wilson</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Sat, Sun</TableCell>
+                                <TableCell>01:15 PM</TableCell>
+                                <TableCell className="hidden md:table-cell">Rocky</TableCell>
+                                <TableCell className="hidden md:table-cell">Jack Brown</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Mon - Fri</TableCell>
+                                <TableCell>03:30 PM</TableCell>
+                                <TableCell className="hidden md:table-cell">Daisy</TableCell>
+                                <TableCell className="hidden md:table-cell">Mia Johnson</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className="flex justify-end mt-4">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious href="#" />
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">1</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#" isActive>
+                                    2
+                                </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">3</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationNext href="#" />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            </main>
+        </>
+    )
 }
-

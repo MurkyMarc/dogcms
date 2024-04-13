@@ -7,18 +7,25 @@ import { Textarea } from '../../components/ui/textarea';
 import { Separator } from '../../components/ui/separator';
 import { DogCard } from './components/DogCard';
 import { CardPlaceholder } from './components/CardPlaceholder';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { fileTypeSupported, generateFilePath } from '../../utils/helpers';
 import { Header } from './components/Header';
+import { useQueryClient } from '@tanstack/react-query';
+import { Tables } from '../../utils/database.types';
 
 export const DogProfile = () => {
-    // todo - handle fake ids being passed in such as abc
+    // todo - handle fake ids being passed in such as abc or just for ids that dont exist
     const { id } = useParams();
-    const { data: dog, isFetched } = useGetDogById(id || "");
+    const queryClient = useQueryClient();
+    const { isFetched } = useGetDogById(id || "");
+    const dog = queryClient.getQueryData<Tables<'dogs'>>(['dogs', id]);
+
     const uploadDogImageQuery = useUploadDogImage();
     const updateDogQuery = useUpdateDog();
     const deleteDogImageQuery = useDeleteDogImage();
     const isUpdating = uploadDogImageQuery.isPending || updateDogQuery.isPending;
+
+    const [name, setName] = useState(dog?.name || "");
 
     const handleUploadImageButton = async () => document.getElementById('dogImageUploadInput')!.click();
 
@@ -31,6 +38,12 @@ export const DogProfile = () => {
         }
     }
 
+    useEffect(() => {
+        if (dog?.name) {
+            setName(dog.name);
+        }
+    }, [dog?.name]);
+
     async function updateDogImage(event: ChangeEvent<HTMLInputElement>) {
         try {
             if (dog) {
@@ -39,12 +52,12 @@ export const DogProfile = () => {
                 const newDog = { ...dog, image: filePath, updated_at: new Date().toISOString() };
 
                 const { error: uploadError } = await uploadDogImageQuery.mutateAsync({ filePath: filePath, file });
-                if (uploadError) throw new Error("There was an error when uploading the picture. Please try again later.");
+                if (uploadError) throw uploadError;
 
                 const { error: updateError } = await updateDogQuery.mutateAsync(newDog);
                 if (updateError) {
                     deleteDogImageQuery.mutateAsync({ filePath });
-                    throw new Error("There was an error when uploading the picture. Please try again later.");
+                    throw updateError;
                 }
 
                 deleteDogImageQuery.mutateAsync({ filePath: oldImage });
@@ -85,7 +98,7 @@ export const DogProfile = () => {
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                             <Label htmlFor="name">Name</Label>
-                            <Input id="name" placeholder={"Enter a name"} required value={dog?.name || ""} />
+                            <Input id="name" placeholder={"Enter a name"} required value={name} onChange={e => setName(e.target.value)}/>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="breed">Breed</Label>
