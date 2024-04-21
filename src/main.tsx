@@ -12,7 +12,8 @@ import { AuthStateListener } from './hooks/useAuth.ts'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: Infinity
+      gcTime: Infinity,
+      staleTime: 1000 * 10 // 10 seconds
     },
   },
 })

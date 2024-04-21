@@ -15,7 +15,7 @@ export function useGetMyProfileById(profileId: string, enabled = true) {
     return useQuery({ queryKey: ['myprofile'], queryFn, enabled: isValidProfile });
 }
 
-export function useGetProfileById(profileId: string, enabled = true) {
+export function useGetProfileById(profileId: string) {
     const client = useSupabase();
 
     const queryFn = async () => {
@@ -23,24 +23,25 @@ export function useGetProfileById(profileId: string, enabled = true) {
             (result) => result.data
         );
     };
-    const isValidProfile = (profileId !== "" && enabled === true) ? true : false;
-    return useQuery({ queryKey: ['profiles', profileId], queryFn, enabled: isValidProfile });
+
+    return useQuery({ queryKey: ['profiles', profileId], queryFn });
 }
 
 export function useUpdateProfile() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (params: { id: string; data: Partial<Tables<'profiles'>>; }) => {
-        return await updateProfile(client, params).then(
-            (result) => result.data
-        );
+    const mutationFn = async (profile: Partial<Tables<'profiles'>>) => {
+        return await updateProfile(client, profile);
     };
 
     return useMutation({
         mutationFn,
-        onSuccess: (_, variables) => {
-            queryClient.setQueryData(['profiles', variables.id], { id: variables.id, ...variables.data });
+        onSuccess: (_, profile) => {
+            queryClient.setQueryData(['myprofile'], profile);
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['myprofile'] })
         }
     });
 }

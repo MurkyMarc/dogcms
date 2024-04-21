@@ -11,10 +11,9 @@ import { Button } from "../ui/button"
 import { cn } from "../../utils/cn"
 import { Calendar } from "../ui/calendar"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
-import { useQueryClient } from "@tanstack/react-query"
 import { useUploadAvatar, useDeleteAvatar } from "../../hooks/useAvatar"
-import { useUpdateProfile } from "../../hooks/useProfile"
-import { Tables } from "../../utils/database.types"
+import { useGetMyProfileById, useUpdateProfile } from "../../hooks/useProfile"
+import { useSession } from "../../hooks/useAuth"
 
 const languages = [
     { label: "English", value: "en" },
@@ -54,11 +53,11 @@ const defaultValues: Partial<AccountFormValues> = {
 }
 
 export function AccountForm() {
-    const queryClient = useQueryClient();
+    const { data: session } = useSession();
     const uploadAvatarQuery = useUploadAvatar();
     const deleteAvatarQuery = useDeleteAvatar();
     const updateProfileQuery = useUpdateProfile();
-    const profile = queryClient.getQueryData<Tables<'profiles'>>(['myprofile']);
+    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
     const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
 
     const form = useForm<AccountFormValues>({

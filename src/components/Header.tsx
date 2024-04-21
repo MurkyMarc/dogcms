@@ -1,17 +1,15 @@
 import { Link } from "react-router-dom";
-import { useGetMyProfileById } from "../hooks/useProfile";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Session } from "@supabase/supabase-js";
-import { useSignOut } from "../hooks/useAuth";
-import { useQueryClient } from "@tanstack/react-query";
+import { useSession, useSignOut } from "../hooks/useAuth";
 import { Mountain } from "lucide-react";
+import { AccountCard } from "../pages/Account/components/AccountCard";
+import { useGetMyProfileById } from "../hooks/useProfile";
 
 export default function Header() {
     const signOut = useSignOut();
-    const queryClient = useQueryClient();
-    const session = queryClient.getQueryData<Session>(['session']);
-    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: session } = useSession();
+    const { data: profile, isFetched } = useGetMyProfileById(session?.user.id || "", !!session);
 
     return (
         <header className="flex items-center justify-between w-full h-14 px-4 border-b gap-4 lg:px-6 bg-sky-100">
@@ -19,24 +17,15 @@ export default function Header() {
                 <Mountain className="h-6 w-6" />
                 <span className="hidden xs:block ml-2 text-xl font-bold">Uptown Dogs</span>
             </Link>
-            {session ? (
+
+            {profile ? (
                 <div className="flex items-center space-x-2 ml-auto">
-                    <span className="hidden xs:block px-3">Hello, {profile?.username}</span>
+                    {profile.username ? <span className="hidden xs:block px-3">Hello, {profile.username}</span> : <span>Welcome</span>}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className="w-8 h-8 rounded-[50%] border-2 border-gray-200 relative" size="icon" variant="ghost">
                                 <span className="sr-only">Toggle user menu</span>
-                                <img
-                                    alt="profile picture"
-                                    className="rounded-[50%] object-cover w-full h-full"
-                                    width="32"
-                                    height="32"
-                                    src={"/placeholder.svg"}
-                                    style={{
-                                        aspectRatio: "32/32",
-                                        objectFit: "cover",
-                                    }}
-                                />
+                                <AccountCard profile={profile} className="rounded-full object-cover w-full h-full" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="mt-2 w-48 bg-white shadow-lg ring-1 ring-black ring-opacity-5 rounded-md py-1 focus:outline-none">
@@ -65,7 +54,7 @@ export default function Header() {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-            ) : <Link to="/login">Log In</Link>}
+            ) : isFetched ? <Link to="/login">Log In</Link> : null}
         </header>
     );
 }

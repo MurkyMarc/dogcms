@@ -7,22 +7,21 @@ export async function upsertProfile(client: TypedSupabaseClient, updates: Tables
 
 export async function updateProfile(
     client: TypedSupabaseClient,
-    params: {
-        id: string;
-        data: Partial<Tables<'profiles'>>;
-    }
+    profile: Partial<Tables<'profiles'>>
 ) {
+    const {id, ...data} = profile;
     return await client
         .from('profiles')
-        .update({ ...params.data })
-        .eq('id', params.id)
+        .update({ ...data })
+        .eq('id', id!)
         .throwOnError()
+        .single();
 }
 
 export async function getProfileById(client: TypedSupabaseClient, profileId: string) {
     return await client
         .from('profiles')
-        // .select(`username, website, avatar_url`)
+        // .select(`username, website, image`)
         .select(`*`)
         .eq('id', profileId)
         .throwOnError()

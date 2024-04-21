@@ -1,7 +1,9 @@
 import useSupabase from "./useSupabase";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getProfileById } from "../queries/profileQueries";
+import { Session } from "@supabase/supabase-js";
 
 export function AuthStateListener() {
     const supabase = useSupabase();
@@ -11,6 +13,8 @@ export function AuthStateListener() {
         const fetchInitialSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             queryClient.setQueryData(['session'], session);
+            const { data: profile } = await getProfileById(supabase, session?.user.id || "");
+            queryClient.setQueryData(['myprofile'], profile);
         };
 
         fetchInitialSession();
@@ -19,9 +23,13 @@ export function AuthStateListener() {
         });
 
         return () => subscription.unsubscribe();
-    }, [supabase.auth, queryClient]);
+    }, [supabase.auth, queryClient, supabase]);
 
     return null;
+}
+
+export function useSession() {
+    return useQuery<Session, Error>({ queryKey: ['session'] });
 }
 
 export function useSignInWithOTP() {

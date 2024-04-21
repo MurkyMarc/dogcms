@@ -1,10 +1,8 @@
-import { useEffect } from 'react'
-import { useGetProfileById } from '../../hooks/useProfile'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Separator } from "../../components/ui/separator"
 import { SidebarNav } from '../../components/ProfileSidebarNav'
-import { Session } from '@supabase/supabase-js'
-import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useSession } from '../../hooks/useAuth'
 
 const sidebarNavItems = [
     {
@@ -23,14 +21,11 @@ const sidebarNavItems = [
 
 export const Account = () => {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const session = queryClient.getQueryData<Session>(['session']);
-    const { error: profileError, isLoading: profileLoading } = useGetProfileById(session?.user.id || "", !!session);
+    const { data: session, isFetched } = useSession();
 
     useEffect(() => {
-        if ((!session) && !profileLoading) navigate("/login");
-        if (profileError) navigate("/login");
-    }, [session, navigate, profileLoading, profileError]);
+        if (isFetched && !session) navigate("/login");
+    }, [session, navigate, isFetched]);
 
     return (
         <div className="space-y-6 p-10 pb-16 md:block">

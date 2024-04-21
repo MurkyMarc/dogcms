@@ -7,14 +7,15 @@ export async function upsertDog(client: TypedSupabaseClient, dog: Tables<'dogs'>
 
 export async function updateDog(
     client: TypedSupabaseClient,
-    updates: Tables<'dogs'>
+    updates: Partial<Tables<'dogs'>>
 ) {
     const {id, ...data} = updates;
     return await client
         .from('dogs')
         .update({ ...data })
-        .eq('id', id)
+        .eq('id', id!)
         .throwOnError()
+        .single()
 }
 
 export async function getDogById(client: TypedSupabaseClient, id: string) {

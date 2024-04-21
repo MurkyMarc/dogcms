@@ -10,10 +10,10 @@ export async function getAvatarURL(client: TypedSupabaseClient, path: string) {
 }
 
 export async function getProfileAvatar(client: TypedSupabaseClient, profile: Tables<'profiles'>) {
-    if (!profile.avatar_url) {
+    if (!profile.image) {
         return { url: null, error: `profile: ${profile.id} does not have an image` }
     }
-    const { data, error } = await client.storage.from('avatars').download(profile.avatar_url);
+    const { data, error } = await client.storage.from('avatars').download(profile.image);
     if (error || data == null) return { url: null, error }
 
     const objectUrl = URL.createObjectURL(data);
@@ -21,13 +21,11 @@ export async function getProfileAvatar(client: TypedSupabaseClient, profile: Tab
 }
 
 export async function uploadAvatar(client: TypedSupabaseClient, url: string, file: Blob | File) {
-    const { data, error } = await client.storage.from('avatars').upload(url, file, { upsert: true });
-    return { data, error }
+    return await client.storage.from('avatars').upload(url, file);
 }
 
 export async function deleteAvatar(client: TypedSupabaseClient, url: string) {
-    const { data, error } = await client.storage.from('avatars').remove([url]);
-    return { data, error }
+    return await client.storage.from('avatars').remove([url]);
 }
 
 export async function getAvatarURLs(client: TypedSupabaseClient, paths: string[]) {

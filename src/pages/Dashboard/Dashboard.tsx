@@ -1,17 +1,15 @@
-import { Outlet, useNavigate } from "react-router-dom"
-import { Sidebar } from "./components/Sidebar"
 import { useEffect } from "react";
-import { Session } from "@supabase/supabase-js";
-import { useQueryClient } from "@tanstack/react-query";
+import { Outlet, useNavigate } from "react-router-dom"
+import { useSession } from "../../hooks/useAuth";
+import { Sidebar } from "./components/Sidebar"
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const session = queryClient.getQueryData<Session>(['session']);
+    const { data: session, isFetched} = useSession();
 
     useEffect(() => {
-        if (!session) navigate("/login");
-    }, [session, navigate]);
+        if (isFetched && !session) navigate("/login");
+    }, [session, navigate, isFetched]);
 
     return (
         <div className="block bg-background">

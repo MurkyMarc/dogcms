@@ -1,4 +1,3 @@
-
 import { cn } from "../../../utils/cn"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../../../components/ui/context-menu"
 import { Link } from "react-router-dom"
@@ -27,7 +26,7 @@ export function DogCard({
         try {
             setLoading(true);
             const { url } = await getDogImageURL(supabase, path);
-            if(url) setImageUrl(url);
+            if (url) setImageUrl(url);
         } catch (error) {
             alert((error as Error).message); // TODO - toast
         }
@@ -41,7 +40,7 @@ export function DogCard({
     return (
         <div className={cn(className)} {...props}>
             <Link to={`/dashboard/dogs/${dog.id}`}>
-                {loading ? <CardPlaceholder className={className} loading /> :
+                {loading ? <CardPlaceholder className={className} loading={loading} /> :
                     <ContextMenu>
                         <ContextMenuTrigger>
                             <img

@@ -10,21 +10,15 @@ import { CardPlaceholder } from './components/CardPlaceholder';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { fileTypeSupported, generateFilePath } from '../../utils/helpers';
 import { Header } from './components/Header';
-import { useQueryClient } from '@tanstack/react-query';
-import { Tables } from '../../utils/database.types';
 
 export const DogProfile = () => {
     // todo - handle fake ids being passed in such as abc or just for ids that dont exist
     const { id } = useParams();
-    const queryClient = useQueryClient();
-    const { isFetched } = useGetDogById(id || "");
-    const dog = queryClient.getQueryData<Tables<'dogs'>>(['dogs', id]);
-
+    const { data: dog, isFetched } = useGetDogById(id || "");
     const uploadDogImageQuery = useUploadDogImage();
     const updateDogQuery = useUpdateDog();
     const deleteDogImageQuery = useDeleteDogImage();
     const isUpdating = uploadDogImageQuery.isPending || updateDogQuery.isPending;
-
     const [name, setName] = useState(dog?.name || "");
 
     const handleUploadImageButton = async () => document.getElementById('dogImageUploadInput')!.click();
