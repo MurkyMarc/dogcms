@@ -15,6 +15,7 @@ export async function updateDog(
         .update({ ...data })
         .eq('id', id!)
         .select()
+        .single()
         .throwOnError()
 }
 

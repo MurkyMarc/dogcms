@@ -44,9 +44,6 @@ export function useUpdateProfile() {
         },
         onError: (error) => {
             toast.error(error.message);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['myprofile'] });
         }
     });
 }

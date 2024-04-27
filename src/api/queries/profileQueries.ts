@@ -15,6 +15,7 @@ export async function updateProfile(
         .update({ ...data })
         .eq('id', id!)
         .select()
+        .single()
         .throwOnError()
 }
 
