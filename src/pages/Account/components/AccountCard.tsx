@@ -4,6 +4,7 @@ import useSupabase from "../../../hooks/useSupabase"
 import { getAvatarURL } from "../../../queries/avatarQueries"
 import { useCallback, useEffect, useState } from "react"
 import { CardPlaceholder } from "../../Dashboard/components/CardPlaceholder"
+import { toast } from "sonner"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     profile: Tables<'profiles'>
@@ -26,7 +27,13 @@ export function AccountCard({
             const { url } = await getAvatarURL(supabase, path);
             if (url) setImageUrl(url);
         } catch (error) {
-            alert((error as Error).message); // TODO - toast
+            toast.error("Something went wrong", {
+                description: (error as Error).message,
+                cancel: {
+                    label: 'Dismiss',
+                    onClick: () => { },
+                }
+            });
         }
         setLoading(false);
     }, [supabase])
@@ -40,9 +47,9 @@ export function AccountCard({
             {loading ? <CardPlaceholder className={className} loading={true} /> :
                 <img
                     src={imageUrl}
-                    alt={profile.full_name || ""}
+                    alt={profile.username || ""}
                     className={cn(
-                        "hover:scale-105 rounded-md object-cover transition-all aspect-[3/4]", className
+                        "rounded-md object-cover transition-all aspect-[3/4]", className
                     )}
                 />
             }

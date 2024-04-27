@@ -6,16 +6,19 @@ import useSupabase from "../../../hooks/useSupabase"
 import { getDogImageURL } from "../../../queries/dogQueries"
 import { useCallback, useEffect, useState } from "react"
 import { CardPlaceholder } from "./CardPlaceholder"
+import { toast } from "sonner"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     dog: Tables<'dogs'>
     children?: React.ReactNode
+    imageStyles?: string
 }
 
 export function DogCard({
     dog,
     className,
     children,
+    imageStyles,
     ...props
 }: Props) {
     const supabase = useSupabase();
@@ -28,7 +31,13 @@ export function DogCard({
             const { url } = await getDogImageURL(supabase, path);
             if (url) setImageUrl(url);
         } catch (error) {
-            alert((error as Error).message); // TODO - toast
+            toast.error("Something went wrong", {
+                description: (error as Error).message,
+                cancel: {
+                    label: 'Dismiss',
+                    onClick: () => { },
+                }
+            });
         }
         setLoading(false);
     }, [supabase])
@@ -47,7 +56,7 @@ export function DogCard({
                                 src={imageUrl}
                                 alt={dog.name || ""}
                                 className={cn(
-                                    "hover:scale-105 rounded-md object-cover transition-all aspect-[3/4]", className
+                                    "rounded-md object-cover transition-all aspect-[3/4]", imageStyles
                                 )}
                             />
                         </ContextMenuTrigger>

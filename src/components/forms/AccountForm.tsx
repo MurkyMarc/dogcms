@@ -1,56 +1,48 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { toast } from "../ui/use-toast"
+import { toast } from "sonner"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Button } from "../ui/button"
 import { cn } from "../../utils/cn"
 import { Calendar } from "../ui/calendar"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
 import { useUploadAvatar, useDeleteAvatar } from "../../hooks/useAvatar"
 import { useGetMyProfileById, useUpdateProfile } from "../../hooks/useProfile"
 import { useSession } from "../../hooks/useAuth"
 
-const languages = [
-    { label: "English", value: "en" },
-    { label: "French", value: "fr" },
-    { label: "German", value: "de" },
-    { label: "Spanish", value: "es" },
-    { label: "Portuguese", value: "pt" },
-    { label: "Russian", value: "ru" },
-    { label: "Japanese", value: "ja" },
-    { label: "Korean", value: "ko" },
-    { label: "Chinese", value: "zh" },
-] as const
+const phoneRegex = new RegExp(
+    /^([\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+);
 
 const accountFormSchema = z.object({
-    name: z
+    f_name: z
         .string()
         .min(2, {
-            message: "Name must be at least 2 characters.",
+            message: "First name must be at least 2 characters.",
         })
         .max(30, {
-            message: "Name must not be longer than 30 characters.",
-        }),
+            message: "First name must not be longer than 30 characters.",
+        }).optional(),
+    l_name: z
+        .string()
+        .min(2, {
+            message: "Last name must be at least 2 characters.",
+        })
+        .max(30, {
+            message: "Last name must not be longer than 30 characters.",
+        }).optional(),
+    email: z.string().readonly().optional(),
     dob: z.date({
         required_error: "A date of birth is required.",
-    }),
-    language: z.string({
-        required_error: "Please select a language.",
-    }),
+    }).optional(),
+    phone: z.string().regex(phoneRegex, 'Please enter a valid phone number.').or(z.string().length(0)).optional(),
+    emergency_phone_1: z.string().regex(phoneRegex, 'Please enter a valid phone number.').or(z.string().length(0)).optional(),
+    emergency_phone_2: z.string().regex(phoneRegex, 'Please enter a valid phone number.').or(z.string().length(0)).optional()
 })
-
-type AccountFormValues = z.infer<typeof accountFormSchema>
-
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-    // name: "Your name",
-    // dob: new Date("2023-01-23"),
-}
 
 export function AccountForm() {
     const { data: session } = useSession();
@@ -60,19 +52,21 @@ export function AccountForm() {
     const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
     const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
 
+    type AccountFormValues = z.infer<typeof accountFormSchema>
+
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountFormSchema),
-        defaultValues,
+        defaultValues: { ...profile },
     })
 
-    function onSubmit(data: AccountFormValues) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+    function onSubmit(e: AccountFormValues) {
+        console.log(e)
+        toast("Loading...", {
+            cancel: {
+                label: 'Dismiss',
+                onClick: () => { },
+            },
+            duration: 2000
         })
     }
 
@@ -81,17 +75,40 @@ export function AccountForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="name"
+                    name="email"
+                    render={() => (
+                        <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input placeholder={session?.user.email} disabled readOnly />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="f_name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Name</FormLabel>
+                            <FormLabel>First Name</FormLabel>
                             <FormControl>
-                                <Input placeholder={profile?.username || "Your name"} {...field} />
+                                <Input placeholder={"Your name"} {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is the name that will be displayed on your profile and in
-                                emails.
-                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="l_name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder={"Your name"} {...field} />
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -134,7 +151,7 @@ export function AccountForm() {
                                 </PopoverContent>
                             </Popover>
                             <FormDescription>
-                                Your date of birth is used to calculate your age.
+                                This is used to calculate age.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -142,61 +159,39 @@ export function AccountForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="language"
+                    name="phone"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Language</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant="outline"
-                                            role="combobox"
-                                            className={cn(
-                                                "w-[200px] justify-between",
-                                                !field.value && "text-muted-foreground"
-                                            )}
-                                        >
-                                            {field.value
-                                                ? languages.find(
-                                                    (language) => language.value === field.value
-                                                )?.label
-                                                : "Select language"}
-                                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[200px] p-0">
-                                    <Command>
-                                        <CommandInput placeholder="Search language..." />
-                                        <CommandEmpty>No language found.</CommandEmpty>
-                                        <CommandGroup>
-                                            {languages.map((language) => (
-                                                <CommandItem
-                                                    value={language.label}
-                                                    key={language.value}
-                                                    onSelect={() => {
-                                                        form.setValue("language", language.value)
-                                                    }}
-                                                >
-                                                    <CheckIcon
-                                                        className={cn(
-                                                            "mr-2 h-4 w-4",
-                                                            language.value === field.value
-                                                                ? "opacity-100"
-                                                                : "opacity-0"
-                                                        )}
-                                                    />
-                                                    {language.label}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                            <FormDescription>
-                                This is the language that will be used in the dashboard.
-                            </FormDescription>
+                        <FormItem>
+                            <FormLabel>Phone Number</FormLabel>
+                            <FormControl>
+                                <Input placeholder={"000-000-0000"} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="emergency_phone_1"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Emergency Contact Phone 1</FormLabel>
+                            <FormControl>
+                                <Input placeholder={"000-000-0000"} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="emergency_phone_2"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Emergency Contact Phone 2</FormLabel>
+                            <FormControl>
+                                <Input placeholder={"000-000-0000"} {...field} />
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}

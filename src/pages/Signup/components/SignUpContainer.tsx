@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSignInWithOTP } from '../../../hooks/useAuth';
+import { toast } from 'sonner';
 
 export const SignUpContainer = () => {
     const [loading, setLoading] = useState(false);
@@ -12,9 +13,13 @@ export const SignUpContainer = () => {
         const { error } = await signInWithOTP(email);
 
         if (error) {
-            console.log(error);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            alert((error as any)?.error_description || error.message); // TODO - need to handle differently
+            toast.error("Something went wrong", {
+                description: (error as Error).message,
+                cancel: {
+                    label: 'Dismiss',
+                    onClick: () => { },
+                }
+            });
         } else {
             alert('Check your email for the login link!');
         }

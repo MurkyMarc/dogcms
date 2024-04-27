@@ -41,7 +41,7 @@ export function useUpdateProfile() {
             queryClient.setQueryData(['myprofile'], profile);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['myprofile'] })
+            queryClient.invalidateQueries({ queryKey: ['myprofile'] });
         }
     });
 }

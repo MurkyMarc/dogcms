@@ -26,6 +26,7 @@ export default function MyDogs() {
                             key={dog.name}
                             dog={dog}
                             className="space-y-3 aspect-[3/4] w-full rounded-md mb-2"
+                            imageStyles="hover:scale-105"
                         >
                             <div className="text-sm">
                                 <h3 className="font-medium leading-none">{dog.name}</h3>

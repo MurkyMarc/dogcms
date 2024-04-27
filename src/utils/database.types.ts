@@ -67,28 +67,46 @@ export type Database = {
       }
       profiles: {
         Row: {
-          full_name: string | null
+          bio: string
+          created_at: string
+          emergency_phone_1: string
+          emergency_phone_2: string
+          f_name: string
           id: string
-          image: string | null
-          updated_at: string | null
-          username: string | null
-          website: string | null
+          image: string
+          l_name: string
+          phone: string
+          role: string
+          updated_at: string
+          username: string
         }
         Insert: {
-          full_name?: string | null
+          bio?: string
+          created_at?: string
+          emergency_phone_1?: string
+          emergency_phone_2?: string
+          f_name?: string
           id: string
-          image?: string | null
-          updated_at?: string | null
-          username?: string | null
-          website?: string | null
+          image?: string
+          l_name?: string
+          phone?: string
+          role?: string
+          updated_at?: string
+          username?: string
         }
         Update: {
-          full_name?: string | null
+          bio?: string
+          created_at?: string
+          emergency_phone_1?: string
+          emergency_phone_2?: string
+          f_name?: string
           id?: string
-          image?: string | null
-          updated_at?: string | null
-          username?: string | null
-          website?: string | null
+          image?: string
+          l_name?: string
+          phone?: string
+          role?: string
+          updated_at?: string
+          username?: string
         }
         Relationships: [
           {

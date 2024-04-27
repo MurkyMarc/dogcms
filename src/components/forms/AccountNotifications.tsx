@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { toast } from "../ui/use-toast"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { Switch } from "../ui/switch"
 import { Link } from "react-router-dom"
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
+import { toast } from "sonner"
 
 const notificationsFormSchema = z.object({
     type: z.enum(["all", "mentions", "none"], {
@@ -22,7 +22,6 @@ const notificationsFormSchema = z.object({
 
 type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
 
-// This can come from your database or API.
 const defaultValues: Partial<NotificationsFormValues> = {
     communication_emails: false,
     marketing_emails: false,
@@ -36,14 +35,14 @@ export function NotificationsForm() {
         defaultValues,
     })
 
-    function onSubmit(data: NotificationsFormValues) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+    function onSubmit(e: NotificationsFormValues) {
+        console.log(e)
+        toast("Loading...", {
+            cancel: {
+                label: 'Dismiss',
+                onClick: () => { },
+            },
+            duration: 2000
         })
     }
 

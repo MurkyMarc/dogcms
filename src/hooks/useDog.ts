@@ -30,7 +30,7 @@ export function useUpdateDog() {
             queryClient.setQueryData(['dogs', `${dog.id}`], dog);
         },
         onSettled: (_response, _error, dog) => {
-            queryClient.invalidateQueries({ queryKey: ['dogs', `${dog.id}`] })
+            queryClient.invalidateQueries({ queryKey: ['dogs', `${dog.id}`] });
         }
     });
 }

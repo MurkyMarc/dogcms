@@ -9,6 +9,7 @@ import { useGetMyProfileById, useUpdateProfile } from "../../../hooks/useProfile
 import { ChangeEvent } from "react";
 import { fileTypeSupported, generateFilePath } from "../../../utils/helpers";
 import { useSession } from "../../../hooks/useAuth";
+import { toast } from "sonner";
 
 export const AccountProfile = () => {
     const { data: session } = useSession();
@@ -22,8 +23,13 @@ export const AccountProfile = () => {
         try {
             if (fileTypeSupported(event)) updateProfileImage(event);
         } catch (error) {
-            alert((error as Error).message);
-            // todo - add a toast
+            toast.error("Something went wrong", {
+                description: (error as Error).message,
+                cancel: {
+                    label: 'Dismiss',
+                    onClick: () => { },
+                },
+            });
         }
     }
 
@@ -46,9 +52,21 @@ export const AccountProfile = () => {
                 }
 
                 deleteAvatarQuery.mutateAsync({ profile, filePath: oldImage });
+                toast.success("Image updated successfully", {
+                    cancel: {
+                        label: 'Dismiss',
+                        onClick: () => { },
+                    },
+                });
             }
         } catch (error) {
-            alert(error);
+            toast.error("Something went wrong", {
+                description: (error as Error).message,
+                cancel: {
+                    label: 'Dismiss',
+                    onClick: () => { },
+                },
+            });
         }
     }
 
