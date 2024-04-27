@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProfileById, updateProfile } from "../queries/profileQueries";
-import { Tables } from "../utils/database.types";
+import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 
 export function useGetMyProfileById(profileId: string, enabled = true) {

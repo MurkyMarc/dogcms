@@ -1,9 +1,9 @@
 import { DogCard } from "./components/DogCard";
-import { useGetDogsByOwner } from "../../hooks/useDog";
+import { useGetDogsByOwner } from "../../api/hooks/useDog";
 import { CardPlaceholder } from "./components/CardPlaceholder";
 import { Header } from "./components/Header";
 import { Button } from "../../components/ui/button";
-import { useSession } from "../../hooks/useAuth";
+import { useSession } from "../../api/hooks/useAuth";
 
 export default function MyDogs() {
     const { data: session } = useSession();

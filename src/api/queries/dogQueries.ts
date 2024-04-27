@@ -1,5 +1,5 @@
-import { Tables } from "../utils/database.types";
-import { TypedSupabaseClient } from "../utils/supabase";
+import { Tables } from "../../utils/database.types";
+import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function upsertDog(client: TypedSupabaseClient, dog: Tables<'dogs'>) {
     return await client.from('dogs').insert(dog);

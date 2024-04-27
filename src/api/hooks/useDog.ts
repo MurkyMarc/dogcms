@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
-import { Tables } from "../utils/database.types";
+import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 
 export function useGetDogById(id: string, enabled = true) {

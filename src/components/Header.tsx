@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { useSession, useSignOut } from "../hooks/useAuth";
+import { useSession, useSignOut } from "../api/hooks/useAuth";
 import { Mountain } from "lucide-react";
 import { AccountCard } from "../pages/Account/components/AccountCard";
-import { useGetMyProfileById } from "../hooks/useProfile";
+import { useGetMyProfileById } from "../api/hooks/useProfile";
 
 export default function Header() {
     const signOut = useSignOut();

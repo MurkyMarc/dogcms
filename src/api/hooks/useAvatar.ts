@@ -1,7 +1,6 @@
 import useSupabase from "./useSupabase";
 import { deleteAvatar, uploadAvatar } from "../queries/avatarQueries";
 import { useMutation } from "@tanstack/react-query";
-import { Tables } from "../utils/database.types";
 
 export function useUploadAvatar() {
     const client = useSupabase();
@@ -16,7 +15,7 @@ export function useUploadAvatar() {
 export function useDeleteAvatar() {
     const client = useSupabase();
 
-    const mutationFn = async ({ filePath }: { profile: Partial<Tables<'profiles'>>, filePath: string }) => {
+    const mutationFn = async ({ filePath }: { filePath: string }) => {
         return await deleteAvatar(client, filePath);
     }
 

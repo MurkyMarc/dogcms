@@ -57,26 +57,4 @@ export function useSignOut() {
     return signOut;
 }
 
-// export function useSession() {
-//     const supabase = useSupabase();
-//     const queryClient = useQueryClient();
-//     const queryKey = ['session'];
-    
-//     const queryFn = async () => {
-//         const { data } = await supabase.auth.getSession();
-//         return data.session;
-//     }
-//     const { data: session, ...queryInfo } = useQuery({ queryKey, queryFn });
-
-//     useEffect(() => {
-//         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-//             queryClient.setQueryData(['session'], session);
-//         });
-
-//         return () => subscription.unsubscribe();
-//     }, [supabase.auth, queryClient]);
-
-//     return { session, ...queryInfo };
-// }
-
 // TODO - when someone updates their profile - revalidate session

@@ -1,5 +1,5 @@
-import { Tables } from "../utils/database.types";
-import { TypedSupabaseClient } from "../utils/supabase";
+import { Tables } from "../../utils/database.types";
+import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function upsertProfile(client: TypedSupabaseClient, updates: Tables<'profiles'>) {
     return await client.from('profiles').upsert(updates);

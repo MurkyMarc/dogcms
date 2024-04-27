@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom"
-import { useSession } from "../../hooks/useAuth";
+import { useSession } from "../../api/hooks/useAuth";
 import { Sidebar } from "./components/Sidebar"
 
 export default function Dashboard() {

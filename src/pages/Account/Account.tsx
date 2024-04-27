@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { Separator } from "../../components/ui/separator"
 import { SidebarNav } from './components/SidebarNav'
 import { useEffect } from 'react'
-import { useSession } from '../../hooks/useAuth'
+import { useSession } from '../../api/hooks/useAuth'
 
 const sidebarNavItems = [
     {

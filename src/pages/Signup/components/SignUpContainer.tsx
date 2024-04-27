@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSignInWithOTP } from '../../../hooks/useAuth';
+import { useSignInWithOTP } from '../../../api/hooks/useAuth';
 import { toast } from 'sonner';
 
 export const SignUpContainer = () => {

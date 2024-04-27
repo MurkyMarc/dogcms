@@ -4,11 +4,11 @@ import { AccountCard } from "./AccountCard"
 import { CardPlaceholder } from "../../Dashboard/components/CardPlaceholder";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
-import { useUploadAvatar, useDeleteAvatar } from "../../../hooks/useAvatar";
-import { useGetMyProfileById, useUpdateProfile } from "../../../hooks/useProfile";
+import { useUploadAvatar, useDeleteAvatar } from "../../../api/hooks/useAvatar";
+import { useGetMyProfileById, useUpdateProfile } from "../../../api/hooks/useProfile";
 import { ChangeEvent } from "react";
 import { fileTypeSupported, generateFilePath } from "../../../utils/helpers";
-import { useSession } from "../../../hooks/useAuth";
+import { useSession } from "../../../api/hooks/useAuth";
 import { toast } from "sonner";
 
 export const AccountProfile = () => {

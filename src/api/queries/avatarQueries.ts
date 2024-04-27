@@ -1,5 +1,5 @@
-import { Tables } from "../utils/database.types";
-import { TypedSupabaseClient } from "../utils/supabase";
+import { Tables } from "../../utils/database.types";
+import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function getAvatarURL(client: TypedSupabaseClient, path: string) {
     const { data, error } = await client.storage.from('avatars').download(path);
@@ -11,7 +11,7 @@ export async function getAvatarURL(client: TypedSupabaseClient, path: string) {
 
 export async function getProfileAvatar(client: TypedSupabaseClient, profile: Tables<'profiles'>) {
     if (!profile.image) {
-        return { url: null, error: `profile: ${profile.id} does not have an image` }
+        return { url: null, error: new Error(`profile: ${profile.id} does not have an image`) }
     }
     const { data, error } = await client.storage.from('avatars').download(profile.image);
     if (error || data == null) return { url: null, error }
@@ -36,7 +36,6 @@ export async function getAvatarURLs(client: TypedSupabaseClient, paths: string[]
             const objectUrl = URL.createObjectURL(data);
             return { path, objectUrl, error: null };
         } catch (error) {
-            console.error(`Failed to fetch avatar at ${path}:`, error);
             return { path, objectUrl: null, error };
         }
     });

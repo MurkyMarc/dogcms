@@ -6,8 +6,8 @@ import { toast } from "sonner"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
-import { useGetMyProfileById } from "../../hooks/useProfile"
-import { useSession } from "../../hooks/useAuth"
+import { useGetMyProfileById } from "../../api/hooks/useProfile"
+import { useSession } from "../../api/hooks/useAuth"
 
 const profileFormSchema = z.object({
     username: z
