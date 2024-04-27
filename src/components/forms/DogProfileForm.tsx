@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { toast } from "sonner"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
@@ -9,7 +8,7 @@ import { useGetMyProfileById, useUpdateProfile } from "../../api/hooks/useProfil
 import { useSession } from "../../api/hooks/useAuth"
 import { useUploadAvatar, useDeleteAvatar } from "../../api/hooks/useAvatar"
 import { useState } from "react"
-import { phoneFormat } from "../../utils/helpers"
+import { loadingToast, phoneFormat } from "../../utils/helpers"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
@@ -67,13 +66,7 @@ export function DogProfileForm() {
 
     function onSubmit(e: AccountFormValues) {
         console.log(e)
-        toast("Loading...", {
-            cancel: {
-                label: 'Dismiss',
-                onClick: () => { },
-            },
-            duration: 2000
-        })
+        loadingToast();
     }
 
     return (

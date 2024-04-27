@@ -7,7 +7,7 @@ import { Switch } from "../ui/switch"
 import { Link } from "react-router-dom"
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
-import { toast } from "sonner"
+import { loadingToast } from "../../utils/helpers"
 
 const notificationsFormSchema = z.object({
     type: z.enum(["all", "mentions", "none"], {
@@ -37,13 +37,7 @@ export function NotificationsForm() {
 
     function onSubmit(e: NotificationsFormValues) {
         console.log(e)
-        toast("Loading...", {
-            cancel: {
-                label: 'Dismiss',
-                onClick: () => { },
-            },
-            duration: 2000
-        })
+        loadingToast();
     }
 
     return (

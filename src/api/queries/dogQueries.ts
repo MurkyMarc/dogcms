@@ -14,8 +14,8 @@ export async function updateDog(
         .from('dogs')
         .update({ ...data })
         .eq('id', id!)
+        .select()
         .throwOnError()
-        .single()
 }
 
 export async function getDogById(client: TypedSupabaseClient, id: string) {

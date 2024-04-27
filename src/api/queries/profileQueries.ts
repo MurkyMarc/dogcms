@@ -14,15 +14,15 @@ export async function updateProfile(
         .from('profiles')
         .update({ ...data })
         .eq('id', id!)
+        .select()
         .throwOnError()
-        .single();
 }
 
 export async function getProfileById(client: TypedSupabaseClient, profileId: string) {
     return await client
         .from('profiles')
         // .select(`username, website, image`)
-        .select(`*`)
+        .select()
         .eq('id', profileId)
         .throwOnError()
         .single();

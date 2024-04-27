@@ -1,40 +1,48 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
-import { toast } from "sonner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { useGetMyProfileById, useUpdateProfile } from "../../api/hooks/useProfile"
 import { useSession } from "../../api/hooks/useAuth"
 import { useUploadAvatar, useDeleteAvatar } from "../../api/hooks/useAvatar"
-import { phoneFormat } from "../../utils/helpers"
+import { loadingToast, phoneFormat } from "../../utils/helpers"
 
 const phoneRegex = new RegExp(
     /^([\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
 const accountFormSchema = z.object({
+    email: z.string().readonly().optional(),
     f_name: z
         .string()
-        .min(2, {
-            message: "First name must be at least 2 characters.",
-        })
-        .max(30, {
-            message: "First name must not be longer than 30 characters.",
-        }).optional(),
+        .min(2, "First name must be at least 2 characters.")
+        .max(30, "First name must not be longer than 30 characters.")
+        .optional(),
     l_name: z
         .string()
-        .min(2, {
-            message: "Last name must be at least 2 characters.",
-        })
-        .max(30, {
-            message: "Last name must not be longer than 30 characters.",
-        }).optional(),
-    email: z.string().readonly().optional(),
-    phone: z.string().min(14, "A phone number requires 10 digits").regex(phoneRegex).or(z.string().length(0)).optional(),
-    emergency_phone_1: z.string().min(14, "A phone number requires 10 digits").regex(phoneRegex).or(z.string().length(0)).optional(),
-    emergency_phone_2: z.string().min(14, "A phone number requires 10 digits").regex(phoneRegex).or(z.string().length(0)).optional()
+        .min(2, "Last name must be at least 2 characters.")
+        .max(30, "Last name must not be longer than 30 characters.")
+        .optional(),
+    phone: z
+        .string()
+        .min(14, "A phone number requires 10 digits.")
+        .regex(phoneRegex)
+        .or(z.string().length(0))
+        .optional(),
+    emergency_phone_1: z
+        .string()
+        .min(14, "A phone number requires 10 digits.")
+        .regex(phoneRegex)
+        .or(z.string().length(0))
+        .optional(),
+    emergency_phone_2: z
+        .string()
+        .min(14, "A phone number requires 10 digits.")
+        .regex(phoneRegex)
+        .or(z.string().length(0))
+        .optional()
 })
 
 export function AccountForm() {
@@ -57,15 +65,9 @@ export function AccountForm() {
         },
     })
 
-    function onSubmit(e: AccountFormValues) {
-        console.log(e)
-        toast("Loading...", {
-            cancel: {
-                label: "Dismiss",
-                onClick: () => { },
-            },
-            duration: 2000
-        })
+    async function onSubmit(e: AccountFormValues) {
+        loadingToast();
+        if(profile) updateProfileQuery.mutate({id: profile.id, ...e});
     }
 
     return (

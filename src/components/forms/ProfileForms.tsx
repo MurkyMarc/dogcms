@@ -2,12 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "../ui/button"
-import { toast } from "sonner"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 import { useGetMyProfileById } from "../../api/hooks/useProfile"
 import { useSession } from "../../api/hooks/useAuth"
+import { loadingToast } from "../../utils/helpers"
 
 const profileFormSchema = z.object({
     username: z
@@ -42,13 +42,7 @@ export function ProfileForm() {
 
     function onSubmit(e: ProfileFormValues) {
         console.log(e)
-        toast("Loading...", {
-            cancel: {
-                label: 'Dismiss',
-                onClick: () => { },
-            },
-            duration: 2000
-        })
+        loadingToast();
     }
 
     return (

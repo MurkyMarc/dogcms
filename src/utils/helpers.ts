@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react';
+import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 
 export const generateFilePath = (event: ChangeEvent<HTMLInputElement>) => {
@@ -131,4 +132,14 @@ export function phoneFormat(input: string) {
     if (size > 3) { input = input.slice(0, 4) + ") " + input.slice(4, 11) }
     if (size > 6) { input = input.slice(0, 9) + "-" + input.slice(9) }
     return input;
+}
+
+export function loadingToast() {
+    toast("Loading...", {
+        cancel: {
+            label: "Dismiss",
+            onClick: () => { },
+        },
+        duration: 2000
+    })
 }
