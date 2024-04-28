@@ -5,9 +5,8 @@ import { Button } from "../ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
-import { useGetMyProfileById } from "../../api/hooks/useProfile"
+import { useGetMyProfileById, useUpdateProfile } from "../../api/hooks/useProfile"
 import { useSession } from "../../api/hooks/useAuth"
-import { loadingToast } from "../../utils/helpers"
 
 const profileFormSchema = z.object({
     username: z
@@ -31,6 +30,7 @@ const profileFormSchema = z.object({
 export function ProfileForm() {
     const { data: session } = useSession();
     const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
+    const updateProfileQuery = useUpdateProfile();
 
     type ProfileFormValues = z.infer<typeof profileFormSchema>
 
@@ -40,9 +40,8 @@ export function ProfileForm() {
         mode: "onChange",
     })
 
-    function onSubmit(e: ProfileFormValues) {
-        console.log(e)
-        loadingToast();
+    async function onSubmit(e: ProfileFormValues) {
+        if (profile) updateProfileQuery.mutate({ id: profile.id, ...e });
     }
 
     return (

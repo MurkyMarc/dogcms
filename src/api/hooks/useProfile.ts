@@ -3,6 +3,7 @@ import { getProfileById, updateProfile } from "../queries/profileQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { toast } from "sonner";
+import { loadingToast } from "../../utils/helpers";
 
 export function useGetMyProfileById(profileId: string, enabled = true) {
     const client = useSupabase();
@@ -38,12 +39,11 @@ export function useUpdateProfile() {
 
     return useMutation({
         mutationFn,
+        onMutate: () => loadingToast(),
         onSuccess: ({data: profile}) => {
             queryClient.setQueryData(['myprofile'], profile);
             toast.success("Updated successfully.")
         },
-        onError: (error) => {
-            toast.error(error.message);
-        }
+        onError: (error) => toast.error(error.message)
     });
 }
