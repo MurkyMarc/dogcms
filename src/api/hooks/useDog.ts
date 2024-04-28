@@ -33,9 +33,6 @@ export function useUpdateDog() {
             queryClient.setQueryData(['dogs', `${dog?.id}`], dog);
             toast.success("Updated successfully.")
         },
-        onSettled: (_response, _error, dog) => {
-            queryClient.invalidateQueries({ queryKey: ['dogs', `${dog.id}`] });
-        },
         onError: (error) => toast.error(error.message)
     });
 }
