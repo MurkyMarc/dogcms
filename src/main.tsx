@@ -41,7 +41,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthStateListener />
-        <Toaster richColors />
+        <Toaster richColors duration={3000} />
         <App />
         <ReactQueryDevtools initialIsOpen={true} />
       </BrowserRouter>

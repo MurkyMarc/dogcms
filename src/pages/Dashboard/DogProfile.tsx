@@ -8,9 +8,8 @@ import { Separator } from '../../components/ui/separator';
 import { DogCard } from './components/DogCard';
 import { CardPlaceholder } from './components/CardPlaceholder';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { fileTypeSupported, generateFilePath } from '../../utils/helpers';
+import { errorToast, fileTypeSupported, generateFilePath, successToast } from '../../utils/helpers';
 import { Header } from './components/Header';
-import { toast } from 'sonner';
 
 export const DogProfile = () => {
     // todo - handle fake ids being passed in such as abc or just for ids that dont exist
@@ -28,13 +27,7 @@ export const DogProfile = () => {
         try {
             if (fileTypeSupported(event)) updateDogImage(event);
         } catch (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                }
-            });
+            errorToast(error);
         }
     }
 
@@ -61,21 +54,10 @@ export const DogProfile = () => {
                 }
 
                 deleteDogImageQuery.mutateAsync({ filePath: oldImage });
-                toast.success("Image was updated successfully", {
-                    cancel: {
-                        label: 'Dismiss',
-                        onClick: () => { },
-                    },
-                });
+                successToast("Image was updated successfully");
             }
         } catch (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                }
-            });
+            errorToast(error);
         }
     }
 

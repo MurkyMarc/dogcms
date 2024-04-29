@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSignInWithOTP } from '../../../api/hooks/useAuth';
-import { toast } from 'sonner';
+import { errorToast } from '../../../utils/helpers';
 
 export const SignUpContainer = () => {
     const [loading, setLoading] = useState(false);
@@ -13,13 +13,7 @@ export const SignUpContainer = () => {
         const { error } = await signInWithOTP(email);
 
         if (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                }
-            });
+            errorToast("Something went wrong");
         } else {
             alert('Check your email for the login link!');
         }

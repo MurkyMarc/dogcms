@@ -6,7 +6,7 @@ import useSupabase from "../../../api/hooks/useSupabase"
 import { getDogImageURL } from "../../../api/queries/dogQueries"
 import { useCallback, useEffect, useState } from "react"
 import { CardPlaceholder } from "./CardPlaceholder"
-import { toast } from "sonner"
+import { errorToast } from "../../../utils/helpers"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     dog: Tables<'dogs'>
@@ -31,13 +31,7 @@ export function DogCard({
             const { url } = await getDogImageURL(supabase, path);
             if (url) setImageUrl(url);
         } catch (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                }
-            });
+            errorToast(error);
         }
         setLoading(false);
     }, [supabase])

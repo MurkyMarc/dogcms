@@ -2,8 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
-import { loadingToast } from "../../utils/helpers";
-import { toast } from "sonner";
+import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
 export function useGetDogById(id: string, enabled = true) {
     const client = useSupabase();
@@ -31,9 +30,11 @@ export function useUpdateDog() {
         onMutate: () => loadingToast(),
         onSuccess: ({ data: dog }) => {
             queryClient.setQueryData(['dogs', `${dog?.id}`], dog);
-            toast.success("Updated successfully.")
+            successToast("Updated successfully.")
         },
-        onError: (error) => toast.error(error.message)
+        onError: (error) => {
+            errorToast(error)
+        }
     });
 }
 

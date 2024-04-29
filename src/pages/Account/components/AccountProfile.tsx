@@ -7,9 +7,8 @@ import { Input } from "../../../components/ui/input";
 import { useUploadAvatar, useDeleteAvatar } from "../../../api/hooks/useAvatar";
 import { useGetMyProfileById, useUpdateProfile } from "../../../api/hooks/useProfile";
 import { ChangeEvent } from "react";
-import { fileTypeSupported, generateFilePath } from "../../../utils/helpers";
+import { errorToast, fileTypeSupported, generateFilePath, successToast } from "../../../utils/helpers";
 import { useSession } from "../../../api/hooks/useAuth";
-import { toast } from "sonner";
 
 export const AccountProfile = () => {
     const { data: session } = useSession();
@@ -23,13 +22,7 @@ export const AccountProfile = () => {
         try {
             if (fileTypeSupported(event)) updateProfileImage(event);
         } catch (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                },
-            });
+            errorToast(error);
         }
     }
 
@@ -47,26 +40,15 @@ export const AccountProfile = () => {
 
                 const { error: updateError } = await updateProfileQuery.mutateAsync(newProfile);
                 if (updateError) {
-                    deleteAvatarQuery.mutateAsync({ profile, filePath });
+                    deleteAvatarQuery.mutateAsync({ filePath });
                     throw updateError;
                 }
 
-                deleteAvatarQuery.mutateAsync({ profile, filePath: oldImage });
-                toast.success("Image updated successfully", {
-                    cancel: {
-                        label: 'Dismiss',
-                        onClick: () => { },
-                    },
-                });
+                deleteAvatarQuery.mutateAsync({ filePath: oldImage });
+                successToast("Image updated successfully");
             }
         } catch (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                },
-            });
+            errorToast(error);
         }
     }
 

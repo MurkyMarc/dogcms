@@ -2,8 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProfileById, updateProfile } from "../queries/profileQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
-import { toast } from "sonner";
-import { loadingToast } from "../../utils/helpers";
+import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
 export function useGetMyProfileById(profileId: string, enabled = true) {
     const client = useSupabase();
@@ -40,10 +39,12 @@ export function useUpdateProfile() {
     return useMutation({
         mutationFn,
         onMutate: () => loadingToast(),
-        onSuccess: ({data: profile}) => {
+        onSuccess: ({ data: profile }) => {
             queryClient.setQueryData(['myprofile'], profile);
-            toast.success("Updated successfully.")
+            successToast("Updated successfully.")
         },
-        onError: (error) => toast.error(error.message)
+        onError: (error) => {
+            errorToast(error)
+        }
     });
 }

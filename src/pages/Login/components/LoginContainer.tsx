@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSignInWithOTP } from '../../../api/hooks/useAuth';
 import loginBanner from '/loginBanner.jpeg';
-import { toast } from 'sonner';
+import { errorToast } from '../../../utils/helpers';
 
 export const LoginContainer = () => {
     const [loading, setLoading] = useState(false);
@@ -14,13 +14,7 @@ export const LoginContainer = () => {
         const { error } = await signInWithOTP(email);
 
         if (error) {
-            toast.error("Something went wrong", {
-                description: (error as Error).message,
-                cancel: {
-                    label: 'Dismiss',
-                    onClick: () => { },
-                }
-            });
+            errorToast(error);
         } else {
             alert('Check your email for the login link!');
         }

@@ -143,3 +143,21 @@ export function loadingToast() {
         duration: 2000
     })
 }
+
+export function successToast(message: string) {
+    toast.success(message, {
+        cancel: {
+            label: 'Dismiss',
+            onClick: () => {},
+        }
+    })
+}
+
+export function errorToast(error: unknown) {
+    toast.error((error as Error).message, {
+        cancel: {
+            label: 'Dismiss',
+            onClick: () => {},
+        }
+    })
+}
