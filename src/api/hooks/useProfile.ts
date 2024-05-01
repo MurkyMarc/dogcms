@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProfileById, updateProfile } from "../queries/profileQueries";
+import { deleteAvatar, getProfileById, updateProfile, uploadProfileAvatar } from "../queries/profileQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
@@ -47,4 +47,24 @@ export function useUpdateProfile() {
             errorToast(error)
         }
     });
+}
+
+export function useUploadAvatar() {
+    const client = useSupabase();
+
+    const mutationFn = async ({ filePath, file }: { filePath: string, file: File | Blob }) => {
+        return await uploadProfileAvatar(client, filePath, file);
+    }
+
+    return useMutation({ mutationFn });
+}
+
+export function useDeleteAvatar() {
+    const client = useSupabase();
+
+    const mutationFn = async ({ filePath }: { filePath: string }) => {
+        return await deleteAvatar(client, filePath);
+    }
+
+    return useMutation({ mutationFn });
 }

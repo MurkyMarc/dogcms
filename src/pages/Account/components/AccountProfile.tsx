@@ -1,8 +1,7 @@
 import { ChangeEvent } from "react";
 import { useIsMutating } from "@tanstack/react-query";
 import { errorToast, fileTypeSupported, generateFilePath, successToast } from "../../../utils/helpers";
-import { useDeleteAvatar, useUploadAvatar } from "../../../api/hooks/useAvatar";
-import { useGetMyProfileById, useUpdateProfile } from "../../../api/hooks/useProfile";
+import { useDeleteAvatar, useGetMyProfileById, useUpdateProfile, useUploadAvatar } from "../../../api/hooks/useProfile";
 import { useSession } from "../../../api/hooks/useAuth";
 import { AccountCard } from "./AccountCard"
 import { Input } from "../../../components/ui/input";

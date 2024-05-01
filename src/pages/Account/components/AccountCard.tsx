@@ -1,7 +1,7 @@
 import { cn } from "../../../utils/cn"
 import { Tables } from "../../../utils/database.types"
 import useSupabase from "../../../api/hooks/useSupabase"
-import { getAvatarURL } from "../../../api/queries/avatarQueries"
+import { getProfileAvatarUrl } from "../../../api/queries/profileQueries"
 import { useCallback, useEffect, useState } from "react"
 import { CardPlaceholder } from "../../Dashboard/components/CardPlaceholder"
 import { errorToast } from "../../../utils/helpers"
@@ -21,19 +21,19 @@ export function AccountCard({
     const [imageUrl, setImageUrl] = useState("/placeholder.svg");
     const [loading, setLoading] = useState<boolean>(true);
 
-    const downloadImage = useCallback(async (path: string) => {
+    const downloadImage = useCallback(async () => {
         try {
             setLoading(true);
-            const { url } = await getAvatarURL(supabase, path);
+            const { url } = await getProfileAvatarUrl(supabase, profile);
             if (url) setImageUrl(url);
         } catch (error) {
             errorToast(error);
         }
         setLoading(false);
-    }, [supabase])
+    }, [profile, supabase])
 
     useEffect(() => {
-        if (profile.image) downloadImage(profile.image);
+        if (profile.image) downloadImage();
     }, [profile.image, downloadImage])
 
     return (
