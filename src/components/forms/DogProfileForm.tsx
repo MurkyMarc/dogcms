@@ -44,11 +44,12 @@ export function DogProfileForm({ dog }: DogFormProps) {
 
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountFormSchema),
-        defaultValues: { ...dog },
+        defaultValues: { ...dog, dob: new Date(dog.dob) },
     })
 
     async function onSubmit(e: AccountFormValues) {
-        updateDogQuery.mutate({ id: dog.id, ...e });
+        const data = {id: dog.id, ...e, dob: e.dob?.toISOString()};
+        updateDogQuery.mutate(data);
     }
 
     return (
@@ -110,7 +111,9 @@ export function DogProfileForm({ dog }: DogFormProps) {
                                         mode="single"
                                         selected={field.value}
                                         onSelect={field.onChange}
-                                        initialFocus
+                                        fromYear={2000}
+                                        toYear={new Date().getFullYear()}
+                                        captionLayout="dropdown-buttons"
                                     />
                                 </PopoverContent>
                             </Popover>

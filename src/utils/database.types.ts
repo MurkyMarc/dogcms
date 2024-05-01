@@ -15,6 +15,7 @@ export type Database = {
           bio: string
           breed: string
           created_at: string
+          dob: string
           group_walks: boolean
           id: number
           image: string
@@ -30,6 +31,7 @@ export type Database = {
           bio?: string
           breed?: string
           created_at?: string
+          dob: string
           group_walks?: boolean
           id?: number
           image?: string
@@ -45,6 +47,7 @@ export type Database = {
           bio?: string
           breed?: string
           created_at?: string
+          dob?: string
           group_walks?: boolean
           id?: number
           image?: string
