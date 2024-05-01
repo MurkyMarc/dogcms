@@ -1,7 +1,7 @@
 import useSupabase from "./useSupabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import { getProfileById } from "../queries/profileQueries";
 import { Session } from "@supabase/supabase-js";
 
@@ -44,14 +44,13 @@ export function useSignInWithOTP() {
 }
 
 export function useSignOut() {
-    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const client = useSupabase();
 
     const signOut = async () => {
         await client.auth.signOut();
         queryClient.clear();
-        navigate('/');
+        redirect("/");
     };
 
     return signOut;

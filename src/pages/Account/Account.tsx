@@ -1,8 +1,9 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Separator } from "../../components/ui/separator"
 import { SidebarNav } from './components/SidebarNav'
 import { useEffect } from 'react'
 import { useSession } from '../../api/hooks/useAuth'
+import { redirect } from "react-router-dom";
 
 const sidebarNavItems = [
     {
@@ -20,12 +21,11 @@ const sidebarNavItems = [
 ]
 
 export const Account = () => {
-    const navigate = useNavigate();
     const { data: session, isFetched } = useSession();
 
     useEffect(() => {
-        if (isFetched && !session) navigate("/login");
-    }, [session, navigate, isFetched]);
+        if (isFetched && !session) redirect("/login");
+    }, [session, isFetched]);
 
     return (
         <div className="space-y-6 p-10 pb-16 md:block">
