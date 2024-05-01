@@ -1,7 +1,11 @@
+import { useSession } from "../../../api/hooks/useAuth";
+import { useGetMyProfileById } from "../../../api/hooks/useProfile";
 import { AccountForm } from "../../../components/forms/AccountForm";
 import { Separator } from "../../../components/ui/separator";
 
 export default function AccountRoot() {
+    const { data: session } = useSession();
+    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
     return (
         <div className="flex-1 lg:max-w-2xl">
             <div className="space-y-6">
@@ -12,7 +16,7 @@ export default function AccountRoot() {
                     </p>
                 </div>
                 <Separator />
-                <AccountForm />
+                {session && profile ? <AccountForm session={session} profile={profile} /> : null}
             </div>
         </div>
     )

@@ -4,10 +4,11 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { useGetMyProfileById, useUpdateProfile } from "../../api/hooks/useProfile"
-import { useSession } from "../../api/hooks/useAuth"
-import { useUploadAvatar, useDeleteAvatar } from "../../api/hooks/useAvatar"
-import { loadingToast, phoneFormat } from "../../utils/helpers"
+import { useUpdateProfile } from "../../api/hooks/useProfile"
+import { phoneFormat } from "../../utils/helpers"
+import { Tables } from "../../utils/database.types"
+import { Session } from "@supabase/supabase-js"
+import { useIsMutating } from '@tanstack/react-query'
 
 const phoneRegex = new RegExp(
     /^([\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -45,13 +46,14 @@ const accountFormSchema = z.object({
         .optional()
 })
 
-export function AccountForm() {
-    const { data: session } = useSession();
-    const uploadAvatarQuery = useUploadAvatar();
-    const deleteAvatarQuery = useDeleteAvatar();
+interface AccountFormProps {
+    profile: Tables<'profiles'>;
+    session: Session
+}
+
+export function AccountForm({ profile, session }: AccountFormProps) {
+    const isMutating = !!useIsMutating()
     const updateProfileQuery = useUpdateProfile();
-    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
-    const isUpdating = updateProfileQuery.isPending || uploadAvatarQuery.isPending || deleteAvatarQuery.isPending;
 
     type AccountFormValues = z.infer<typeof accountFormSchema>
 
@@ -66,8 +68,7 @@ export function AccountForm() {
     })
 
     async function onSubmit(e: AccountFormValues) {
-        loadingToast();
-        if(profile) updateProfileQuery.mutate({id: profile.id, ...e});
+        updateProfileQuery.mutate({ id: profile.id, ...e });
     }
 
     return (
@@ -80,7 +81,7 @@ export function AccountForm() {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder={session?.user.email} disabled readOnly />
+                                <Input placeholder={session.user.email} disabled readOnly />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -93,7 +94,7 @@ export function AccountForm() {
                         <FormItem>
                             <FormLabel>First Name</FormLabel>
                             <FormControl>
-                                <Input placeholder={"Your name"} {...field} />
+                                <Input placeholder={"Your first name"} {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -106,7 +107,7 @@ export function AccountForm() {
                         <FormItem>
                             <FormLabel>Last Name</FormLabel>
                             <FormControl>
-                                <Input placeholder={"Your name"} {...field} />
+                                <Input placeholder={"Your last name"} {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -181,7 +182,7 @@ export function AccountForm() {
                         />
                     )}
                 />
-                <Button disabled={isUpdating} type="submit">Update account</Button>
+                <Button disabled={isMutating} type="submit">Update account</Button>
             </form>
         </Form>
     )

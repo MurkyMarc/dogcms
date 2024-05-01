@@ -5,8 +5,9 @@ import { Button } from "../ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
-import { useGetMyProfileById, useUpdateProfile } from "../../api/hooks/useProfile"
-import { useSession } from "../../api/hooks/useAuth"
+import { useUpdateProfile } from "../../api/hooks/useProfile"
+import { Tables } from "../../utils/database.types"
+import { useIsMutating } from '@tanstack/react-query'
 
 const profileFormSchema = z.object({
     username: z
@@ -19,9 +20,12 @@ const profileFormSchema = z.object({
         .optional()
 })
 
-export function ProfileForm() {
-    const { data: session } = useSession();
-    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
+interface ProfileFormProps {
+    profile: Tables<'profiles'>
+}
+
+export function ProfileForm({ profile }: ProfileFormProps) {
+    const isMutating = !!useIsMutating();
     const updateProfileQuery = useUpdateProfile();
 
     type ProfileFormValues = z.infer<typeof profileFormSchema>
@@ -33,7 +37,7 @@ export function ProfileForm() {
     })
 
     async function onSubmit(e: ProfileFormValues) {
-        if (profile) updateProfileQuery.mutate({ id: profile.id, ...e });
+        updateProfileQuery.mutate({ id: profile.id, ...e });
     }
 
     return (
@@ -46,7 +50,7 @@ export function ProfileForm() {
                         <FormItem>
                             <FormLabel>Username</FormLabel>
                             <FormControl>
-                                <Input placeholder={"Aa"} {...field} />
+                                <Input placeholder={"Username"} {...field} />
                             </FormControl>
                             <FormDescription>
                                 This is the name visible on the site to others.
@@ -75,7 +79,7 @@ export function ProfileForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Update profile</Button>
+                <Button disabled={isMutating} type="submit">Update profile</Button>
             </form>
         </Form>
     )

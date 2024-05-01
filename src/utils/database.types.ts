@@ -11,49 +11,49 @@ export type Database = {
     Tables: {
       dogs: {
         Row: {
-          age: number | null
-          bio: string | null
-          breed: string | null
+          age: number
+          bio: string
+          breed: string
           created_at: string
-          group_walks: boolean | null
+          group_walks: boolean
           id: number
-          image: string | null
-          name: string | null
-          notes: string | null
+          image: string
+          name: string
+          notes: string
           owner: string
-          sex: string | null
-          updated_at: string | null
-          weight: number | null
+          sex: string
+          updated_at: string
+          weight: number
         }
         Insert: {
-          age?: number | null
-          bio?: string | null
-          breed?: string | null
+          age?: number
+          bio?: string
+          breed?: string
           created_at?: string
-          group_walks?: boolean | null
+          group_walks?: boolean
           id?: number
-          image?: string | null
-          name?: string | null
-          notes?: string | null
-          owner: string
-          sex?: string | null
-          updated_at?: string | null
-          weight?: number | null
+          image?: string
+          name?: string
+          notes?: string
+          owner?: string
+          sex?: string
+          updated_at?: string
+          weight?: number
         }
         Update: {
-          age?: number | null
-          bio?: string | null
-          breed?: string | null
+          age?: number
+          bio?: string
+          breed?: string
           created_at?: string
-          group_walks?: boolean | null
+          group_walks?: boolean
           id?: number
-          image?: string | null
-          name?: string | null
-          notes?: string | null
+          image?: string
+          name?: string
+          notes?: string
           owner?: string
-          sex?: string | null
-          updated_at?: string | null
-          weight?: number | null
+          sex?: string
+          updated_at?: string
+          weight?: number
         }
         Relationships: [
           {
