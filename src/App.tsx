@@ -9,13 +9,14 @@ import { PageContainer } from './components/PageContainer';
 import { Account } from './pages/Account/Account';
 import { AccountProfile } from './pages/Account/components/AccountProfile';
 import AccountNotifications from './pages/Account/components/AccountNotifications';
-import AccountRoot from './pages/Account/components/AccountRoot';
+import AccountSettings from './pages/Account/components/AccountSettings';
 import Dashboard from './pages/Dashboard/Dashboard';
 import MyDogs from './pages/Dashboard/MyDogs';
 import MyWalks from './pages/Dashboard/Walks';
 import Schedules from './pages/Dashboard/Schedules';
 import { DogProfile } from './pages/Dashboard/DogProfile';
 import { Messages } from './pages/Dashboard/Messages/Messages';
+import AccountAddress from './pages/Account/components/AccountAddress';
 
 export const App = () => {
   return (
@@ -28,9 +29,10 @@ export const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/account" element={<Account/>}>
-          <Route path="/account" element={<AccountRoot/>} />
+          <Route path="/account" element={<AccountSettings/>} />
           <Route path="/account/profile" element={<AccountProfile />} />
           <Route path="/account/notifications" element={<AccountNotifications />} />
+          <Route path="/account/address" element={<AccountAddress />} />
         </Route>
         <Route path="/dashboard" element={<Dashboard/>}>
           <Route path="/dashboard" element={<MyDogs />} />

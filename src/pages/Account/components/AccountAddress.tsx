@@ -1,9 +1,9 @@
 import { useSession } from "../../../api/hooks/useAuth";
 import { useGetMyProfileById } from "../../../api/hooks/useProfile";
-import { AccountForm } from "../../../components/forms/AccountForm";
+import { AccountAddressForm } from "../../../components/forms/AccountAddressForm";
 import { Separator } from "../../../components/ui/separator";
 
-export default function AccountRoot() {
+export default function AccountAddress() {
     const { data: session } = useSession();
     const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
     return (
@@ -12,11 +12,11 @@ export default function AccountRoot() {
                 <div>
                     <h3 className="text-lg font-medium">Account</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update your account settings.
+                        Set your default address where your dogs will be picked up from. Pickup location can be customized on each scheduled walk.
                     </p>
                 </div>
                 <Separator />
-                {session && profile ? <AccountForm session={session} profile={profile} /> : null}
+                {session && profile ? <AccountAddressForm session={session} profile={profile} /> : null}
             </div>
         </div>
     )
