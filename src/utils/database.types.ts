@@ -171,7 +171,7 @@ export type Database = {
           status: string
           subtitle: string
           title: string
-          walker: string
+          walker: string | null
         }
         Insert: {
           address?: string
@@ -189,7 +189,7 @@ export type Database = {
           status?: string
           subtitle: string
           title: string
-          walker: string
+          walker?: string | null
         }
         Update: {
           address?: string
@@ -207,7 +207,7 @@ export type Database = {
           status?: string
           subtitle?: string
           title?: string
-          walker?: string
+          walker?: string | null
         }
         Relationships: [
           {
