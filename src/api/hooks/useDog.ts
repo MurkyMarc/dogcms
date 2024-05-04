@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
+import { deleteDogById, deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
+import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
 export function useGetDogById(id: string, enabled = true) {
@@ -15,6 +16,31 @@ export function useGetDogById(id: string, enabled = true) {
     };
     const isValidDog = (id && enabled === true) ? true : false;
     return useQuery({ queryKey, queryFn, enabled: isValidDog });
+}
+
+// todo - restrict this to the owner or an admin
+export function useDeleteDogById() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const mutationFn = async (id: string) => await deleteDogById(client, id);
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: (_, id) => {
+            queryClient.removeQueries({ queryKey: ['dogs', `${id}`] });
+            if (location.pathname.startsWith('/dashboard/dogs/')) {
+                navigate('/dashboard');
+            }
+            successToast("Deleted successfully.");
+        },
+        onError: (error) => {
+            errorToast(error)
+        }
+    });
 }
 
 export function useUpdateDog() {

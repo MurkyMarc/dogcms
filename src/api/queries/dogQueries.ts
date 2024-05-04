@@ -2,7 +2,7 @@ import { Tables } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function upsertDog(client: TypedSupabaseClient, dog: Tables<'dogs'>) {
-    return await client.from('dogs').insert(dog);
+    return await client.from('dogs').upsert(dog);
 }
 
 export async function updateDog(
@@ -26,6 +26,14 @@ export async function getDogById(client: TypedSupabaseClient, id: string) {
         .eq('id', id)
         .throwOnError()
         .single();
+}
+
+export async function deleteDogById(client: TypedSupabaseClient, id: string) {
+    return await client
+        .from('dogs')
+        .delete()
+        .eq('id', id)
+        .throwOnError();
 }
 
 export async function getDogsByOwnerId(client: TypedSupabaseClient, id: string) {

@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      dog_walk: {
+        Row: {
+          dog: number
+          id: number
+          walk: number
+        }
+        Insert: {
+          dog: number
+          id?: number
+          walk: number
+        }
+        Update: {
+          dog?: number
+          id?: number
+          walk?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dog_walk_dog_fkey"
+            columns: ["dog"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dog_walk_walk_fkey"
+            columns: ["walk"]
+            isOneToOne: false
+            referencedRelation: "walks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dogs: {
         Row: {
           age: number
@@ -117,6 +150,78 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      walks: {
+        Row: {
+          address: string
+          admin_notes: string
+          customer: string
+          date: string
+          description: string
+          end: string
+          group: boolean
+          id: number
+          lat: string
+          long: string
+          notes: string
+          start: string
+          status: string
+          subtitle: string
+          title: string
+          walker: string
+        }
+        Insert: {
+          address?: string
+          admin_notes?: string
+          customer: string
+          date: string
+          description: string
+          end: string
+          group?: boolean
+          id?: number
+          lat?: string
+          long?: string
+          notes?: string
+          start: string
+          status?: string
+          subtitle: string
+          title: string
+          walker: string
+        }
+        Update: {
+          address?: string
+          admin_notes?: string
+          customer?: string
+          date?: string
+          description?: string
+          end?: string
+          group?: boolean
+          id?: number
+          lat?: string
+          long?: string
+          notes?: string
+          start?: string
+          status?: string
+          subtitle?: string
+          title?: string
+          walker?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walks_customer_fkey"
+            columns: ["customer"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "walks_walker_fkey"
+            columns: ["walker"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
