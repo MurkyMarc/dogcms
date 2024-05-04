@@ -104,6 +104,7 @@ export type Database = {
       profiles: {
         Row: {
           bio: string
+          city: string
           created_at: string
           emergency_phone_1: string
           emergency_phone_2: string
@@ -113,11 +114,15 @@ export type Database = {
           l_name: string
           phone: string
           role: string
+          state: string
+          street: string
           updated_at: string
           username: string
+          zip: string
         }
         Insert: {
           bio?: string
+          city?: string
           created_at?: string
           emergency_phone_1?: string
           emergency_phone_2?: string
@@ -127,11 +132,15 @@ export type Database = {
           l_name?: string
           phone?: string
           role?: string
+          state?: string
+          street?: string
           updated_at?: string
           username?: string
+          zip?: string
         }
         Update: {
           bio?: string
+          city?: string
           created_at?: string
           emergency_phone_1?: string
           emergency_phone_2?: string
@@ -141,8 +150,11 @@ export type Database = {
           l_name?: string
           phone?: string
           role?: string
+          state?: string
+          street?: string
           updated_at?: string
           username?: string
+          zip?: string
         }
         Relationships: [
           {
