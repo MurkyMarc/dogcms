@@ -8,6 +8,7 @@ import { useUpdateProfile } from "../../api/hooks/useProfile"
 import { Tables } from "../../utils/database.types"
 import { Session } from "@supabase/supabase-js"
 import { useIsMutating } from '@tanstack/react-query'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 const zipRegex = new RegExp(
     /^[0-9]{5}$/
@@ -46,7 +47,7 @@ export function AccountAddressForm({ profile }: AccountAddressFormProps) {
 
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountAddressFormSchema),
-        defaultValues: { 
+        defaultValues: {
             ...profile,
             state: "NY"
         }
@@ -92,7 +93,16 @@ export function AccountAddressForm({ profile }: AccountAddressFormProps) {
                         <FormItem>
                             <FormLabel>State</FormLabel>
                             <FormControl>
-                                <Input placeholder={"NY"} {...field} disabled={true} />
+                                <Select disabled>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue {...field} defaultValue="NY" placeholder="NY" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="NY">New York</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                             </FormControl>
                             <FormMessage />
                         </FormItem>

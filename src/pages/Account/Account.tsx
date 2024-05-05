@@ -21,7 +21,7 @@ const sidebarNavItems = [
     {
         title: "Notifications",
         href: "/account/notifications",
-    }
+    } // todo - remove notifications page or update the mobile sidebar menu
 ]
 
 export const Account = () => {
