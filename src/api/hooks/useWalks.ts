@@ -1,14 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteWalkById, getWalkById, updateWalk } from "../queries/walkQueries";
+import { deleteWalkById, getWalkById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange } from "../queries/walkQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
-// to do - need to figure out how to efficiently store the walks in the cache.
-// will be fetching day walks, weeks walks, and months walks.
-
-export function useGetWalkById(id: string) {
+export function useGetWalksById(id: string) {
     const client = useSupabase();
     const queryKey = ['walks', id];
 
@@ -19,6 +16,27 @@ export function useGetWalkById(id: string) {
     };
 
     return useQuery({ queryKey, queryFn });
+}
+
+export function useCreateWalk() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async (walk: Partial<Tables<'walks'>>) => {
+        return await createWalk(client, walk);
+    };
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: () => {
+            successToast("Created successfully.");
+            queryClient.invalidateQueries({ queryKey: ['walks'] });
+        },
+        onError: (error) => {
+            errorToast(error)
+        }
+    });
 }
 
 // todo - restrict this to the owner or an admin
@@ -65,4 +83,30 @@ export function useUpdateWalk() {
             errorToast(error)
         }
     });
+}
+
+export function useGetWalksByCustomerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' | 'week' | 'month') {
+    const client = useSupabase();
+    const queryKey = ['walks', 'customer', id, periodType, startDate];
+
+    const queryFn = async () => {
+        return await getWalksByCustomerIdAndDateRange(client, id, startDate, endDate).then(
+            (result) => result.data
+        );
+    };
+
+    return useQuery({ queryKey, queryFn });
+}
+
+export function useGetWalksByWalkerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' |'week' | 'month') {
+    const client = useSupabase();
+    const queryKey = ['walks', 'walker', id, periodType, startDate];
+
+    const queryFn = async () => {
+        return await getWalksByWalkerIdAndDateRange(client, id, startDate, endDate).then(
+            (result) => result.data
+        );
+    };
+
+    return useQuery({ queryKey, queryFn });
 }

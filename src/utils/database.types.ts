@@ -168,8 +168,8 @@ export type Database = {
       }
       walks: {
         Row: {
-          address: string
           admin_notes: string
+          city: string
           customer: string
           date: string
           description: string
@@ -180,17 +180,20 @@ export type Database = {
           long: string
           notes: string
           start: string
+          state: string
           status: string
+          street: string
           subtitle: string
           title: string
           walker: string | null
+          zip: string
         }
         Insert: {
-          address?: string
           admin_notes?: string
+          city?: string
           customer: string
           date: string
-          description: string
+          description?: string
           end: string
           group?: boolean
           id?: number
@@ -198,14 +201,17 @@ export type Database = {
           long?: string
           notes?: string
           start: string
+          state?: string
           status?: string
-          subtitle: string
-          title: string
+          street?: string
+          subtitle?: string
+          title?: string
           walker?: string | null
+          zip?: string
         }
         Update: {
-          address?: string
           admin_notes?: string
+          city?: string
           customer?: string
           date?: string
           description?: string
@@ -216,10 +222,13 @@ export type Database = {
           long?: string
           notes?: string
           start?: string
+          state?: string
           status?: string
+          street?: string
           subtitle?: string
           title?: string
           walker?: string | null
+          zip?: string
         }
         Relationships: [
           {

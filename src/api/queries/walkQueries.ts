@@ -1,4 +1,4 @@
-import { Tables } from "../../utils/database.types";
+import { Tables, TablesInsert } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function upsertWalk(client: TypedSupabaseClient, walk: Tables<'walks'>) {
@@ -36,12 +36,32 @@ export async function getWalkById(client: TypedSupabaseClient, id: string) {
         .single();
 }
 
-// todo - create queries for walks for 1 day, 1 week, 1 month
-
-export async function getWalksByWalkerId(client: TypedSupabaseClient, id: string) {
+// todo - test this query
+export async function getWalksByWalkerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
     return await client
         .from('walks')
         .select(`*`)
         .eq('walker', id)
+        .gte("date", startDate)
+        .lte("date", endDate)
         .throwOnError() || [];
+}
+
+// todo - test this query
+export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
+    return await client
+        .from('walks')
+        .select(`*`)
+        .eq('customer', id)
+        .gte("date", startDate)
+        .lte("date", endDate)
+        .throwOnError() || [];
+}
+
+export async function createWalk(client: TypedSupabaseClient, walk: Partial<TablesInsert<'walks'>>) {
+    return await client
+        .from('walks')
+        .insert(walk as TablesInsert<'walks'>)
+        .select()
+        .throwOnError();
 }

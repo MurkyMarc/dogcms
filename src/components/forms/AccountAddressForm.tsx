@@ -6,13 +6,9 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { useUpdateProfile } from "../../api/hooks/useProfile"
 import { Tables } from "../../utils/database.types"
-import { Session } from "@supabase/supabase-js"
 import { useIsMutating } from '@tanstack/react-query'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-
-const zipRegex = new RegExp(
-    /^[0-9]{5}$/
-);
+import { zipRegex } from "../../utils/helpers"
 
 const accountAddressFormSchema = z.object({
     street: z
@@ -28,15 +24,12 @@ const accountAddressFormSchema = z.object({
     state: z.string(),
     zip: z
         .string()
-        .regex(zipRegex, "Zipcode can only container numbers 0-9")
-        .min(5, "Zipcode must be 5 characters.")
-        .max(5, "Zipcode must be 5 characters.")
+        .regex(zipRegex, "Zip Code must be between 10000 and 12000")
         .optional()
 })
 
 interface AccountAddressFormProps {
     profile: Tables<'profiles'>;
-    session: Session
 }
 
 export function AccountAddressForm({ profile }: AccountAddressFormProps) {
@@ -48,8 +41,7 @@ export function AccountAddressForm({ profile }: AccountAddressFormProps) {
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountAddressFormSchema),
         defaultValues: {
-            ...profile,
-            state: "NY"
+            ...profile
         }
     })
 
@@ -73,49 +65,55 @@ export function AccountAddressForm({ profile }: AccountAddressFormProps) {
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="city"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>City</FormLabel>
-                            <FormControl>
-                                <Input placeholder={"Brooklyn"} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="state"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>State</FormLabel>
-                            <FormControl>
-                                <Select disabled>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue {...field} defaultValue="NY" placeholder="NY" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="NY">New York</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div className="flex gap-4">
+                    <div className="flex-3">
+                        <FormField
+                            control={form.control}
+                            name="city"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>City</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder={"Brooklyn"} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="flex-1 max-w-32">
+                        <FormField
+                            control={form.control}
+                            name="state"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>State</FormLabel>
+                                    <FormControl>
+                                        <Select disabled>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue {...field} defaultValue="NY" placeholder="NY" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value="NY">New York</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </div>
                 <FormField
                     control={form.control}
                     name="zip"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Zipcode</FormLabel>
+                            <FormLabel>Zip Code</FormLabel>
                             <FormControl>
-                                <Input placeholder={"10001"} {...field} />
+                                <Input type="number" placeholder={"10001"} {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

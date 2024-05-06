@@ -2,15 +2,18 @@ import { Header } from "./components/Header"
 import { Button } from "../../components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "../../components/ui/pagination"
+import { useNavigate } from "react-router-dom";
 
 export default function Walks() {
+    const navigate = useNavigate();
+    
     return (
         <>
             <Header title="Walks" showSearch={true} />
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
                 <div className="flex items-center">
                     <h1 className="font-semibold text-lg md:text-2xl">Upcoming Walks</h1>
-                    <Button className="ml-auto" size="sm">
+                    <Button className="ml-auto" size="sm" onClick={() => navigate("/dashboard/walks/new")}>
                         Schedule new walk
                     </Button>
                 </div>

@@ -22,7 +22,7 @@ export default function AccountAddress() {
                     </p>
                 </div>
                 <Separator />
-                {session && profile ? <AccountAddressForm session={session} profile={profile} /> : null}
+                {session && profile ? <AccountAddressForm profile={profile} /> : null}
             </div>
         </div>
     )

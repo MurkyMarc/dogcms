@@ -161,3 +161,120 @@ export function errorToast(error: unknown) {
         }
     })
 }
+
+export const zipRegex = new RegExp(
+    // allow the value to be 10000-11999 or 12000
+    /^1[01]\d{3}$|^12000$/
+);
+
+export const phoneRegex = new RegExp(
+    /^([\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+);
+
+export const timeOptions = [
+    { name: '6:00 AM', value: '06:00:00'},
+    { name: '6:15 AM', value: '06:15:00'},
+    { name: '6:30 AM', value: '06:30:00'},
+    { name: '6:45 AM', value: '06:45:00'},
+    { name: '7:00 AM', value: '07:00:00'},
+    { name: '7:15 AM', value: '07:15:00'},
+    { name: '7:30 AM', value: '07:30:00'},
+    { name: '7:45 AM', value: '07:45:00'},
+    { name: '8:00 AM', value: '08:00:00'},
+    { name: '8:15 AM', value: '08:15:00'},
+    { name: '8:30 AM', value: '08:30:00'},
+    { name: '8:45 AM', value: '08:45:00'},
+    { name: '9:00 AM', value: '09:00:00'},
+    { name: '9:15 AM', value: '09:15:00'},
+    { name: '9:30 AM', value: '09:30:00'},
+    { name: '9:45 AM', value: '09:45:00'},
+    { name: '10:00 AM', value: '10:00:00'},
+    { name: '10:15 AM', value: '10:15:00'},
+    { name: '10:30 AM', value: '10:30:00'},
+    { name: '10:45 AM', value: '10:45:00'},
+    { name: '11:00 AM', value: '11:00:00'},
+    { name: '11:15 AM', value: '11:15:00'},
+    { name: '11:30 AM', value: '11:30:00'},
+    { name: '11:45 AM', value: '11:45:00'},
+    { name: '12:00 PM', value: '12:00:00'},
+    { name: '12:15 PM', value: '12:15:00'},
+    { name: '12:30 PM', value: '12:30:00'},
+    { name: '12:45 PM', value: '12:45:00'},
+    { name: '1:00 PM', value: '13:00:00'},
+    { name: '1:15 PM', value: '13:15:00'},
+    { name: '1:30 PM', value: '13:30:00'},
+    { name: '1:45 PM', value: '13:45:00'},
+    { name: '2:00 PM', value: '14:00:00'},
+    { name: '2:15 PM', value: '14:15:00'},
+    { name: '2:30 PM', value: '14:30:00'},
+    { name: '2:45 PM', value: '14:45:00'},
+    { name: '3:00 PM', value: '15:00:00'},
+    { name: '3:15 PM', value: '15:15:00'},
+    { name: '3:30 PM', value: '15:30:00'},
+    { name: '3:45 PM', value: '15:45:00'},
+    { name: '4:00 PM', value: '16:00:00'},
+    { name: '4:15 PM', value: '16:15:00'},
+    { name: '4:30 PM', value: '16:30:00'},
+    { name: '4:45 PM', value: '16:45:00'},
+    { name: '5:00 PM', value: '17:00:00'},
+    { name: '5:15 PM', value: '17:15:00'},
+    { name: '5:30 PM', value: '17:30:00'},
+    { name: '5:45 PM', value: '17:45:00'},
+    { name: '6:00 PM', value: '18:00:00'},
+    { name: '6:15 PM', value: '18:15:00'},
+    { name: '6:30 PM', value: '18:30:00'},
+    { name: '6:45 PM', value: '18:45:00'},
+    { name: '7:00 PM', value: '19:00:00'},
+    { name: '7:15 PM', value: '19:15:00'},
+    { name: '7:30 PM', value: '19:30:00'},
+    { name: '7:45 PM', value: '19:45:00'},
+    { name: '8:00 PM', value: '20:00:00'},
+    { name: '8:15 PM', value: '20:15:00'},
+    { name: '8:30 PM', value: '20:30:00'},
+    { name: '8:45 PM', value: '20:45:00'},
+    { name: '9:00 PM', value: '21:00:00'}
+]
+
+export const durationOptions = [
+    { name: '15 minutes', value: '15' },
+    { name: '30 minutes', value: '30' },
+    { name: '45 minutes', value: '45' },
+    { name: '60 minutes', value: '60' }
+]
+
+export function calculateEndTime(timeOption: string, duration: string) {
+    const [hour, minute] = timeOption.split(':'); // Split the time option into hour and minute
+    const durationInMinutes = parseInt(duration, 10); // Convert duration to a number
+
+    // Create a date object starting at today's date but with specified hour and minute
+    const startTime = new Date();
+    startTime.setHours(parseInt(hour, 10), parseInt(minute, 10), 0, 0); // Reset seconds and milliseconds to 0
+
+    // Add duration to the startTime
+    startTime.setMinutes(startTime.getMinutes() + durationInMinutes);
+
+    // Format the new time in 'hh:mm:ss'
+    const hours = startTime.getHours().toString().padStart(2, '0');
+    const minutes = startTime.getMinutes().toString().padStart(2, '0');
+    const seconds = startTime.getSeconds().toString().padStart(2, '0');
+
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+export function formatTimeToAmPm(timeString: string) {
+    // Split the time string into components
+    const [hours, minutes] = timeString.split(':');
+
+    // Convert hours to integer to determine AM or PM
+    let hoursInt = parseInt(hours, 10);
+
+    // Determine the suffix and adjust hours for 12-hour format
+    const suffix = hoursInt >= 12 ? 'PM' : 'AM';
+    hoursInt = hoursInt % 12;
+    hoursInt = hoursInt === 0 ? 12 : hoursInt; // Adjust for 12-hour format, change 0 to 12 for readability
+
+    // Format the minutes to ensure two digits
+    const formattedMinutes = minutes.padStart(2, '0');
+
+    return `${hoursInt}:${formattedMinutes}${suffix}`;
+}

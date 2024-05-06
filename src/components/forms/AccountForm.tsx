@@ -5,14 +5,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { useUpdateProfile } from "../../api/hooks/useProfile"
-import { phoneFormat } from "../../utils/helpers"
+import { phoneFormat, phoneRegex } from "../../utils/helpers"
 import { Tables } from "../../utils/database.types"
 import { Session } from "@supabase/supabase-js"
 import { useIsMutating } from '@tanstack/react-query'
-
-const phoneRegex = new RegExp(
-    /^([\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
-);
 
 const accountFormSchema = z.object({
     email: z.string().readonly().optional(),
@@ -87,101 +83,100 @@ export function AccountForm({ profile, session }: AccountFormProps) {
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="f_name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>First Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder={"Your first name"} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="l_name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Last Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder={"Your last name"} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    name="phone"
-                    render={() => (
-                        <Controller
+                <div className="flex gap-4">
+                    <div className="flex-1">
+                        <FormField
                             control={form.control}
+                            name="l_name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Last Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder={"Your last name"} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <FormField
                             name="phone"
-                            render={({ field: { onChange, value, ...restField } }) => (
-                                <FormItem>
-                                    <FormLabel>Phone Number</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder={"(123) 456-7890"}
-                                            value={value}
-                                            onChange={e => onChange(phoneFormat(e.target.value))}
-                                            {...restField}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                            render={() => (
+                                <Controller
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field: { onChange, value, ...restField } }) => (
+                                        <FormItem>
+                                            <FormLabel>Phone Number</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={"(123) 456-7890"}
+                                                    value={value}
+                                                    onChange={e => onChange(phoneFormat(e.target.value))}
+                                                    {...restField}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             )}
                         />
-                    )}
-                />
-                <FormField
-                    name="emergency_phone_1"
-                    render={() => (
-                        <Controller
-                            control={form.control}
+                    </div>
+                </div>
+                <div className="flex gap-4">
+                    <div className="flex-1">
+                        <FormField
                             name="emergency_phone_1"
-                            render={({ field: { onChange, value, ...restField } }) => (
-                                <FormItem>
-                                    <FormLabel>Emergency Contact Phone 1</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder={"(123) 456-7890"}
-                                            value={value}
-                                            onChange={e => onChange(phoneFormat(e.target.value))}
-                                            {...restField}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                            render={() => (
+                                <Controller
+                                    control={form.control}
+                                    name="emergency_phone_1"
+                                    render={({ field: { onChange, value, ...restField } }) => (
+                                        <FormItem>
+                                            <FormLabel>Emergency Contact Phone 1</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={"(123) 456-7890"}
+                                                    value={value}
+                                                    onChange={e => onChange(phoneFormat(e.target.value))}
+                                                    {...restField}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             )}
                         />
-                    )}
-                />
-                <FormField
-                    name="emergency_phone_2"
-                    render={() => (
-                        <Controller
-                            control={form.control}
+                    </div>
+                    <div className="flex-1">
+                        <FormField
                             name="emergency_phone_2"
-                            render={({ field: { onChange, value, ...restField } }) => (
-                                <FormItem>
-                                    <FormLabel>Emergency Contact Phone 2</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder={"(123) 456-7890"}
-                                            value={value}
-                                            onChange={e => onChange(phoneFormat(e.target.value))}
-                                            {...restField}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                            render={() => (
+                                <Controller
+                                    control={form.control}
+                                    name="emergency_phone_2"
+                                    render={({ field: { onChange, value, ...restField } }) => (
+                                        <FormItem>
+                                            <FormLabel>Emergency Contact Phone 2</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={"(123) 456-7890"}
+                                                    value={value}
+                                                    onChange={e => onChange(phoneFormat(e.target.value))}
+                                                    {...restField}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             )}
                         />
-                    )}
-                />
+                    </div>
+                </div>
                 <Button disabled={isMutating} type="submit">Update account</Button>
             </form>
         </Form>

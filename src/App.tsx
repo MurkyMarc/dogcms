@@ -17,6 +17,7 @@ import Schedules from './pages/Dashboard/Schedules';
 import { DogProfile } from './pages/Dashboard/DogProfile';
 import { Messages } from './pages/Dashboard/Messages/Messages';
 import AccountAddress from './pages/Account/components/AccountAddress';
+import CreateWalk from './pages/Dashboard/components/CreateWalk';
 
 export const App = () => {
   return (
@@ -38,6 +39,7 @@ export const App = () => {
           <Route path="/dashboard" element={<MyDogs />} />
           <Route path="/dashboard/dogs/:id" element={<DogProfile />} />
           <Route path="/dashboard/walks" element={<MyWalks />} />
+          <Route path="/dashboard/walks/new" element={<CreateWalk />} />
           <Route path="/dashboard/schedules" element={<Schedules />} />
           <Route path="/dashboard/messages" element={<Messages />} />
         </Route>
