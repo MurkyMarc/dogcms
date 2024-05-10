@@ -1,0 +1,45 @@
+import { TablesInsert } from "../../utils/database.types";
+import { TypedSupabaseClient } from "../../utils/supabase";
+
+export async function createDogWalksByDogIds(client: TypedSupabaseClient, dogIds: number[], walkId: number) {
+    const walks = dogIds.map((dogId) => {
+        return { 'walk': walkId, 'dog': dogId }
+    });
+    return await client
+        .from('dog_walks')
+        .upsert([...walks] as TablesInsert<'dog_walks'>[], { ignoreDuplicates: true })
+        .throwOnError();
+}
+
+export async function deleteDogWalkById(client: TypedSupabaseClient, id: string) {
+    return await client
+        .from('dog_walks')
+        .delete()
+        .eq('id', id)
+        .throwOnError();
+}
+
+export async function deleteDogWalksByWalkId(client: TypedSupabaseClient, walkId: number) {
+    return await client
+        .from('dog_walks')
+        .delete()
+        .eq('walk', walkId)
+        .throwOnError();
+}
+
+export async function getDogWalkById(client: TypedSupabaseClient, id: string) {
+    return await client
+        .from('dog_walks')
+        .select(`*`)
+        .eq('id', id)
+        .throwOnError()
+        .single();
+}
+
+export async function getDogWalksByDogIds(client: TypedSupabaseClient, ids: string[]) {
+    return await client
+        .from('dog_walks')
+        .select(`*`)
+        .in('dog', ids)
+        .throwOnError() || [];
+}

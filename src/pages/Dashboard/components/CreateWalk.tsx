@@ -8,7 +8,7 @@ export default function CreateWalk() {
     const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
 
     return (
-        <div className="p-6 max-w-3xl space-y-8">
+        <div className="p-6 space-y-8">
             <div className="items-center">
                 <div>
                     <h3 className="text-lg font-medium">Schedule a Walk</h3>

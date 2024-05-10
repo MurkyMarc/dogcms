@@ -278,3 +278,37 @@ export function formatTimeToAmPm(timeString: string) {
 
     return `${hoursInt}:${formattedMinutes}${suffix}`;
 }
+
+export function getTodaysDate() {
+    // returns todays date in the format YYYY-MM-DD
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+export function getNextWeekDate(date: Date) {
+    // returns the date of the next week in the format YYYY-MM-DD
+    const nextWeek = new Date(date);
+    nextWeek.setDate(date.getDate() + 7);
+
+    const year = nextWeek.getFullYear();
+    const month = (nextWeek.getMonth() + 1).toString().padStart(2, '0');
+    const day = nextWeek.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+export function getNextMonthDate(date: Date) {
+    // returns the date of the next month in the format YYYY-MM-DD
+    const nextMonth = new Date(date);
+    nextMonth.setMonth(date.getMonth() + 1);
+
+    const year = nextMonth.getFullYear();
+    const month = (nextMonth.getMonth() + 1).toString().padStart(2, '0');
+    const day = nextMonth.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}

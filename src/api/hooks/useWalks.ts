@@ -23,14 +23,16 @@ export function useCreateWalk() {
     const queryClient = useQueryClient();
 
     const mutationFn = async (walk: Partial<Tables<'walks'>>) => {
-        return await createWalk(client, walk);
+        return await createWalk(client, walk).then(
+            (result) => result.data
+        );
     };
 
     return useMutation({
         mutationFn,
         onMutate: () => loadingToast(),
         onSuccess: () => {
-            successToast("Created successfully.");
+            successToast("Your walk has been scheduled!");
             queryClient.invalidateQueries({ queryKey: ['walks'] });
         },
         onError: (error) => {

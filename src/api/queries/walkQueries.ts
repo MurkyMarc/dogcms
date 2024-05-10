@@ -63,5 +63,6 @@ export async function createWalk(client: TypedSupabaseClient, walk: Partial<Tabl
         .from('walks')
         .insert(walk as TablesInsert<'walks'>)
         .select()
+        .single()
         .throwOnError();
 }

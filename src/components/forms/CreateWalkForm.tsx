@@ -16,6 +16,13 @@ import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
 import { calculateEndTime, durationOptions, formatTimeToAmPm, timeOptions, zipRegex } from "../../utils/helpers"
+import { ScrollArea, ScrollBar } from "../ui/scroll-area"
+import { useSession } from "../../api/hooks/useAuth"
+import { useGetDogsByOwner } from "../../api/hooks/useDog"
+import { WalkScrollImage } from "../../pages/Dashboard/components/WalkScrollImage"
+import { useState } from "react"
+import { useCreateDogWalks } from "../../api/hooks/useDogWalks"
+import { useNavigate } from "react-router-dom";
 
 const createWalkFormSchema = z.object({
     date: z.date(),
@@ -46,8 +53,13 @@ interface CreateWalkFormProps {
 }
 
 export function CreateWalkForm({ profile }: CreateWalkFormProps) {
+    const navigate = useNavigate();
     const isMutating = !!useIsMutating()
     const createWalkQuery = useCreateWalk();
+    const createDogWalksQuery = useCreateDogWalks();
+    const { data: session } = useSession();
+    const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
+    const [selectedDogIds, setSelectedDogIds] = useState<number[]>([]);
 
     type CreateWalkFormValues = z.infer<typeof createWalkFormSchema>
 
@@ -84,219 +96,239 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             subtitle: `${formatTimeToAmPm(e.start)} - ${formatTimeToAmPm(end)}`,
             description: `${profile.f_name} ${profile.l_name} - status: unscheduled`
         }
-        console.log(data);
-        createWalkQuery.mutate(data);
+
+        const newWalk = await createWalkQuery.mutateAsync(data);
+        if (newWalk) createDogWalksQuery.mutate({ dogIds: selectedDogIds, walkId: newWalk.id });
+        navigate('/dashboard/walks');
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Date to schedule</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
-                                                !field.value && "text-muted-foreground"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP")
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <div className="flex gap-4">
-                    <div className="flex-1 max-w-48">
-                        <FormField
-                            control={form.control}
-                            name="start"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Start Time</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue {...field} placeholder="12:00 PM" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {timeOptions.map((option, index) => (
-                                                        <SelectItem key={index} value={option.value}>{option.name}</SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="flex-1  max-w-48">
-                        <FormField
-                            control={form.control}
-                            name="duration"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Duration</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue {...field} placeholder="15 minutes" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {durationOptions.map((option, index) => (
-                                                        <SelectItem key={index} value={option.value}>{option.name}</SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
+        <>
+            <p className="text-m pb-4 font-bold">
+                1. Select the dog(s) going on the walk
+            </p>
+            <ScrollArea className="rounded-md border mb-8 grid max-w-fit">
+                <div className="flex shrink-0 p-2">
+                    {dogs?.map((dog) => (
+                        <WalkScrollImage key={dog.id} dog={dog} setDogIds={setSelectedDogIds} />
+                    ))}
                 </div>
-                <div className="max-w-96">
+                <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+
+            <p className="text-m pb-6 font-bold">
+                2. Enter the walk details
+            </p>
+
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField
                         control={form.control}
-                        name="street"
+                        name="date"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Street</FormLabel>
-                                <FormControl>
-                                    <Input placeholder={"123 Main Street"} {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-                <div className="flex max-w-96 gap-4">
-                    <div className="flex-3">
-                        <FormField
-                            control={form.control}
-                            name="city"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>City</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder={"Brooklyn"} {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="flex-1 max-w-32">
-                        <FormField
-                            control={form.control}
-                            name="state"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>State</FormLabel>
-                                    <FormControl>
-                                        <Select disabled>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue {...field} defaultValue="NY" placeholder="NY" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="NY">New York</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="max-w-48">
-                    <FormField
-                        control={form.control}
-                        name="zip"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Zip Code</FormLabel>
-                                <FormControl>
-                                    <Input type="number" placeholder={"10001"} {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-                <div className="max-w-96">
-                    <FormField
-                        control={form.control}
-                        name="group"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Do you allow your dogs to walk with other people's dogs? <br />
-                                </FormLabel>
-                                <div className="flex">
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Date to schedule</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
                                         />
-                                    </FormControl>
-                                    <span className="pl-4 leading-5">{field.value ? "yes" : "no"}</span>
-                                </div>
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
-                </div>
-                <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Notes</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder={"Aa"}
-                                    className="resize-none"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Please provide any additional notes you would like to add.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button disabled={isMutating} type="submit">Schedule Walk</Button>
-            </form>
-        </Form>
+                    <div className="flex gap-4">
+                        <div className="flex-1 max-w-48">
+                            <FormField
+                                control={form.control}
+                                name="start"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Start Time</FormLabel>
+                                        <FormControl>
+                                            <Select onValueChange={field.onChange}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue {...field} placeholder="12:00 PM" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {timeOptions.map((option, index) => (
+                                                            <SelectItem key={index} value={option.value}>{option.name}</SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="flex-1  max-w-48">
+                            <FormField
+                                control={form.control}
+                                name="duration"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Duration</FormLabel>
+                                        <FormControl>
+                                            <Select onValueChange={field.onChange}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue {...field} placeholder="15 minutes" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {durationOptions.map((option, index) => (
+                                                            <SelectItem key={index} value={option.value}>{option.name}</SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
+                    <div className="max-w-96">
+                        <FormField
+                            control={form.control}
+                            name="street"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Street</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder={"123 Main Street"} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="flex max-w-96 gap-4">
+                        <div className="flex-3">
+                            <FormField
+                                control={form.control}
+                                name="city"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>City</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder={"Brooklyn"} {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="flex-1 max-w-32">
+                            <FormField
+                                control={form.control}
+                                name="state"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>State</FormLabel>
+                                        <FormControl>
+                                            <Select disabled>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue {...field} defaultValue="NY" placeholder="NY" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectItem value="NY">New York</SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
+                    <div className="max-w-48">
+                        <FormField
+                            control={form.control}
+                            name="zip"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Zip Code</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder={"10001"} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="max-w-96">
+                        <FormField
+                            control={form.control}
+                            name="group"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Do you allow your dogs to walk with other people's dogs? <br />
+                                    </FormLabel>
+                                    <div className="flex">
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        <span className="pl-4 leading-5">{field.value ? "yes" : "no"}</span>
+                                    </div>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Notes</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder={"Aa"}
+                                        className="resize-none max-w-3xl"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription>
+                                    Please provide any additional notes you would like to add.
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button disabled={isMutating} type="submit">Schedule Walk</Button>
+                </form>
+            </Form>
+        </>
     )
 }
