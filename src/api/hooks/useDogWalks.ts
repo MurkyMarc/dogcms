@@ -1,23 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useSupabase from "./useSupabase";
 import { errorToast } from "../../utils/helpers";
-import { createDogWalksByDogIds, deleteDogWalkById, deleteDogWalksByWalkId, getDogWalkById } from "../queries/dogWalksQueries";
+import { createDogWalksByDogIds, deleteDogWalkById, deleteDogWalksByWalkId, getDogWalkById, getDogWalksByWalkId } from "../queries/dogWalksQueries";
 
 // todo - add restrictions to these
 
-export function useGetDogWalksById(id: string) {
+export async function useGetDogWalkById(id: string) {
     const client = useSupabase();
-    const queryKey = ['dog_walks', id];
+    return await getDogWalkById(client, id);
+}
 
-    const queryFn = async () => {
-        return await getDogWalkById(client, id);
-    };
-
-    return useQuery({ queryKey, queryFn });
+export async function useGetDogWalksByWalkId(walkId: number) {
+    const client = useSupabase();
+    return await getDogWalksByWalkId(client, walkId);
 }
 
 export function useCreateDogWalks() {
     const client = useSupabase();
+    const queryClient = useQueryClient();
 
     const mutationFn = async ({ dogIds, walkId }: { dogIds: number[], walkId: number }) => {
         return await createDogWalksByDogIds(client, dogIds, walkId);
@@ -27,7 +27,10 @@ export function useCreateDogWalks() {
         mutationFn,
         onError: () => {
             errorToast("Unable to assign your dogs to this walk. Please edit the walk and add your dogs.");
-        }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['walks'] });
+        },
     });
 }
 
@@ -39,7 +42,7 @@ export function useDeleteDogWalkById() {
     return useMutation({
         mutationFn,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['dog_walks'] });
+            queryClient.invalidateQueries({ queryKey: ['walks'] });
         },
     });
 }
@@ -55,7 +58,7 @@ export function useDeleteDogWalksByWalkId() {
     return useMutation({
         mutationFn,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['dog_walks'] });
-        }, 
+            queryClient.invalidateQueries({ queryKey: ['walks'] });
+        },
     });
 }

@@ -43,3 +43,11 @@ export async function getDogWalksByDogIds(client: TypedSupabaseClient, ids: stri
         .in('dog', ids)
         .throwOnError() || [];
 }
+
+export async function getDogWalksByWalkId(client: TypedSupabaseClient, walkId: number) {
+    return await client
+        .from('dog_walks')
+        .select(`*`)
+        .eq('walk', walkId)
+        .throwOnError() || [];
+}

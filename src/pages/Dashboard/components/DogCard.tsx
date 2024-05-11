@@ -1,5 +1,4 @@
 import { cn } from "../../../utils/cn"
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../../../components/ui/context-menu"
 import { Link } from "react-router-dom"
 import { Tables } from "../../../utils/database.types"
 import useSupabase from "../../../api/hooks/useSupabase"
@@ -43,25 +42,14 @@ export function DogCard({
     return (
         <div className={cn(className)} {...props}>
             <Link to={`/dashboard/dogs/${dog.id}`}>
-                {loading ? <CardPlaceholder className={className} loading={loading} /> :
-                    <ContextMenu>
-                        <ContextMenuTrigger>
-                            <img
-                                src={imageUrl}
-                                alt={dog.name || ""}
-                                className={cn(
-                                    "rounded-md object-cover transition-all aspect-[3/4]", imageStyles
-                                )}
-                            />
-                        </ContextMenuTrigger>
-                        <ContextMenuContent className="w-40">
-                            <ContextMenuItem>Open</ContextMenuItem>
-                            <ContextMenuItem>Edit</ContextMenuItem>
-                            <ContextMenuSeparator />
-                            <ContextMenuItem>Delete</ContextMenuItem>
-                            <ContextMenuItem>Share</ContextMenuItem>
-                        </ContextMenuContent>
-                    </ContextMenu>
+                {loading ? <CardPlaceholder className={cn(className, imageStyles)} loading={loading} /> :
+                    <img
+                        src={imageUrl}
+                        alt={dog.name || ""}
+                        className={cn(
+                            "rounded-md object-cover transition-all aspect-[3/4]", imageStyles
+                        )}
+                    />
                 }
             </Link>
             {children}

@@ -40,6 +40,20 @@ export type Database = {
             referencedRelation: "walks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "dog_walk_walk_fkey"
+            columns: ["walk"]
+            isOneToOne: false
+            referencedRelation: "walks_with_dogs"
+            referencedColumns: ["walk_id"]
+          },
+          {
+            foreignKeyName: "dog_walk_walk_fkey"
+            columns: ["walk"]
+            isOneToOne: false
+            referencedRelation: "walks_with_dogs"
+            referencedColumns: ["id"]
+          },
         ]
       }
       dogs: {
@@ -249,7 +263,47 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      walks_with_dogs: {
+        Row: {
+          admin_notes: string | null
+          city: string | null
+          customer: string | null
+          date: string | null
+          description: string | null
+          dogs: Json | null
+          end: string | null
+          group: boolean | null
+          id: number | null
+          lat: string | null
+          long: string | null
+          notes: string | null
+          start: string | null
+          state: string | null
+          status: string | null
+          street: string | null
+          subtitle: string | null
+          title: string | null
+          walk_id: number | null
+          walker: string | null
+          zip: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walks_customer_fkey"
+            columns: ["customer"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "walks_walker_fkey"
+            columns: ["walker"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       delete_avatar: {

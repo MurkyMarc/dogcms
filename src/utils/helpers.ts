@@ -148,7 +148,7 @@ export function successToast(message: string) {
     toast.success(message, {
         cancel: {
             label: 'Dismiss',
-            onClick: () => {},
+            onClick: () => { },
         }
     })
 }
@@ -157,7 +157,7 @@ export function errorToast(error: unknown) {
     toast.error((error as Error).message, {
         cancel: {
             label: 'Dismiss',
-            onClick: () => {},
+            onClick: () => { },
         }
     })
 }
@@ -172,67 +172,67 @@ export const phoneRegex = new RegExp(
 );
 
 export const timeOptions = [
-    { name: '6:00 AM', value: '06:00:00'},
-    { name: '6:15 AM', value: '06:15:00'},
-    { name: '6:30 AM', value: '06:30:00'},
-    { name: '6:45 AM', value: '06:45:00'},
-    { name: '7:00 AM', value: '07:00:00'},
-    { name: '7:15 AM', value: '07:15:00'},
-    { name: '7:30 AM', value: '07:30:00'},
-    { name: '7:45 AM', value: '07:45:00'},
-    { name: '8:00 AM', value: '08:00:00'},
-    { name: '8:15 AM', value: '08:15:00'},
-    { name: '8:30 AM', value: '08:30:00'},
-    { name: '8:45 AM', value: '08:45:00'},
-    { name: '9:00 AM', value: '09:00:00'},
-    { name: '9:15 AM', value: '09:15:00'},
-    { name: '9:30 AM', value: '09:30:00'},
-    { name: '9:45 AM', value: '09:45:00'},
-    { name: '10:00 AM', value: '10:00:00'},
-    { name: '10:15 AM', value: '10:15:00'},
-    { name: '10:30 AM', value: '10:30:00'},
-    { name: '10:45 AM', value: '10:45:00'},
-    { name: '11:00 AM', value: '11:00:00'},
-    { name: '11:15 AM', value: '11:15:00'},
-    { name: '11:30 AM', value: '11:30:00'},
-    { name: '11:45 AM', value: '11:45:00'},
-    { name: '12:00 PM', value: '12:00:00'},
-    { name: '12:15 PM', value: '12:15:00'},
-    { name: '12:30 PM', value: '12:30:00'},
-    { name: '12:45 PM', value: '12:45:00'},
-    { name: '1:00 PM', value: '13:00:00'},
-    { name: '1:15 PM', value: '13:15:00'},
-    { name: '1:30 PM', value: '13:30:00'},
-    { name: '1:45 PM', value: '13:45:00'},
-    { name: '2:00 PM', value: '14:00:00'},
-    { name: '2:15 PM', value: '14:15:00'},
-    { name: '2:30 PM', value: '14:30:00'},
-    { name: '2:45 PM', value: '14:45:00'},
-    { name: '3:00 PM', value: '15:00:00'},
-    { name: '3:15 PM', value: '15:15:00'},
-    { name: '3:30 PM', value: '15:30:00'},
-    { name: '3:45 PM', value: '15:45:00'},
-    { name: '4:00 PM', value: '16:00:00'},
-    { name: '4:15 PM', value: '16:15:00'},
-    { name: '4:30 PM', value: '16:30:00'},
-    { name: '4:45 PM', value: '16:45:00'},
-    { name: '5:00 PM', value: '17:00:00'},
-    { name: '5:15 PM', value: '17:15:00'},
-    { name: '5:30 PM', value: '17:30:00'},
-    { name: '5:45 PM', value: '17:45:00'},
-    { name: '6:00 PM', value: '18:00:00'},
-    { name: '6:15 PM', value: '18:15:00'},
-    { name: '6:30 PM', value: '18:30:00'},
-    { name: '6:45 PM', value: '18:45:00'},
-    { name: '7:00 PM', value: '19:00:00'},
-    { name: '7:15 PM', value: '19:15:00'},
-    { name: '7:30 PM', value: '19:30:00'},
-    { name: '7:45 PM', value: '19:45:00'},
-    { name: '8:00 PM', value: '20:00:00'},
-    { name: '8:15 PM', value: '20:15:00'},
-    { name: '8:30 PM', value: '20:30:00'},
-    { name: '8:45 PM', value: '20:45:00'},
-    { name: '9:00 PM', value: '21:00:00'}
+    { name: '6:00 AM', value: '06:00:00' },
+    { name: '6:15 AM', value: '06:15:00' },
+    { name: '6:30 AM', value: '06:30:00' },
+    { name: '6:45 AM', value: '06:45:00' },
+    { name: '7:00 AM', value: '07:00:00' },
+    { name: '7:15 AM', value: '07:15:00' },
+    { name: '7:30 AM', value: '07:30:00' },
+    { name: '7:45 AM', value: '07:45:00' },
+    { name: '8:00 AM', value: '08:00:00' },
+    { name: '8:15 AM', value: '08:15:00' },
+    { name: '8:30 AM', value: '08:30:00' },
+    { name: '8:45 AM', value: '08:45:00' },
+    { name: '9:00 AM', value: '09:00:00' },
+    { name: '9:15 AM', value: '09:15:00' },
+    { name: '9:30 AM', value: '09:30:00' },
+    { name: '9:45 AM', value: '09:45:00' },
+    { name: '10:00 AM', value: '10:00:00' },
+    { name: '10:15 AM', value: '10:15:00' },
+    { name: '10:30 AM', value: '10:30:00' },
+    { name: '10:45 AM', value: '10:45:00' },
+    { name: '11:00 AM', value: '11:00:00' },
+    { name: '11:15 AM', value: '11:15:00' },
+    { name: '11:30 AM', value: '11:30:00' },
+    { name: '11:45 AM', value: '11:45:00' },
+    { name: '12:00 PM', value: '12:00:00' },
+    { name: '12:15 PM', value: '12:15:00' },
+    { name: '12:30 PM', value: '12:30:00' },
+    { name: '12:45 PM', value: '12:45:00' },
+    { name: '1:00 PM', value: '13:00:00' },
+    { name: '1:15 PM', value: '13:15:00' },
+    { name: '1:30 PM', value: '13:30:00' },
+    { name: '1:45 PM', value: '13:45:00' },
+    { name: '2:00 PM', value: '14:00:00' },
+    { name: '2:15 PM', value: '14:15:00' },
+    { name: '2:30 PM', value: '14:30:00' },
+    { name: '2:45 PM', value: '14:45:00' },
+    { name: '3:00 PM', value: '15:00:00' },
+    { name: '3:15 PM', value: '15:15:00' },
+    { name: '3:30 PM', value: '15:30:00' },
+    { name: '3:45 PM', value: '15:45:00' },
+    { name: '4:00 PM', value: '16:00:00' },
+    { name: '4:15 PM', value: '16:15:00' },
+    { name: '4:30 PM', value: '16:30:00' },
+    { name: '4:45 PM', value: '16:45:00' },
+    { name: '5:00 PM', value: '17:00:00' },
+    { name: '5:15 PM', value: '17:15:00' },
+    { name: '5:30 PM', value: '17:30:00' },
+    { name: '5:45 PM', value: '17:45:00' },
+    { name: '6:00 PM', value: '18:00:00' },
+    { name: '6:15 PM', value: '18:15:00' },
+    { name: '6:30 PM', value: '18:30:00' },
+    { name: '6:45 PM', value: '18:45:00' },
+    { name: '7:00 PM', value: '19:00:00' },
+    { name: '7:15 PM', value: '19:15:00' },
+    { name: '7:30 PM', value: '19:30:00' },
+    { name: '7:45 PM', value: '19:45:00' },
+    { name: '8:00 PM', value: '20:00:00' },
+    { name: '8:15 PM', value: '20:15:00' },
+    { name: '8:30 PM', value: '20:30:00' },
+    { name: '8:45 PM', value: '20:45:00' },
+    { name: '9:00 PM', value: '21:00:00' }
 ]
 
 export const durationOptions = [
@@ -276,7 +276,7 @@ export function formatTimeToAmPm(timeString: string) {
     // Format the minutes to ensure two digits
     const formattedMinutes = minutes.padStart(2, '0');
 
-    return `${hoursInt}:${formattedMinutes}${suffix}`;
+    return `${hoursInt}:${formattedMinutes} ${suffix}`;
 }
 
 export function getTodaysDate() {
@@ -311,4 +311,26 @@ export function getNextMonthDate(date: Date) {
     const day = nextMonth.getDate().toString().padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+}
+
+export function formatMonthDay(dateString: string) {
+    const date = new Date(dateString);
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const day = date.getDate();
+    return `${month} ${day}`;
+}
+
+export function selectRandomBackgroundColor() {
+    const colors = [
+        '#FFADAD',
+        '#FFD6A5',
+        '#FDFFB6',
+        '#CAFFBF',
+        '#9BF6FF',
+        '#A0C4FF',
+        '#BDB2FF',
+        '#FFC6FF'
+    ]
+
+    return colors[Math.floor(Math.random() * colors.length)];
 }

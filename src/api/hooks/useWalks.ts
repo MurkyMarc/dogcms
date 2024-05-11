@@ -7,11 +7,18 @@ import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
 export function useGetWalksById(id: string) {
     const client = useSupabase();
+    const queryClient = useQueryClient();
     const queryKey = ['walks', id];
 
     const queryFn = async () => {
         return await getWalkById(client, id).then(
-            (result) => result.data
+            (result) => {
+                const walk = result.data;
+                walk && (walk.dogs as Array<Tables<'dogs'>>).map(dog => {
+                    queryClient.setQueryData(['dogs', `${dog.id}`], dog);
+                });
+                return walk;
+            }
         );
     };
 
@@ -89,24 +96,44 @@ export function useUpdateWalk() {
 
 export function useGetWalksByCustomerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' | 'week' | 'month') {
     const client = useSupabase();
+    const queryClient = useQueryClient();
     const queryKey = ['walks', 'customer', id, periodType, startDate];
 
     const queryFn = async () => {
         return await getWalksByCustomerIdAndDateRange(client, id, startDate, endDate).then(
-            (result) => result.data
+            (result) => {
+                const walks = result.data || [];
+                walks.map(walk => {
+                    queryClient.setQueryData(['walks', `${walk.id}`], walk);
+                    (walk.dogs as Array<Tables<'dogs'>>).map(dog => {
+                        queryClient.setQueryData(['dogs', `${dog.id}`], dog);
+                    })
+                });
+                return walks;
+            }
         );
     };
 
     return useQuery({ queryKey, queryFn });
 }
 
-export function useGetWalksByWalkerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' |'week' | 'month') {
+export function useGetWalksByWalkerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' | 'week' | 'month') {
     const client = useSupabase();
+    const queryClient = useQueryClient();
     const queryKey = ['walks', 'walker', id, periodType, startDate];
 
     const queryFn = async () => {
         return await getWalksByWalkerIdAndDateRange(client, id, startDate, endDate).then(
-            (result) => result.data
+            (result) => {
+                const walks = result.data || [];
+                walks.map(walk => {
+                    queryClient.setQueryData(['walks', `${walk.id}`], walk);
+                    (walk.dogs as Array<Tables<'dogs'>>).map(dog => {
+                        queryClient.setQueryData(['dogs', `${dog.id}`], dog);
+                    })
+                });
+                return walks;
+            }
         );
     };
 

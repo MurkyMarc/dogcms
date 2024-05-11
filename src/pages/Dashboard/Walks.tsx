@@ -1,17 +1,17 @@
 import { Header } from "./components/Header"
 import { Button } from "../../components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "../../components/ui/pagination"
+// import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "../../components/ui/pagination"
 import { useNavigate } from "react-router-dom";
-import WalkTableBody from "./components/WalkTableBody";
 import { useSession } from "../../api/hooks/useAuth";
 import { useGetMyProfileById } from "../../api/hooks/useProfile";
+import WalkTable from "./components/WalkTable";
 
 export default function Walks() {
     const navigate = useNavigate();
     const { data: session } = useSession();
     const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
-    
+
     return (
         <>
             <Header title="Walks" showSearch={true} />
@@ -22,19 +22,9 @@ export default function Walks() {
                         Schedule new walk
                     </Button>
                 </div>
-                <div className="border shadow-sm rounded-lg">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="">Date</TableHead>
-                                <TableHead className="">Time</TableHead>
-                                <TableHead className="hidden md:table-cell">Dog's Name</TableHead>
-                                <TableHead className="hidden md:table-cell">Walker's Name</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        {profile && <WalkTableBody profile={profile} />}
-                    </Table>
-                </div>
+
+                {profile && <WalkTable profile={profile} />}
+
                 <div className="flex items-center mt-8">
                     <h1 className="font-semibold text-lg md:text-2xl">Recurring Walks</h1>
                 </div>
@@ -82,7 +72,8 @@ export default function Walks() {
                         </TableBody>
                     </Table>
                 </div>
-                <div className="flex justify-end mt-4">
+                {/* todo - add a load more button */}
+                {/* <div className="grid mt-4">
                     <Pagination>
                         <PaginationContent>
                             <PaginationItem>
@@ -107,7 +98,7 @@ export default function Walks() {
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
-                </div>
+                </div> */}
             </main>
         </>
     )

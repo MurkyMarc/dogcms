@@ -29,7 +29,7 @@ export async function deleteWalkById(client: TypedSupabaseClient, id: string) {
 
 export async function getWalkById(client: TypedSupabaseClient, id: string) {
     return await client
-        .from('walks')
+        .from('walks_with_dogs')
         .select(`*`)
         .eq('id', id)
         .throwOnError()
@@ -39,20 +39,21 @@ export async function getWalkById(client: TypedSupabaseClient, id: string) {
 // todo - test this query
 export async function getWalksByWalkerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
     return await client
-        .from('walks')
+        .from('walks_with_dogs')
         .select(`*`)
         .eq('walker', id)
+        .order('date', { ascending: true })
         .gte("date", startDate)
         .lte("date", endDate)
         .throwOnError() || [];
 }
 
-// todo - test this query
 export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
     return await client
-        .from('walks')
+        .from('walks_with_dogs')
         .select(`*`)
         .eq('customer', id)
+        .order('date', { ascending: true })
         .gte("date", startDate)
         .lte("date", endDate)
         .throwOnError() || [];
