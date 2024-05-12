@@ -316,7 +316,7 @@ export function getNextMonthDate(date: Date) {
 export function formatMonthDay(dateString: string) {
     const date = new Date(dateString);
     const month = date.toLocaleString('en-US', { month: 'short' });
-    const day = date.getDate();
+    const day = date.getDate() + 1;
     return `${month} ${day}`;
 }
 
@@ -333,4 +333,31 @@ export function selectRandomBackgroundColor() {
     ]
 
     return colors[Math.floor(Math.random() * colors.length)];
+}
+
+export function timeDifference(start: string, end: string) {
+    const [startHours, startMinutes] = start.split(':').slice(0, 2).map(Number);
+    const [endHours, endMinutes] = end.split(':').slice(0, 2).map(Number);
+
+    const startTime = startHours * 60 + startMinutes;
+    const endTime = endHours * 60 + endMinutes;
+
+    const timeDiff = endTime - startTime;
+
+    return `${timeDiff}`;
+}
+
+export function parseDateStringToUTC(dateString: string) {
+    return new Date(
+        parseInt(dateString.slice(0, 4)), // year
+        parseInt(dateString.slice(5, 7)) - 1, // month (0 indexed)
+        parseInt(dateString.slice(8, 10)) // day
+    );
+}
+
+export function getArrayDifferences(array1: number[], array2: number[]) {
+    return {
+        added: array2.filter(item => !array1.includes(item)),
+        removed: array1.filter(item => !array2.includes(item))
+    }
 }

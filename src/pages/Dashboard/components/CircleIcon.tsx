@@ -52,7 +52,7 @@ export function CircleIcon({
 
     return (
         <div className={cn(className)} {...props}>
-            <Link to={`/dashboard/dogs/${dog.id}`}>
+            <Link to={`/dashboard/dogs/${dog.id}`} onClick={e => e.stopPropagation()}>
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger>

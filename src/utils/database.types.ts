@@ -265,27 +265,27 @@ export type Database = {
     Views: {
       walks_with_dogs: {
         Row: {
-          admin_notes: string | null
-          city: string | null
-          customer: string | null
-          date: string | null
-          description: string | null
-          dogs: Json | null
-          end: string | null
-          group: boolean | null
-          id: number | null
-          lat: string | null
-          long: string | null
-          notes: string | null
-          start: string | null
-          state: string | null
-          status: string | null
-          street: string | null
-          subtitle: string | null
-          title: string | null
-          walk_id: number | null
+          admin_notes: string
+          city: string
+          customer: string
+          date: string
+          description: string
+          dogs: Tables<'dogs'>[]
+          end: string
+          group: boolean
+          id: number
+          lat: string
+          long: string
+          notes: string
+          start: string
+          state: string
+          status: string
+          street: string
+          subtitle: string
+          title: string
+          walk_id: number
           walker: string | null
-          zip: string | null
+          zip: string
         }
         Relationships: [
           {

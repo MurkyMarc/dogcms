@@ -5,9 +5,23 @@ export async function upsertWalk(client: TypedSupabaseClient, walk: Tables<'walk
     return await client.from('walks').upsert(walk);
 }
 
+type WalkUpdate = {
+    id: number;
+    date: string;
+    start: string;
+    end: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    group: boolean;
+    notes: string;
+    subtitle: string;
+}
+
 export async function updateWalk(
     client: TypedSupabaseClient,
-    updates: Partial<Tables<'walks'>>
+    updates: WalkUpdate
 ) {
     const { id, ...data } = updates;
     return await client
@@ -28,6 +42,7 @@ export async function deleteWalkById(client: TypedSupabaseClient, id: string) {
 }
 
 export async function getWalkById(client: TypedSupabaseClient, id: string) {
+    if (!id) return null;
     return await client
         .from('walks_with_dogs')
         .select(`*`)

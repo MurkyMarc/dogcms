@@ -8,6 +8,7 @@ import { errorToast } from "../../../utils/helpers"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     dog: Tables<'dogs'>
+    selectedDogIds: number[];
     setDogIds: React.Dispatch<React.SetStateAction<number[]>>
 }
 
@@ -15,12 +16,13 @@ export function WalkScrollImage({
     dog,
     className,
     setDogIds,
+    selectedDogIds = [],
     ...props
 }: Props) {
     const supabase = useSupabase();
     const [imageUrl, setImageUrl] = useState("/placeholder.svg");
     const [loading, setLoading] = useState<boolean>(true);
-    const [selected, setSelected] = useState(false);
+    const [selected, setSelected] = useState(selectedDogIds.includes(dog.id));
 
     const downloadImage = useCallback(async (path: string) => {
         try {

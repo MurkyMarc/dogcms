@@ -87,6 +87,21 @@ export function AccountForm({ profile, session }: AccountFormProps) {
                     <div className="flex-1">
                         <FormField
                             control={form.control}
+                            name="f_name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>First Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder={"Your first name"} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <FormField
+                            control={form.control}
                             name="l_name"
                             render={({ field }) => (
                                 <FormItem>
@@ -99,31 +114,31 @@ export function AccountForm({ profile, session }: AccountFormProps) {
                             )}
                         />
                     </div>
-                    <div className="flex-1">
-                        <FormField
-                            name="phone"
-                            render={() => (
-                                <Controller
-                                    control={form.control}
-                                    name="phone"
-                                    render={({ field: { onChange, value, ...restField } }) => (
-                                        <FormItem>
-                                            <FormLabel>Phone Number</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder={"(123) 456-7890"}
-                                                    value={value}
-                                                    onChange={e => onChange(phoneFormat(e.target.value))}
-                                                    {...restField}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            )}
-                        />
-                    </div>
+                </div>
+                <div className="w-1/2">
+                    <FormField
+                        name="phone"
+                        render={() => (
+                            <Controller
+                                control={form.control}
+                                name="phone"
+                                render={({ field: { onChange, value, ...restField } }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder={"(123) 456-7890"}
+                                                value={value}
+                                                onChange={e => onChange(phoneFormat(e.target.value))}
+                                                {...restField}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+                    />
                 </div>
                 <div className="flex gap-4">
                     <div className="flex-1">

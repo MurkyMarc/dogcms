@@ -33,8 +33,8 @@ export default function WalkTable({ profile }: { profile: Tables<'profiles'> }) 
                 <TableBody>
                     {walks.map((walk) => (
                         <TableRow key={walk.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/walks/${walk.id}`)}>
-                            <TableCell>{formatMonthDay(walk.date || "")}</TableCell>
-                            <TableCell>{formatTimeToAmPm(walk.start || "")}</TableCell>
+                            <TableCell>{formatMonthDay(walk.date)}</TableCell>
+                            <TableCell>{formatTimeToAmPm(walk.start) + " - " + formatTimeToAmPm(walk.end)}</TableCell>
                             <TableCell className="hidden md:flex md:flex-row md:py-1">
                                 {(walk.dogs as Array<Tables<'dogs'>>).map((dog) => {
                                     return (

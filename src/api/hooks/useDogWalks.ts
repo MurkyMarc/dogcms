@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useSupabase from "./useSupabase";
 import { errorToast } from "../../utils/helpers";
-import { createDogWalksByDogIds, deleteDogWalkById, deleteDogWalksByWalkId, getDogWalkById, getDogWalksByWalkId } from "../queries/dogWalksQueries";
+import { createDogWalksByDogIds, deleteDogWalkById, deleteDogWalksByDogIds, getDogWalkById, getDogWalksByWalkId } from "../queries/dogWalksQueries";
 
 // todo - add restrictions to these
 
@@ -19,8 +19,8 @@ export function useCreateDogWalks() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async ({ dogIds, walkId }: { dogIds: number[], walkId: number }) => {
-        return await createDogWalksByDogIds(client, dogIds, walkId);
+    const mutationFn = async ({ walkId, dogIds }: { dogIds: number[], walkId: number }) => {
+        return await createDogWalksByDogIds(client, walkId, dogIds);
     };
 
     return useMutation({
@@ -47,12 +47,12 @@ export function useDeleteDogWalkById() {
     });
 }
 
-export function useDeleteDogWalksByWalkId() {
+export function useDeleteDogWalksByWalkDogIds() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (walkId: number) => {
-        return await deleteDogWalksByWalkId(client, walkId);
+    const mutationFn = async ({ walkId, dogIds }: { walkId: number, dogIds: number[] }) => {
+        return await deleteDogWalksByDogIds(client, walkId, dogIds);
     };
 
     return useMutation({

@@ -4,8 +4,9 @@ import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
+import { createDogWalksByDogIds, deleteDogWalksByDogIds } from "../queries/dogWalksQueries";
 
-export function useGetWalksById(id: string) {
+export function useGetWalkById(id: string) {
     const client = useSupabase();
     const queryClient = useQueryClient();
     const queryKey = ['walks', id];
@@ -13,11 +14,11 @@ export function useGetWalksById(id: string) {
     const queryFn = async () => {
         return await getWalkById(client, id).then(
             (result) => {
-                const walk = result.data;
+                const walk = result?.data;
                 walk && (walk.dogs as Array<Tables<'dogs'>>).map(dog => {
                     queryClient.setQueryData(['dogs', `${dog.id}`], dog);
                 });
-                return walk;
+                return walk as Tables<'walks_with_dogs'>;
             }
         );
     };
@@ -73,19 +74,44 @@ export function useDeleteWalkById() {
     });
 }
 
+type WalkUpdate = {
+    id: number;
+    date: string;
+    start: string;
+    end: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    group: boolean;
+    notes: string;
+    subtitle: string;
+}
+
+interface UseUpdateWalkParams {
+    walk: WalkUpdate;
+    addedDogIds: number[];
+    removedDogIds: number[];
+}
+
 export function useUpdateWalk() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (walk: Partial<Tables<'walks'>>) => {
-        return await updateWalk(client, walk);
+    const mutationFn = async ({ walk, addedDogIds, removedDogIds }: UseUpdateWalkParams) => {
+        // update walk and create/delete dog walks in parallel
+        const promises = [];
+        promises.push(updateWalk(client, walk));
+        if (addedDogIds.length > 0) promises.push(createDogWalksByDogIds(client, walk.id, addedDogIds));
+        if (removedDogIds.length > 0) promises.push(deleteDogWalksByDogIds(client, walk.id, removedDogIds));
+        await Promise.all(promises);
     };
 
     return useMutation({
         mutationFn,
         onMutate: () => loadingToast(),
-        onSuccess: ({ data: walk }) => {
-            queryClient.setQueryData(['walks', `${walk?.id}`], walk);
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['walks'] });
             successToast("Updated successfully.")
         },
         onError: (error) => {

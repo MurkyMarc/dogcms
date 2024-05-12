@@ -6,7 +6,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Tables } from "../../utils/database.types"
 import { useIsMutating } from '@tanstack/react-query'
-import { useCreateWalk } from "../../api/hooks/useWalks"
+import { useUpdateWalk } from "../../api/hooks/useWalks"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
 import { Switch } from "../ui/switch"
@@ -15,14 +15,13 @@ import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateEndTime, durationOptions, formatTimeToAmPm, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateEndTime, durationOptions, formatTimeToAmPm, getArrayDifferences, parseDateStringToUTC, timeDifference, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
+import { WalkScrollImage } from "../../pages/Dashboard/components/WalkScrollImage"
+import { useRef, useState } from "react"
+import { useNavigate } from "react-router-dom";
 import { useSession } from "../../api/hooks/useAuth"
 import { useGetDogsByOwner } from "../../api/hooks/useDog"
-import { WalkScrollImage } from "../../pages/Dashboard/components/WalkScrollImage"
-import { useState } from "react"
-import { useCreateDogWalks } from "../../api/hooks/useDogWalks"
-import { useNavigate } from "react-router-dom";
 
 const createWalkFormSchema = z.object({
     date: z.date(),
@@ -45,44 +44,44 @@ const createWalkFormSchema = z.object({
         .string()
         .min(0)
         .max(300)
-        .optional()
 })
 
-interface CreateWalkFormProps {
-    profile: Tables<'profiles'>;
+interface EditWalkFormProps {
+    walk: Tables<'walks_with_dogs'>;
 }
 
-export function CreateWalkForm({ profile }: CreateWalkFormProps) {
+export function EditWalkForm({ walk }: EditWalkFormProps) {
     const navigate = useNavigate();
     const isMutating = !!useIsMutating()
-    const createWalkQuery = useCreateWalk();
-    const createDogWalksQuery = useCreateDogWalks();
+    const updateWalkQuery = useUpdateWalk();
     const { data: session } = useSession();
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
-    const [selectedDogIds, setSelectedDogIds] = useState<number[]>([]);
+    const originalDogIds = useRef(walk.dogs.map(dog => dog.id));
+    const [selectedDogIds, setSelectedDogIds] = useState<number[]>(walk.dogs.map(dog => dog.id));
+    const initialTime = timeOptions.filter(option => option.value === walk.start)[0].name;
+    const initialDuration = timeDifference(walk.start, walk.end);
 
     type CreateWalkFormValues = z.infer<typeof createWalkFormSchema>
 
     const form = useForm<CreateWalkFormValues>({
         resolver: zodResolver(createWalkFormSchema),
         defaultValues: {
-            date: new Date(),
-            start: '12:00:00',
-            duration: '15',
-            street: profile.street,
-            city: profile.city,
-            state: profile.state,
-            zip: profile.zip,
-            group: true,
-            notes: ''
+            date: parseDateStringToUTC(walk.date),
+            start: walk.start,
+            duration: initialDuration,
+            street: walk.street,
+            city: walk.city,
+            state: walk.state,
+            zip: walk.zip,
+            group: walk.group,
+            notes: walk.notes
         }
     })
 
     async function onSubmit(e: CreateWalkFormValues) {
         const end = calculateEndTime(e.start, e.duration);
         const data = {
-            customer: profile.id,
-            date: e.date.toISOString().split('T')[0],
+            id: walk.id,
             start: e.start,
             end,
             street: e.street,
@@ -91,14 +90,12 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             zip: e.zip,
             group: e.group,
             notes: e.notes,
-            status: 'unscheduled',
-            title: `${profile.username}`,
             subtitle: `${formatTimeToAmPm(e.start)} - ${formatTimeToAmPm(end)}`,
-            description: `${profile.f_name} ${profile.l_name} - status: unscheduled`
+            date: e.date.toISOString().split('T')[0]
         }
 
-        const newWalk = await createWalkQuery.mutateAsync(data);
-        if (newWalk) await createDogWalksQuery.mutateAsync({ walkId: newWalk.id, dogIds: selectedDogIds });
+        const { added, removed } = getArrayDifferences(originalDogIds.current, selectedDogIds);
+        await updateWalkQuery.mutateAsync({walk: data, addedDogIds: added, removedDogIds: removed });
         navigate('/dashboard/walks');
     }
 
@@ -170,7 +167,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
                                         <FormControl>
                                             <Select onValueChange={field.onChange}>
                                                 <SelectTrigger className="w-full">
-                                                    <SelectValue {...field} placeholder="12:00 PM" />
+                                                    <SelectValue {...field} placeholder={initialTime} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
@@ -196,7 +193,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
                                         <FormControl>
                                             <Select onValueChange={field.onChange}>
                                                 <SelectTrigger className="w-full">
-                                                    <SelectValue {...field} placeholder="15 minutes" />
+                                                    <SelectValue {...field} placeholder={`${initialDuration} minutes`} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
@@ -326,7 +323,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
                             </FormItem>
                         )}
                     />
-                    <Button disabled={isMutating} type="submit">Schedule Walk</Button>
+                    <Button disabled={isMutating} type="submit">Update Walk</Button>
                 </form>
             </Form>
         </>
