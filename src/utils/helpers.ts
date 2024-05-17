@@ -3,7 +3,9 @@ import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 
 export const generateFilePath = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || event.target.files.length === 0) return
+    if (!event.target.files || event.target.files.length === 0) {
+        return { file: null, filePath: null };
+    }
 
     const file = event.target.files[0];
     const fileParts = file.name.split(".");

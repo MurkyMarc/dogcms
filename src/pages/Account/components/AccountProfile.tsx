@@ -33,6 +33,8 @@ export const AccountProfile = () => {
             if (profile) {
                 const oldImage = profile?.image || "";
                 const { file, filePath } = generateFilePath(event);
+                if (!file || !filePath) return;
+
                 const newProfile = { ...profile, image: filePath, updated_at: new Date().toISOString() };
 
                 const { error: uploadError } = await uploadAvatarQuery.mutateAsync({ filePath: filePath, file });

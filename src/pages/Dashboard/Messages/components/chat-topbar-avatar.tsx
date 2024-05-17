@@ -20,8 +20,6 @@ export function ChatTopbarAvatar({ selectedUser }: ChatTopbaAvatarProps) {
             </Avatar>
             <div className="flex flex-col">
                 <span className="font-medium">{selectedUser.name}</span>
-                {/* <span className="text-xs">Active 2 mins ago</span> */}
-                {/* TODO - determine if we want last active session indicator */}
             </div>
         </>
     )

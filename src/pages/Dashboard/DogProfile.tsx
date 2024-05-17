@@ -34,6 +34,8 @@ export const DogProfile = () => {
             if (dog) {
                 const oldImage = dog?.image || "";
                 const { file, filePath } = generateFilePath(event);
+                if (!file || !filePath) return;
+
                 const newDog = { ...dog, image: filePath, updated_at: new Date().toISOString() };
 
                 const { error: uploadError } = await uploadDogImageQuery.mutateAsync({ filePath: filePath, file });

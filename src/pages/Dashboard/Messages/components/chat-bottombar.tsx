@@ -11,7 +11,6 @@ import { cn } from "../../../../utils/cn";
 import { buttonVariants } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
 
-
 interface ChatBottombarProps {
     sendMessage: (newMessage: Message) => void;
     isMobile: boolean;
