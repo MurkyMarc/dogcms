@@ -99,7 +99,7 @@ export function useUpdateWalk() {
     const queryClient = useQueryClient();
 
     const mutationFn = async ({ walk, addedDogIds, removedDogIds }: UseUpdateWalkParams) => {
-        // update walk and create/delete dog walks in parallel
+        // update walk and create/delete dog_walks in parallel
         const promises = [];
         promises.push(updateWalk(client, walk));
         if (addedDogIds.length > 0) promises.push(createDogWalksByDogIds(client, walk.id, addedDogIds));

@@ -15,6 +15,7 @@ import MyDogs from './pages/Dashboard/MyDogs';
 import MyWalks from './pages/Dashboard/Walks';
 import Schedules from './pages/Dashboard/Schedules';
 import { DogProfile } from './pages/Dashboard/DogProfile';
+import { CreateDogProfile } from './pages/Dashboard/CreateDogProfile';
 import { Messages } from './pages/Dashboard/Messages/Messages';
 import AccountAddress from './pages/Account/components/AccountAddress';
 import CreateWalk from './pages/Dashboard/components/CreateWalk';
@@ -38,6 +39,7 @@ export const App = () => {
         </Route>
         <Route path="/dashboard" element={<Dashboard/>}>
           <Route path="/dashboard" element={<MyDogs />} />
+          <Route path="/dashboard/dogs/new" element={<CreateDogProfile />} />
           <Route path="/dashboard/dogs/:id" element={<DogProfile />} />
           <Route path="/dashboard/walks" element={<MyWalks />} />
           <Route path="/dashboard/walks/new" element={<CreateWalk />} />

@@ -1,11 +1,10 @@
 import { z } from "zod"
 import { cn } from "../../utils/cn"
-import { Tables } from "../../utils/database.types"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useIsMutating } from "@tanstack/react-query"
 import { format } from "date-fns"
-import { useUpdateDog } from "../../api/hooks/useDog"
+import { useCreateDog, useUploadDogImage } from "../../api/hooks/useDog"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Calendar } from "../ui/calendar"
@@ -13,6 +12,8 @@ import { Textarea } from "../ui/textarea"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { useNavigate } from "react-router-dom"
+import { generateRandomFileName } from "../../utils/helpers"
 
 const accountFormSchema = z.object({
     name: z
@@ -30,26 +31,43 @@ const accountFormSchema = z.object({
         string()
         .max(300, "Bio must be less than 300 characters.")
         .optional()
-})
+});
 
-interface DogFormProps {
-    dog: Tables<'dogs'>
+interface CreateNewDogFormProps {
+    image: File | null;
 }
 
-export function DogProfileForm({ dog }: DogFormProps) {
+export function CreateNewDogForm({ image }: CreateNewDogFormProps) {
+    const navigate = useNavigate();
     const isMutating = !!useIsMutating();
-    const updateDogQuery = useUpdateDog();
+    const createDogQuery = useCreateDog();
+    const uploadDogImageQuery = useUploadDogImage();
 
     type AccountFormValues = z.infer<typeof accountFormSchema>
 
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountFormSchema),
-        defaultValues: { ...dog, dob: new Date(dog.dob) },
+        defaultValues: {
+            name: "",
+            breed: "",
+            dob: new Date(),
+            bio: ""
+        }
     })
 
     async function onSubmit(e: AccountFormValues) {
-        const data = {id: dog.id, ...e, dob: e.dob?.toISOString()};
-        updateDogQuery.mutate(data);
+        const filePath = image ? generateRandomFileName(image.name.split(".")[1]) : "";
+        const data = {
+            ...e,
+            dob: e.dob?.toISOString() || "",
+            image: filePath
+        };
+        
+        const promises = [];
+        promises.push(createDogQuery.mutateAsync(data));
+        if (image) promises.push(uploadDogImageQuery.mutateAsync({ filePath, file: image }));
+        await Promise.all(promises);
+        navigate("/dashboard");
     }
 
     return (

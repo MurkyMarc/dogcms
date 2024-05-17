@@ -53,7 +53,7 @@ export function WalkScrollImage({
         <div key={dog.id} className={cn("p-2 m-1 shrink-0 rounded-md cursor-pointer", selected && "bg-blue-200", !selected && "hover:bg-blue-100")} onClick={handleClick}>
             <div className="rounded-md">
                 <div className={cn(className)} {...props}>
-                    {loading ? <CardPlaceholder className={"aspect-[3/4] w-24"} loading={loading} /> :
+                    {loading ? <CardPlaceholder className={"aspect-[3/4] w-24 rounded-md"} loading={false} /> :
                         <img
                             src={imageUrl}
                             alt={dog.name || ""}

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteDogById, deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
-import { Tables } from "../../utils/database.types";
+import { createDog, deleteDogById, deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
+import { Tables, TablesInsert } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
@@ -16,6 +16,29 @@ export function useGetDogById(id: string, enabled = true) {
     };
     const isValidDog = (id && enabled === true) ? true : false;
     return useQuery({ queryKey, queryFn, enabled: isValidDog });
+}
+
+export function useCreateDog() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async (dog: TablesInsert<'dogs'>) => {
+        return await createDog(client, dog).then(
+            (result) => result.data
+        );
+    };
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: (_, dog) => {
+            queryClient.setQueryData(['dogs', `${dog.id}`], dog);
+            successToast("Dog was created successfully.");
+        },
+        onError: (error) => {
+            errorToast(error)
+        }
+    });
 }
 
 // todo - restrict this to the owner or an admin

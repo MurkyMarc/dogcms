@@ -62,7 +62,9 @@ export const DogProfile = () => {
                         <DogCard
                             id={`${dog.id}`}
                             key={dog?.name}
-                            dog={dog}
+                            image={dog.image}
+                            name={dog.name}
+                            itemId={dog.id}
                             className="aspect-[3/4] min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-4"
                         />
                         : <CardPlaceholder className="aspect-[3/4] min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-4" loading={true} />

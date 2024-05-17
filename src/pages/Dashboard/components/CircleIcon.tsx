@@ -22,7 +22,7 @@ export function CircleIcon({
 }: Props) {
     const supabase = useSupabase();
     const [imageUrl, setImageUrl] = useState("");
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const downloadImage = useCallback(async (path: string) => {
         try {

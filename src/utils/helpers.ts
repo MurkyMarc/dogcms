@@ -3,15 +3,17 @@ import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 
 export const generateFilePath = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('Please select an image to upload.')
-    }
+    if (!event.target.files || event.target.files.length === 0) return
 
     const file = event.target.files[0];
     const fileParts = file.name.split(".");
     const fileType = fileParts[fileParts.length - 1];
     const filePath = `${uuid()}.${fileType}`;
     return { file, filePath };
+}
+
+export const generateRandomFileName = (fileExt: string) => {
+    return `${uuid()}.${fileExt}`;
 }
 
 export async function processImage(file: Blob) {
