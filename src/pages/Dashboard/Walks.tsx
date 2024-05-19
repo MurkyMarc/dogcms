@@ -44,7 +44,7 @@ export default function Walks() {
     }, [walks]);
 
     const walkTable = useMemo(() => {
-        <WalkTable isLoading={isLoading} error={error} walks={walksArray} />
+        return <WalkTable isLoading={isLoading} error={error} walks={walksArray} />
     }, [walksArray, isLoading, error]);
 
     return (
