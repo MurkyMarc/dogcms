@@ -53,7 +53,7 @@ export function CircleIcon({
     const circleIconFallback = useMemo(() => CircleIconFallback({ text: dog.name }), [CircleIconFallback, dog.name]);
 
     return (
-        <div className={cn(className)} {...props}>
+        <div className={cn(className, " min-w-max")} {...props}>
             <Link to={`/dashboard/dogs/${dog.id}`} onClick={e => e.stopPropagation()}>
                 <TooltipProvider>
                     <Tooltip>
