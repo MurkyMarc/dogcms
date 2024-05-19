@@ -305,8 +305,13 @@ export function getNextWeekDate(date: Date) {
     return `${year}-${month}-${day}`;
 }
 
+export function getDateInNumWeeks({ date = new Date(), weeks }: { date?: Date, weeks: number }) {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + (weeks * 7));
+    return newDate;
+}
+
 export function getNextMonthDate(date: Date) {
-    // returns the date of the next month in the format YYYY-MM-DD
     const nextMonth = new Date(date);
     nextMonth.setMonth(date.getMonth() + 1);
 
@@ -319,6 +324,20 @@ export function getNextMonthDate(date: Date) {
 
 export function formatMonthDay(dateString: string) {
     const date = new Date(dateString);
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const day = date.getDate() + 1;
+    return `${month} ${day}`;
+}
+
+export function getFormattedYMDDate(date: Date) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+export function formatMonthDayFromDate(date: Date) {
     const month = date.toLocaleString('en-US', { month: 'short' });
     const day = date.getDate() + 1;
     return `${month} ${day}`;
@@ -364,4 +383,10 @@ export function getArrayDifferences(array1: number[], array2: number[]) {
         added: array2.filter(item => !array1.includes(item)),
         removed: array1.filter(item => !array2.includes(item))
     }
+}
+
+export function showDateRange(startDate: Date, endDate: Date = new Date()) {
+    const start = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const end = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return `${start} - ${end}`;
 }

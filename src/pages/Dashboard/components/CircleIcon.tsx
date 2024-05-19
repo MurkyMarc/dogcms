@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { Tables } from "../../../utils/database.types"
 import useSupabase from "../../../api/hooks/useSupabase"
 import { getDogImageURL } from "../../../api/queries/dogQueries"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { CardPlaceholder } from "./CardPlaceholder"
 import { errorToast, selectRandomBackgroundColor } from "../../../utils/helpers"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
@@ -39,7 +39,7 @@ export function CircleIcon({
         if (dog.image) downloadImage(dog.image);
     }, [dog.image, downloadImage])
 
-    function CircleIconFallback({ text }: { text: string }) {
+    const CircleIconFallback = useCallback(({ text }: { text: string }) => {
         const firstLetterUppercase = text.charAt(0).toUpperCase();
         const backgroundColor = selectRandomBackgroundColor();
 
@@ -48,7 +48,9 @@ export function CircleIcon({
                 {firstLetterUppercase}
             </div>
         )
-    }
+    }, [imageStyles]);
+
+    const circleIconFallback = useMemo(() => CircleIconFallback({ text: dog.name }), [CircleIconFallback, dog.name]);
 
     return (
         <div className={cn(className)} {...props}>
@@ -64,8 +66,7 @@ export function CircleIcon({
                                         className={cn(
                                             "rounded-md object-cover transition-all aspect-[3/4]", imageStyles
                                         )}
-                                    /> : <CircleIconFallback text={dog.name} />
-
+                                    /> : circleIconFallback
                             }
                         </TooltipTrigger>
                         <TooltipContent>
