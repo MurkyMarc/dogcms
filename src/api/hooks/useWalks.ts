@@ -76,14 +76,12 @@ export function useDeleteWalkById() {
 
 type WalkUpdate = {
     id: number;
-    date: string;
     start: string;
     end: string;
     street: string;
     city: string;
     state: string;
     zip: string;
-    group: boolean;
     notes: string;
     subtitle: string;
 }

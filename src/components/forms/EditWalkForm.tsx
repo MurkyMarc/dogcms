@@ -9,13 +9,12 @@ import { useIsMutating } from '@tanstack/react-query'
 import { useUpdateWalk } from "../../api/hooks/useWalks"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
-import { Switch } from "../ui/switch"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateEndTime, durationOptions, formatTimeToAmPm, getArrayDifferences, parseDateStringToUTC, timeDifference, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, formatDateToAmPmString, getArrayDifferences, getTimeStringFromDatetimeString, getTimeDifferenceInMinutes, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { WalkScrollImage } from "../../pages/Dashboard/components/WalkScrollImage"
 import { useRef, useState } from "react"
@@ -39,7 +38,6 @@ const createWalkFormSchema = z.object({
     zip: z
         .string()
         .regex(zipRegex, "Zip Code must be between 10000 and 12000"),
-    group: z.boolean(),
     notes: z
         .string()
         .min(0)
@@ -58,40 +56,38 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
     const originalDogIds = useRef(walk.dogs.map(dog => dog.id));
     const [selectedDogIds, setSelectedDogIds] = useState<number[]>(walk.dogs.map(dog => dog.id));
-    const initialTime = timeOptions.filter(option => option.value === walk.start)[0].name;
-    const initialDuration = timeDifference(walk.start, walk.end);
+    const initialTime = timeOptions.filter(option => option.value === getTimeStringFromDatetimeString(walk.start))[0]?.name || timeOptions[0].name;
+    const initialDuration = getTimeDifferenceInMinutes(new Date(walk.start), new Date(walk.end));
 
     type CreateWalkFormValues = z.infer<typeof createWalkFormSchema>
 
     const form = useForm<CreateWalkFormValues>({
         resolver: zodResolver(createWalkFormSchema),
         defaultValues: {
-            date: parseDateStringToUTC(walk.date),
-            start: walk.start,
-            duration: initialDuration,
+            date: new Date(walk.start),
+            start: getTimeStringFromDatetimeString(walk.start),
+            duration: initialDuration.toString(),
             street: walk.street,
             city: walk.city,
             state: walk.state,
             zip: walk.zip,
-            group: walk.group,
             notes: walk.notes
         }
     })
 
     async function onSubmit(e: CreateWalkFormValues) {
-        const end = calculateEndTime(e.start, e.duration);
+        const startDateTime = calculateDatetimeFromDateAndTime(e.date, e.start);
+        const end = calculateEndDatetimeFromDateAndMinutes(startDateTime, Number(e.duration));
         const data = {
             id: walk.id,
-            start: e.start,
-            end,
+            start: startDateTime.toLocaleString(),
+            end: end.toLocaleString(),
             street: e.street,
             city: e.city,
             state: e.state,
             zip: e.zip,
-            group: e.group,
             notes: e.notes,
-            subtitle: `${formatTimeToAmPm(e.start)} - ${formatTimeToAmPm(end)}`,
-            date: e.date.toISOString().split('T')[0]
+            subtitle: `${formatDateToAmPmString(startDateTime)} - ${formatDateToAmPmString(end)}`
         }
 
         const { added, removed } = getArrayDifferences(originalDogIds.current, selectedDogIds);
@@ -277,28 +273,6 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
                                         <Input type="number" placeholder={"10001"} {...field} />
                                     </FormControl>
                                     <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="max-w-96">
-                        <FormField
-                            control={form.control}
-                            name="group"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Do you allow your dogs to walk with other people's dogs? <br />
-                                    </FormLabel>
-                                    <div className="flex">
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <span className="pl-4 leading-5">{field.value ? "yes" : "no"}</span>
-                                    </div>
                                 </FormItem>
                             )}
                         />

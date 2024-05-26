@@ -15,7 +15,7 @@ import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateEndTime, durationOptions, formatTimeToAmPm, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, formatDateToAmPmString, formatTimeStringToAmPm, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { useSession } from "../../api/hooks/useAuth"
 import { useGetDogsByOwner } from "../../api/hooks/useDog"
@@ -79,21 +79,20 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
     })
 
     async function onSubmit(e: CreateWalkFormValues) {
-        const end = calculateEndTime(e.start, e.duration);
+        const start = calculateDatetimeFromDateAndTime(e.date, e.start);
+        const end = calculateEndDatetimeFromDateAndMinutes(start, Number(e.duration));
         const data = {
             customer: profile.id,
-            date: e.date.toISOString().split('T')[0],
-            start: e.start,
-            end,
+            start: start.toLocaleString(),
+            end: end.toLocaleString(),
             street: e.street,
             city: e.city,
             state: e.state,
             zip: e.zip,
-            group: e.group,
             notes: e.notes,
             status: 'unscheduled',
             title: `${profile.username}`,
-            subtitle: `${formatTimeToAmPm(e.start)} - ${formatTimeToAmPm(end)}`,
+            subtitle: `${formatTimeStringToAmPm(e.start)} - ${formatDateToAmPmString(end)}`,
             description: `${profile.f_name} ${profile.l_name} - status: unscheduled`
         }
 

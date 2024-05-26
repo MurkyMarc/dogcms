@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table"
 import { Tables } from "../../../utils/database.types";
-import { formatMonthDay, formatTimeToAmPm } from "../../../utils/helpers";
+import { formatMonthDayFromDateString, formatDateStringToAmPmString } from "../../../utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { CircleIcon } from "./CircleIcon";
 
@@ -17,7 +17,7 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
     if (error) return <p>There was an error loading the upcoming walks. Please try again later.</p>;
 
     if (!walks || walks.length === 0) {
-        return <p>No walks found for the next 7 days.</p>
+        return <p>No walks found for these dates.</p>
     }
 
     return (
@@ -37,8 +37,8 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
                         <TableBody>
                             {walks.map((walk) => (
                                 <TableRow key={walk.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/walks/${walk.id}`)}>
-                                    <TableCell>{formatMonthDay(walk.date)}</TableCell>
-                                    <TableCell>{formatTimeToAmPm(walk.start) + " - " + formatTimeToAmPm(walk.end)}</TableCell>
+                                    <TableCell>{formatMonthDayFromDateString(walk.start)}</TableCell>
+                                    <TableCell>{formatDateStringToAmPmString(walk.start) + " - " + formatDateStringToAmPmString(walk.end)}</TableCell>
                                     <TableCell className="hidden md:flex md:flex-row md:py-1">
                                         {(walk.dogs as Array<Tables<'dogs'>>).map((dog) => {
                                             return (

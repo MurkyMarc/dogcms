@@ -7,14 +7,12 @@ export async function upsertWalk(client: TypedSupabaseClient, walk: Tables<'walk
 
 type WalkUpdate = {
     id: number;
-    date: string;
     start: string;
     end: string;
     street: string;
     city: string;
     state: string;
     zip: string;
-    group: boolean;
     notes: string;
     subtitle: string;
 }
@@ -57,9 +55,9 @@ export async function getWalksByWalkerIdAndDateRange(client: TypedSupabaseClient
         .from('walks_with_dogs')
         .select(`*`)
         .eq('walker', id)
-        .order('date', { ascending: true })
-        .gte("date", startDate)
-        .lte("date", endDate)
+        .order('start', { ascending: true })
+        .gte('start', startDate)
+        .lte('start', endDate)
         .throwOnError() || [];
 }
 
@@ -68,9 +66,9 @@ export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClie
         .from('walks_with_dogs')
         .select(`*`)
         .eq('customer', id)
-        .order('date', { ascending: true })
-        .gte("date", startDate)
-        .lte("date", endDate)
+        .order('start', { ascending: true })
+        .gte('start', startDate)
+        .lte('start', endDate)
         .throwOnError() || [];
 }
 

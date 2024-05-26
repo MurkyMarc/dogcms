@@ -185,10 +185,8 @@ export type Database = {
           admin_notes: string
           city: string
           customer: string
-          date: string
           description: string
           end: string
-          group: boolean
           id: number
           lat: string
           long: string
@@ -206,10 +204,8 @@ export type Database = {
           admin_notes?: string
           city?: string
           customer: string
-          date: string
           description?: string
           end: string
-          group?: boolean
           id?: number
           lat?: string
           long?: string
@@ -227,10 +223,8 @@ export type Database = {
           admin_notes?: string
           city?: string
           customer?: string
-          date?: string
           description?: string
           end?: string
-          group?: boolean
           id?: number
           lat?: string
           long?: string
@@ -268,11 +262,9 @@ export type Database = {
           admin_notes: string
           city: string
           customer: string
-          date: string
           description: string
           dogs: Tables<'dogs'>[]
           end: string
-          group: boolean
           id: number
           lat: string
           long: string

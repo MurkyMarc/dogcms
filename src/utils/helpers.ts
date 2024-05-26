@@ -246,26 +246,39 @@ export const durationOptions = [
     { name: '60 minutes', value: '60' }
 ]
 
-export function calculateEndTime(timeOption: string, duration: string) {
-    const [hour, minute] = timeOption.split(':'); // Split the time option into hour and minute
-    const durationInMinutes = parseInt(duration, 10); // Convert duration to a number
-
-    // Create a date object starting at today's date but with specified hour and minute
-    const startTime = new Date();
-    startTime.setHours(parseInt(hour, 10), parseInt(minute, 10), 0, 0); // Reset seconds and milliseconds to 0
-
-    // Add duration to the startTime
-    startTime.setMinutes(startTime.getMinutes() + durationInMinutes);
-
-    // Format the new time in 'hh:mm:ss'
-    const hours = startTime.getHours().toString().padStart(2, '0');
-    const minutes = startTime.getMinutes().toString().padStart(2, '0');
-    const seconds = startTime.getSeconds().toString().padStart(2, '0');
-
-    return `${hours}:${minutes}:${seconds}`;
+export function calculateEndDatetimeFromDateAndMinutes(date: Date, minutes: number) {
+    const dateTime = new Date(date.getTime() + (minutes * 60 * 1000));
+    return dateTime;
 }
 
-export function formatTimeToAmPm(timeString: string) {
+export function calculateDatetimeFromDateAndTime(date: Date, timeString: string) {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+    const dateTime = new Date(date);
+    dateTime.setHours(hours);
+    dateTime.setMinutes(minutes);
+    dateTime.setSeconds(seconds);
+
+    return dateTime;
+}
+
+export function getTimeStringFromDatetimeString(dateString: string) {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    // Pad the hours, minutes, and seconds with leading zeros if necessary
+    const hoursString = hours.toString().padStart(2, '0');
+    const minutesString = minutes.toString().padStart(2, '0');
+    const secondsString = seconds.toString().padStart(2, '0');
+
+    // Format the time string as hh:mm:ss
+    return `${hoursString}:${minutesString}:${secondsString}`;
+}
+
+
+export function formatTimeStringToAmPm(timeString: string) {
     // Split the time string into components
     const [hours, minutes] = timeString.split(':');
 
@@ -283,43 +296,41 @@ export function formatTimeToAmPm(timeString: string) {
     return `${hoursInt}:${formattedMinutes} ${suffix}`;
 }
 
-export function getTodaysDate() {
-    // returns todays date in the format YYYY-MM-DD
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
+export function formatDateStringToAmPmString(dateString: string) {
+    const date = new Date(dateString);
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
 
-    return `${year}-${month}-${day}`;
+    // Determine the suffix and adjust hours for 12-hour format
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours === 0 ? 12 : hours; // Adjust for 12-hour format, change 0 to 12 for readability
+
+    // Format the minutes to ensure two digits
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${hours}:${formattedMinutes} ${suffix}`;
 }
 
-export function getNextWeekDate(date: Date) {
-    // returns the date of the next week in the format YYYY-MM-DD
-    const nextWeek = new Date(date);
-    nextWeek.setDate(date.getDate() + 7);
+export function formatDateToAmPmString(date: Date) {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
 
-    const year = nextWeek.getFullYear();
-    const month = (nextWeek.getMonth() + 1).toString().padStart(2, '0');
-    const day = nextWeek.getDate().toString().padStart(2, '0');
+    // Determine the suffix and adjust hours for 12-hour format
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours === 0 ? 12 : hours; // Adjust for 12-hour format, change 0 to 12 for readability
 
-    return `${year}-${month}-${day}`;
+    // Format the minutes to ensure two digits
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${hours}:${formattedMinutes} ${suffix}`;
 }
 
 export function getDateInNumWeeks({ date = new Date(), weeks }: { date?: Date, weeks: number }) {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + (weeks * 7));
     return newDate;
-}
-
-export function getNextMonthDate(date: Date) {
-    const nextMonth = new Date(date);
-    nextMonth.setMonth(date.getMonth() + 1);
-
-    const year = nextMonth.getFullYear();
-    const month = (nextMonth.getMonth() + 1).toString().padStart(2, '0');
-    const day = nextMonth.getDate().toString().padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
 }
 
 export function formatMonthDay(dateString: string) {
@@ -337,9 +348,10 @@ export function getFormattedYMDDate(date: Date) {
     return `${year}-${month}-${day}`;
 }
 
-export function formatMonthDayFromDate(date: Date) {
+export function formatMonthDayFromDateString(dateString: string) {
+    const date = new Date(dateString);
     const month = date.toLocaleString('en-US', { month: 'short' });
-    const day = date.getDate() + 1;
+    const day = date.getDate();
     return `${month} ${day}`;
 }
 
@@ -358,24 +370,13 @@ export function selectRandomBackgroundColor() {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export function timeDifference(start: string, end: string) {
-    const [startHours, startMinutes] = start.split(':').slice(0, 2).map(Number);
-    const [endHours, endMinutes] = end.split(':').slice(0, 2).map(Number);
-
-    const startTime = startHours * 60 + startMinutes;
-    const endTime = endHours * 60 + endMinutes;
+export function getTimeDifferenceInMinutes(start: Date, end: Date) {
+    const startTime = start.getTime();
+    const endTime = end.getTime();
 
     const timeDiff = endTime - startTime;
 
-    return `${timeDiff}`;
-}
-
-export function parseDateStringToUTC(dateString: string) {
-    return new Date(
-        parseInt(dateString.slice(0, 4)), // year
-        parseInt(dateString.slice(5, 7)) - 1, // month (0 indexed)
-        parseInt(dateString.slice(8, 10)) // day
-    );
+    return timeDiff / 60000;
 }
 
 export function getArrayDifferences(array1: number[], array2: number[]) {
