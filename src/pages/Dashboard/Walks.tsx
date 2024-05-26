@@ -22,7 +22,7 @@ export default function Walks() {
     const { data: walks, isLoading, error } = useGetWalksByCustomerIdAndDateRange(
         profile?.id || "",
         getBeginningOfDay(startDate),
-        getEndOfDay(getDateInNumWeeks({ date: startDate, weeks: numWeeks })),
+        getEndOfDay(getDateInNumWeeks({ date: new Date(), weeks: numWeeks })),
         "week"
     );
 
