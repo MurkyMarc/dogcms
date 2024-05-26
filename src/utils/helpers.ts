@@ -246,6 +246,18 @@ export const durationOptions = [
     { name: '60 minutes', value: '60' }
 ]
 
+export function getBeginningOfDay(date: Date) {
+    const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    return newDate.toLocaleString();
+}
+
+export function getEndOfDay(date: Date) {
+    const newDate = new Date(date);
+    newDate.setHours(23, 59, 59, 999);
+    return newDate.toLocaleString();
+}
+
 export function calculateEndDatetimeFromDateAndMinutes(date: Date, minutes: number) {
     const dateTime = new Date(date.getTime() + (minutes * 60 * 1000));
     return dateTime;
@@ -338,14 +350,6 @@ export function formatMonthDay(dateString: string) {
     const month = date.toLocaleString('en-US', { month: 'short' });
     const day = date.getDate() + 1;
     return `${month} ${day}`;
-}
-
-export function getFormattedYMDDate(date: Date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
 }
 
 export function formatMonthDayFromDateString(dateString: string) {
