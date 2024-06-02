@@ -20,6 +20,8 @@ import { Messages } from './pages/Dashboard/Messages/Messages';
 import AccountAddress from './pages/Account/components/AccountAddress';
 import CreateWalk from './pages/Dashboard/components/CreateWalk';
 import EditWalk from './pages/Dashboard/components/EditWalk';
+import Walk from './pages/Dashboard/components/Walk';
+import WalkChat from './pages/Dashboard/components/WalkChat';
 
 export const App = () => {
   return (
@@ -43,7 +45,9 @@ export const App = () => {
           <Route path="/dashboard/dogs/:id" element={<DogProfile />} />
           <Route path="/dashboard/walks" element={<MyWalks />} />
           <Route path="/dashboard/walks/new" element={<CreateWalk />} />
-          <Route path="/dashboard/walks/:id" element={<EditWalk />} />
+          <Route path="/dashboard/walk/:id" element={<Walk />} />
+          <Route path="/dashboard/walk/:id/edit" element={<EditWalk />} />
+          <Route path="/dashboard/walk/:id/chat" element={<WalkChat />} />
           <Route path="/dashboard/schedules" element={<Schedules />} />
           <Route path="/dashboard/messages" element={<Messages />} />
         </Route>

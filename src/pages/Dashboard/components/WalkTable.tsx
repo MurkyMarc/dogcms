@@ -36,7 +36,7 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
                         </TableHeader>
                         <TableBody>
                             {walks.map((walk) => (
-                                <TableRow key={walk.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/walks/${walk.id}`)}>
+                                <TableRow key={walk.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/walk/${walk.id}`)}>
                                     <TableCell>{formatMonthDayFromDateString(walk.start)}</TableCell>
                                     <TableCell>{formatDateStringToAmPmString(walk.start) + " - " + formatDateStringToAmPmString(walk.end)}</TableCell>
                                     <TableCell className="hidden md:flex md:flex-row md:py-1">

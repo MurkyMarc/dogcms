@@ -13,7 +13,6 @@ export function Messages() {
 
     useEffect(() => {
         const checkScreenWidth = () => setIsMobile(window.innerWidth <= 768);
-
         checkScreenWidth();
         window.addEventListener("resize", checkScreenWidth);
 
