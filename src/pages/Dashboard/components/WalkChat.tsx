@@ -17,12 +17,6 @@ export default function WalkChat() {
     return (
         <div className="p-6 space-y-8">
             <div className="items-center">
-                <div className="pb-4">
-                    <h3 className="text-lg font-medium">Walk Chat</h3>
-                    <p className="text-sm text-muted-foreground">
-                        Talk with your walker
-                    </p>
-                </div>
                 <WalkNav />
                 <Separator className="my-6" />
                 <div>

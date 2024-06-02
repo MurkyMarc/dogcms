@@ -345,13 +345,6 @@ export function getDateInNumWeeks({ date = new Date(), weeks }: { date?: Date, w
     return newDate;
 }
 
-export function formatMonthDay(dateString: string) {
-    const date = new Date(dateString);
-    const month = date.toLocaleString('en-US', { month: 'short' });
-    const day = date.getDate() + 1;
-    return `${month} ${day}`;
-}
-
 export function formatMonthDayFromDateString(dateString: string) {
     const date = new Date(dateString);
     const month = date.toLocaleString('en-US', { month: 'short' });

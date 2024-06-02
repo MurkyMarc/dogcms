@@ -8,8 +8,9 @@ import { errorToast } from "../../../utils/helpers"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     dog: Tables<'dogs'>
-    selectedDogIds: number[];
-    setDogIds: React.Dispatch<React.SetStateAction<number[]>>
+    selectedDogIds?: number[];
+    setDogIds?: React.Dispatch<React.SetStateAction<number[]>> | null
+    selectDisabled?: boolean;
 }
 
 export function WalkScrollImage({
@@ -17,6 +18,7 @@ export function WalkScrollImage({
     className,
     setDogIds,
     selectedDogIds = [],
+    selectDisabled = false,
     ...props
 }: Props) {
     const supabase = useSupabase();
@@ -40,17 +42,20 @@ export function WalkScrollImage({
     }, [dog.image, downloadImage])
 
     const handleClick = () => {
-        setSelected(!selected);
-        setDogIds((dogs) => {
-            if (dogs.includes(dog.id)) {
-                return dogs.filter((id) => id !== dog.id);
-            }
-            return [...dogs, dog.id];
-        });
+        !selectDisabled && setSelected(!selected);
+
+        if (setDogIds) {
+            setDogIds((dogs) => {
+                if (dogs.includes(dog.id)) {
+                    return dogs.filter((id) => id !== dog.id);
+                }
+                return [...dogs, dog.id];
+            });
+        }
     }
 
     return (
-        <div key={dog.id} className={cn("p-2 m-1 shrink-0 rounded-md cursor-pointer", selected && "bg-blue-200", !selected && "sm:hover:bg-blue-100")} onClick={handleClick}>
+        <div key={dog.id} className={cn("p-2 m-1 shrink-0 rounded-md cursor-pointer", selected && "bg-blue-200", !selected && "sm:hover:bg-blue-100", selectDisabled && "cursor-default bg-blue-100")} onClick={handleClick}>
             <div className="rounded-md">
                 <div className={cn(className)} {...props}>
                     {loading ? <CardPlaceholder className={"aspect-[3/4] w-24 rounded-md"} loading={false} /> :
