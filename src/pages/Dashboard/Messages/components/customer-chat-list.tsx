@@ -47,11 +47,11 @@ export function CustomerChatList({
                             )}
                         >
                             <div className="flex gap-3 items-center">
-                                {!isYourMessage && <ProfileCircleIcon profile={conversationUsers?.other || null} />}
+                                {!isYourMessage && conversationUsers?.other && <ProfileCircleIcon profile={conversationUsers.other} />}
                                 <span className={cn("bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg", isYourMessage ? "rounded-tr-none" : "rounded-tl-none")}>
                                     {message.content}
                                 </span>
-                                {isYourMessage && <ProfileCircleIcon profile={conversationUsers?.me || null} />}
+                                {isYourMessage && conversationUsers?.me  && <ProfileCircleIcon profile={conversationUsers.me} />}
                             </div>
                         </div>
                     )
