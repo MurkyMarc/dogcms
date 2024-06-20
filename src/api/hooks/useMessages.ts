@@ -21,7 +21,7 @@ export function useGetConversationByWalkId(id: string) {
 
 export function useGetConversationMessages(id: string) {
     const client = useSupabase();
-    const queryKey = ['messages', id];
+    const queryKey = ['messages', 'conversation_id', id];
 
     const queryFn = async () => {
         if (!id) return null;
@@ -114,10 +114,8 @@ export function useSendMessage() {
 
     return useMutation({
         mutationFn,
-        onMutate: () => loadingToast(),
         onSuccess: (_, message) => {
-            queryClient.setQueryData(['messages', `${message.id}`], message);
-            successToast("Message was created successfully.");
+            queryClient.invalidateQueries({ queryKey: ['messages', 'conversation_id', `${message.conversation_id}`] });
         },
         onError: (error) => {
             errorToast(error)

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CustomerChatList } from "./components/customer-chat-list";
 import { cn } from "../../../utils/cn";
-import { useGetConversationByWalkId, useGetConversationMessages } from "../../../api/hooks/useMessages";
+import { useGetConversationByWalkId, useGetConversationMessages, useSendMessage } from "../../../api/hooks/useMessages";
 import { TablesInsert } from "../../../utils/database.types";
 import { useSession } from "../../../api/hooks/useAuth";
 import { identifyConversationUsers } from "../../../utils/helpers";
@@ -17,6 +17,7 @@ export function CustomerChat({ walkId }: CustomerChatProps) {
     const { data: conversation, isLoading: conversationLoading } = useGetConversationByWalkId(walkId);
     const { data: messages, isLoading: messagesLoading } = useGetConversationMessages(conversation?.id.toString() || "");
     const conversationUsers = identifyConversationUsers(conversation!, session!);
+    const sendMessageQuery = useSendMessage();
 
     useEffect(() => {
         const checkScreenWidth = () => setIsMobile(window.innerWidth <= 768);
@@ -27,8 +28,7 @@ export function CustomerChat({ walkId }: CustomerChatProps) {
     }, []);
 
     const sendMessage = (message: TablesInsert<'messages'>) => {
-        // setMessages([...messages, newMessage]);
-        console.log(message);
+        sendMessageQuery.mutate(message);
     };
 
     if (conversationLoading || messagesLoading) return <p>Loading...</p>;
@@ -38,7 +38,7 @@ export function CustomerChat({ walkId }: CustomerChatProps) {
             <div className={cn("w-full flex flex-wrap border-b pb-6")}>
                 <ProfileCircleIcon profile={conversationUsers?.other || null} />
                 <div className="flex flex-col justify-center items-center pl-4">
-                    <span className="font-medium">{conversation?.employee?.f_name}</span>
+                    <span className="font-medium">{conversationUsers?.other?.f_name}</span>
                 </div>
             </div>
             <CustomerChatList
