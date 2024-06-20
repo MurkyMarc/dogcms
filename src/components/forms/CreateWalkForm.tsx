@@ -91,7 +91,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             zip: e.zip,
             notes: e.notes,
             status: 'unscheduled',
-            title: `${profile.username}`,
+            title: `${profile.f_name}`,
             subtitle: `${formatTimeStringToAmPm(e.start)} - ${formatDateToAmPmString(end)}`,
             description: `${profile.f_name} ${profile.l_name} - status: unscheduled`
         }

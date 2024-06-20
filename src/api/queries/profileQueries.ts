@@ -22,7 +22,6 @@ export async function updateProfile(
 export async function getProfileById(client: TypedSupabaseClient, profileId: string) {
     return await client
         .from('profiles')
-        // .select(`username, website, image`)
         .select()
         .eq('id', profileId)
         .throwOnError()

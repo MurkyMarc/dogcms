@@ -16,7 +16,7 @@ export const AccountProfile = () => {
     const uploadAvatarQuery = useUploadAvatar();
     const deleteAvatarQuery = useDeleteAvatar();
     const updateProfileQuery = useUpdateProfile();
-    const { data: profile, isFetched } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: profile, isFetched } = useGetMyProfileById(session?.user.id || "");
 
     function handleOnImageUploaded(event: ChangeEvent<HTMLInputElement>) {
         try {

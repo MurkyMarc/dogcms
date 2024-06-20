@@ -16,7 +16,7 @@ import MyWalks from './pages/Dashboard/Walks';
 import Schedules from './pages/Dashboard/Schedules';
 import { DogProfile } from './pages/Dashboard/DogProfile';
 import { CreateDogProfile } from './pages/Dashboard/CreateDogProfile';
-import { Messages } from './pages/Dashboard/Messages/Messages';
+import { EmployeeChat } from './pages/Dashboard/Messages/EmployeeChat';
 import AccountAddress from './pages/Account/components/AccountAddress';
 import CreateWalk from './pages/Dashboard/components/CreateWalk';
 import EditWalk from './pages/Dashboard/components/EditWalk';
@@ -49,7 +49,7 @@ export const App = () => {
           <Route path="/dashboard/walk/:id/edit" element={<EditWalk />} />
           <Route path="/dashboard/walk/:id/chat" element={<WalkChat />} />
           <Route path="/dashboard/schedules" element={<Schedules />} />
-          <Route path="/dashboard/messages" element={<Messages />} />
+          <Route path="/dashboard/messages" element={<EmployeeChat />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

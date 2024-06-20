@@ -9,7 +9,7 @@ import { useGetMyProfileById } from "../api/hooks/useProfile";
 export default function Header() {
     const signOut = useSignOut();
     const { data: session } = useSession();
-    const { data: profile, isFetched } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: profile, isFetched } = useGetMyProfileById(session?.user.id || "");
 
     return (
         <header className="flex items-center justify-between w-full h-14 px-4 border-b gap-4 lg:px-6 bg-sky-100">
@@ -20,7 +20,7 @@ export default function Header() {
 
             {profile ? (
                 <div className="flex items-center space-x-2 ml-auto">
-                    {profile.username ? <span className="hidden xs:block px-3">Hello, {profile.username}</span> : <span>Welcome</span>}
+                    {profile.f_name ? <span className="hidden xs:block px-3">Hello, {profile.f_name}</span> : <span>Welcome</span>}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className="w-8 h-8 rounded-[50%] border-2 border-gray-200 relative" size="icon" variant="ghost">

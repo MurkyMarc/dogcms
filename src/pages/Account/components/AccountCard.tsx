@@ -41,7 +41,7 @@ export function AccountCard({
             {loading ? <CardPlaceholder className={className} loading={true} /> :
                 <img
                     src={imageUrl}
-                    alt={profile.username || ""}
+                    alt={profile.f_name || ""}
                     className={cn(
                         "rounded-md object-cover transition-all aspect-[3/4]", className
                     )}

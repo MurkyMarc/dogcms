@@ -18,7 +18,7 @@ export default function Walks() {
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [walksArray, setWalksArray] = useState<Tables<'walks_with_dogs'>[]>([]);
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
-    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: profile } = useGetMyProfileById(session?.user.id || "");
     const { data: walks, isLoading, error } = useGetWalksByCustomerIdAndDateRange(
         profile?.id || "",
         getBeginningOfDay(startDate),
@@ -26,7 +26,7 @@ export default function Walks() {
         "week"
     );
 
-    const hasDogs = dogs && dogs.length > 0;
+    const hasDogs = (dogs && dogs.length > 0) || false;
 
     function combineWalks(array1: Tables<'walks_with_dogs'>[], array2: Tables<'walks_with_dogs'>[]) {
         const map = new Map();

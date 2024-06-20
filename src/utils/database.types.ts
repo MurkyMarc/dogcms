@@ -9,6 +9,87 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          archived: boolean
+          created_at: string
+          customer: Tables<'profiles'>
+          customer_last_viewed_at: string
+          customer_unread_count: number
+          employee: Tables<'profiles'> | null
+          employee_last_viewed_at: string
+          employee_unread_count: number
+          id: number
+          last_message: string
+          last_message_at: string | null
+          walk_id: number
+        }
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          customer: string
+          customer_last_viewed_at?: string
+          customer_unread_count?: number
+          employee?: string | null
+          employee_last_viewed_at?: string
+          employee_unread_count?: number
+          id?: number
+          last_message?: string
+          last_message_at?: string | null
+          walk_id: number
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          customer?: string
+          customer_last_viewed_at?: string
+          customer_unread_count?: number
+          employee?: string | null
+          employee_last_viewed_at?: string
+          employee_unread_count?: number
+          id?: number
+          last_message?: string
+          last_message_at?: string | null
+          walk_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_customer_fkey"
+            columns: ["customer"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_employee_fkey"
+            columns: ["employee"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_walk_id_fkey"
+            columns: ["walk_id"]
+            isOneToOne: false
+            referencedRelation: "walks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_walk_id_fkey"
+            columns: ["walk_id"]
+            isOneToOne: false
+            referencedRelation: "walks_with_dogs"
+            referencedColumns: ["walk_id"]
+          },
+          {
+            foreignKeyName: "conversations_walk_id_fkey"
+            columns: ["walk_id"]
+            isOneToOne: false
+            referencedRelation: "walks_with_dogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dog_walks: {
         Row: {
           dog: number
@@ -115,6 +196,48 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: number
+          created_at: string
+          deleted_at: string | null
+          id: number
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id: number
+          created_at?: string
+          deleted_at?: string | null
+          id?: number
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: number
+          created_at?: string
+          deleted_at?: string | null
+          id?: number
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           bio: string
@@ -131,7 +254,6 @@ export type Database = {
           state: string
           street: string
           updated_at: string
-          username: string
           zip: string
         }
         Insert: {
@@ -149,7 +271,6 @@ export type Database = {
           state?: string
           street?: string
           updated_at?: string
-          username?: string
           zip?: string
         }
         Update: {
@@ -167,7 +288,6 @@ export type Database = {
           state?: string
           street?: string
           updated_at?: string
-          username?: string
           zip?: string
         }
         Relationships: [

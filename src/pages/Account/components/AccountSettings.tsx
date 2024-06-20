@@ -5,7 +5,7 @@ import { Separator } from "../../../components/ui/separator";
 
 export default function AccountSettings() {
     const { data: session } = useSession();
-    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: profile } = useGetMyProfileById(session?.user.id || "");
     return (
         <div className="flex-1 lg:max-w-2xl">
             <div className="space-y-6">

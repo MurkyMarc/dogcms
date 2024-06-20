@@ -5,7 +5,7 @@ import { CreateWalkForm } from "../../../components/forms/CreateWalkForm";
 
 export default function CreateWalk() {
     const { data: session } = useSession();
-    const { data: profile } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: profile } = useGetMyProfileById(session?.user.id || "");
 
     return (
         <div className="p-6 space-y-8">

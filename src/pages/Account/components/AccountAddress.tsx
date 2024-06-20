@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function AccountAddress() {
     const navigate = useNavigate();
     const { data: session } = useSession();
-    const { data: profile, isLoading, error } = useGetMyProfileById(session?.user.id || "", !!session);
+    const { data: profile, isLoading, error } = useGetMyProfileById(session?.user.id || "");
 
     if (isLoading) return <p>Loading...</p>;
     if (error) navigate("/login");

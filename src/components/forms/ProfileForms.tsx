@@ -3,17 +3,12 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "../ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 import { useUpdateProfile } from "../../api/hooks/useProfile"
 import { Tables } from "../../utils/database.types"
 import { useIsMutating } from '@tanstack/react-query'
 
 const profileFormSchema = z.object({
-    username: z
-        .string()
-        .min(2, "Username must be at least 2 characters.")
-        .max(30, "Username must not be longer than 30 characters."),
     bio: z
         .string()
         .max(160, "Your bio can be up to 160 characters.")
@@ -43,22 +38,6 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                                <Input placeholder={"Username"} {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                This is the name visible on the site to others.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
                 <FormField
                     control={form.control}
                     name="bio"

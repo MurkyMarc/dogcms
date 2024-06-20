@@ -5,17 +5,18 @@ import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
-export function useGetDogById(id: string, enabled = true) {
+export function useGetDogById(id: string) {
     const client = useSupabase();
     const queryKey = ['dogs', id];
 
     const queryFn = async () => {
+        if (!id) return null;
         return await getDogById(client, id).then(
             (result) => result.data
         );
     };
-    const isValidDog = (id && enabled === true) ? true : false;
-    return useQuery({ queryKey, queryFn, enabled: isValidDog });
+
+    return useQuery({ queryKey, queryFn });
 }
 
 export function useCreateDog() {
@@ -105,6 +106,7 @@ export function useGetDogsByOwner(ownerId: string) {
     const queryClient = useQueryClient();
 
     const queryFn = async () => {
+        if (!ownerId) return null;
         return await getDogsByOwnerId(client, ownerId).then(result => {
             const dogs = result.data || [];
             dogs.map(dog => queryClient.setQueryData(['dogs', `${dog.id}`], dog));
@@ -112,11 +114,7 @@ export function useGetDogsByOwner(ownerId: string) {
         })
     };
 
-    return useQuery({
-        queryKey: ['mydogs'],
-        queryFn,
-        enabled: !!ownerId,
-    });
+    return useQuery({ queryKey: ['mydogs'], queryFn });
 }
 
 export function useUploadDogImage() {

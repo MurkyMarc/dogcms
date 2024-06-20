@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Tables } from "../../../utils/database.types";
 import { formatMonthDayFromDateString, formatDateStringToAmPmString } from "../../../utils/helpers";
 import { useNavigate } from "react-router-dom";
-import { CircleIcon } from "./CircleIcon";
+import { DogCircleIcon } from "./DogCircleIcon";
 
 interface WalkTableProps {
     isLoading: boolean;
@@ -43,7 +43,7 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
                                         {(walk.dogs as Array<Tables<'dogs'>>).map((dog) => {
                                             return (
                                                 <div key={`${dog.id}`} className="p-1 mx-1">
-                                                    <CircleIcon dog={dog} imageStyles="rounded-full w-12 h-12" />
+                                                    <DogCircleIcon dog={dog} />
                                                 </div>
                                             )
                                         })}

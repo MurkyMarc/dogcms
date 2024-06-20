@@ -4,16 +4,17 @@ import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
-export function useGetMyProfileById(profileId: string, enabled = true) {
+export function useGetMyProfileById(profileId: string) {
     const client = useSupabase();
 
     const queryFn = async () => {
+        if (!profileId) return null;
         return await getProfileById(client, profileId).then(
             (result) => result.data
         );
     };
-    const isValidProfile = (profileId !== "" && enabled === true) ? true : false;
-    return useQuery({ queryKey: ['myprofile'], queryFn, enabled: isValidProfile });
+
+    return useQuery({ queryKey: ['myprofile'], queryFn });
 }
 
 export function useGetProfileById(profileId: string) {

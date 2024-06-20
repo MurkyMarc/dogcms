@@ -6,7 +6,7 @@ import { Chat } from "./components/chat";
 import { User, userData } from "./data";
 import Cookies from "js-cookie";
 
-export function Messages() {
+export function EmployeeChat() {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User>(userData[0]);
     const [isMobile, setIsMobile] = useState(false);

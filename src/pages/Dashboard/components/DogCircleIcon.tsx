@@ -3,10 +3,11 @@ import { Link } from "react-router-dom"
 import { Tables } from "../../../utils/database.types"
 import useSupabase from "../../../api/hooks/useSupabase"
 import { getDogImageURL } from "../../../api/queries/dogQueries"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { CardPlaceholder } from "./CardPlaceholder"
-import { errorToast, selectRandomBackgroundColor } from "../../../utils/helpers"
+import { errorToast } from "../../../utils/helpers"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
+import { CircleIconFallback } from "../../../components/ui/icons/CircleIconFallback"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     dog: Tables<'dogs'>
@@ -14,10 +15,10 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     imageStyles?: string
 }
 
-export function CircleIcon({
+export function DogCircleIcon({
     dog,
     className,
-    imageStyles,
+    imageStyles = "rounded-full w-12 h-12",
     ...props
 }: Props) {
     const supabase = useSupabase();
@@ -39,21 +40,8 @@ export function CircleIcon({
         if (dog.image) downloadImage(dog.image);
     }, [dog.image, downloadImage])
 
-    const CircleIconFallback = useCallback(({ text }: { text: string }) => {
-        const firstLetterUppercase = text.charAt(0).toUpperCase();
-        const backgroundColor = selectRandomBackgroundColor();
-
-        return (
-            <div className={cn(imageStyles, "flex flex-col justify-center")} style={{ backgroundColor: backgroundColor, border: `1px solid #e5e7eb` }}>
-                {firstLetterUppercase}
-            </div>
-        )
-    }, [imageStyles]);
-
-    const circleIconFallback = useMemo(() => CircleIconFallback({ text: dog.name }), [CircleIconFallback, dog.name]);
-
     return (
-        <div className={cn(className, " min-w-max")} {...props}>
+        <div className={cn(className, "min-w-max")} {...props}>
             <Link to={`/dashboard/dogs/${dog.id}`} onClick={e => e.stopPropagation()}>
                 <TooltipProvider>
                     <Tooltip>
@@ -64,9 +52,9 @@ export function CircleIcon({
                                         src={imageUrl}
                                         alt={dog.name || ""}
                                         className={cn(
-                                            "rounded-md object-cover transition-all aspect-[3/4]", imageStyles
+                                            "rounded-md object-cover transition-all", imageStyles
                                         )}
-                                    /> : circleIconFallback
+                                    /> : <CircleIconFallback text={dog.name} imageStyles={imageStyles} />
                             }
                         </TooltipTrigger>
                         <TooltipContent>
