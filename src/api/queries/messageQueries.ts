@@ -40,8 +40,40 @@ export async function getConversationByWalkId(client: TypedSupabaseClient, id: s
                 image
             )`)
         .eq('walk_id', id)
+        .single()
         .throwOnError()
-        .single();
+}
+
+export async function updateUnreadCountAndLastViewedAt(client: TypedSupabaseClient, conversation: Tables<'conversations'>, userId: string) {
+    let params;
+    const time = new Date().toLocaleString();
+
+    if (userId === conversation.customer?.id) {
+        params = { customer_last_viewed_at: time, customer_unread_count: 0 }
+    } else if (userId === conversation.employee?.id) {
+        params = { employee_last_viewed_at: time, employee_unread_count: 0 }
+    } else {
+        return { data: null };
+    }
+
+    return await client.from('conversations')
+        .update(params)
+        .eq('id', conversation.id)
+        .select(`*,
+            employee (
+                id,
+                f_name,
+                l_name,
+                image
+            ),
+            customer (
+                id,
+                f_name,
+                l_name,
+                image
+            )`)
+        .single()
+        .throwOnError();
 }
 
 export async function getConversationMessages(client: TypedSupabaseClient, id: string) {
@@ -73,21 +105,6 @@ export async function updateConversation(
         .select()
         .single()
         .throwOnError()
-}
-
-export async function updateConversationLastViewedAt(client: TypedSupabaseClient, conversation: Tables<'conversations'>, id: string) {
-    const isEmployee = id === conversation.employee?.id;
-    const updateFields = isEmployee
-        ? { employee_last_viewed_at: new Date().toLocaleTimeString(), employee_unread_count: 0 }
-        : { customer_last_viewed_at: new Date().toLocaleTimeString(), customer_unread_count: 0 };
-
-    return client
-        .from('conversations')
-        .update(updateFields)
-        .eq('id', conversation.id!)
-        .select()
-        .single()
-        .throwOnError();
 }
 
 export async function deleteConversationById(client: TypedSupabaseClient, id: string) {

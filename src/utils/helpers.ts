@@ -1,4 +1,3 @@
-import { Session } from '@supabase/supabase-js';
 import { ChangeEvent } from 'react';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
@@ -391,17 +390,18 @@ export function showDateRange(startDate: Date, endDate: Date = new Date()) {
     return `${start} - ${end}`;
 }
 
-export function identifyConversationUsers(conversation: Tables<'conversations'>, session: Session) {
-    if (!conversation || !session) return null;
-    if (conversation.employee?.id === session.user.id) {
+export function identifyConversationUsers(conversation: Tables<'conversations'>, userId: string) {
+    if (!conversation || !userId) return null;
+
+    if (conversation.employee?.id === userId) {
         return {
-            me: conversation.employee,
-            other: conversation.customer
+            me: { user: conversation.employee, unreadCount: conversation.employee_unread_count, lastViewedAt: conversation.employee_last_viewed_at },
+            other: { user: conversation.customer, unreadCount: conversation.customer_unread_count, lastViewedAt: conversation.customer_last_viewed_at }
         }
     } else {
         return {
-            me: conversation.customer,
-            other: conversation.employee
+            me: { user: conversation.customer, unreadCount: conversation.customer_unread_count, lastViewedAt: conversation.customer_last_viewed_at },
+            other: { user: conversation.employee, unreadCount: conversation.employee_unread_count, lastViewedAt: conversation.employee_last_viewed_at }
         }
     }
 }

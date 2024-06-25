@@ -10,18 +10,16 @@ interface ChatListProps {
     messages: Tables<'messages'>[];
     conversation: Tables<'conversations'>;
     sendMessage: (newMessage: TablesInsert<'messages'>) => void;
-    isMobile: boolean;
 }
 
 export function CustomerChatList({
     messages,
     conversation,
     sendMessage,
-    isMobile,
 }: ChatListProps) {
     const { data: session } = useSession();
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-    const conversationUsers = identifyConversationUsers(conversation!, session!);
+    const conversationUsers = identifyConversationUsers(conversation!, session!.user.id);
 
     useEffect(() => {
         if (messagesContainerRef.current) {
@@ -42,22 +40,22 @@ export function CustomerChatList({
                         <div
                             key={index}
                             className={cn(
-                                "flex flex-col gap-2 p-4 whitespace-pre-wrap",
+                                "flex flex-col gap-2 p-2 whitespace-pre-wrap",
                                 message.sender_id == session?.user.id ? "items-end" : "items-start"
                             )}
                         >
                             <div className="flex gap-3 items-center">
-                                {!isYourMessage && conversationUsers?.other && <ProfileCircleIcon profile={conversationUsers.other} />}
+                                {!isYourMessage && conversationUsers?.other && <ProfileCircleIcon profile={conversationUsers.other.user} />}
                                 <span className={cn("bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg", isYourMessage ? "rounded-tr-none" : "rounded-tl-none")}>
                                     {message.content}
                                 </span>
-                                {isYourMessage && conversationUsers?.me  && <ProfileCircleIcon profile={conversationUsers.me} />}
+                                {isYourMessage && conversationUsers?.me  && <ProfileCircleIcon profile={conversationUsers.me.user} />}
                             </div>
                         </div>
                     )
                 })}
             </div>
-            <ChatBottombar sendMessage={sendMessage} isMobile={isMobile} conversation={conversation} />
+            <ChatBottombar sendMessage={sendMessage} conversation={conversation} />
         </div>
     );
 }

@@ -15,13 +15,12 @@ import { useSession } from "../../../../api/hooks/useAuth";
 interface ChatBottombarProps {
     conversation: Tables<'conversations'>;
     sendMessage: (newMessage: TablesInsert<'messages'>) => void;
-    isMobile: boolean;
 }
 
 const BottombarIcons = [{ icon: FileImage }];
 
 export default function ChatBottombar({
-    sendMessage, isMobile, conversation
+    sendMessage, conversation
 }: ChatBottombarProps) {
     const { data: session } = useSession();
     const [message, setMessage] = useState("");
@@ -72,7 +71,7 @@ export default function ChatBottombar({
     return (
         <div className="p-2 flex justify-between w-full items-center gap-2">
             <div className="flex">
-                {!message.trim() && !isMobile && (
+                {!message.trim() && (
                     <div className="flex">
                         {BottombarIcons.map((icon, index) => (
                             <Link

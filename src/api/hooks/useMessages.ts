@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createConversation, deleteConversationById, deleteMessageById, getConversationByWalkId, getConversationMessages, sendMessage, updateConversation, updateMessage } from "../queries/messageQueries";
+import { createConversation, deleteConversationById, deleteMessageById, getConversationByWalkId, getConversationMessages, sendMessage, updateConversation, updateMessage, updateUnreadCountAndLastViewedAt } from "../queries/messageQueries";
 import useSupabase from "./useSupabase";
-import { TablesInsert } from "../../utils/database.types";
+import { Tables, TablesInsert } from "../../utils/database.types";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -30,7 +30,7 @@ export function useGetConversationMessages(id: string) {
         );
     };
 
-    return useQuery({ queryKey, queryFn });
+    return useQuery({ queryKey, queryFn, refetchInterval: 5000 });
 }
 
 export function useCreateConversation() {
@@ -46,9 +46,8 @@ export function useCreateConversation() {
     return useMutation({
         mutationFn,
         onMutate: () => loadingToast(),
-        onSuccess: (_, conversation) => {
-            queryClient.setQueryData(['conversations', `${conversation.id}`], conversation);
-            successToast("Conversation was created successfully.");
+        onSuccess: (conversation) => {
+            queryClient.setQueryData(['conversations', `${conversation?.walk_id}`], conversation);
         },
         onError: (error) => {
             errorToast(error)
@@ -81,6 +80,23 @@ export function useDeleteConversationById() {
     });
 }
 
+export function useUpdateConversationUnreadCountAndLastViewedAt() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async ({ conversation, userId }: { conversation: Tables<'conversations'>, userId: string }) => {
+        return await updateUnreadCountAndLastViewedAt(client, conversation, userId);
+    };
+
+    return useMutation({
+        mutationFn,
+        onSuccess: ({ data: conversation }) => {
+            if (!conversation || !conversation.walk_id) return;
+            queryClient.setQueryData(['conversations', `${conversation.walk_id}`], conversation);
+        }
+    });
+}
+
 export function useUpdateConversation() {
     const client = useSupabase();
     const queryClient = useQueryClient();
@@ -93,7 +109,7 @@ export function useUpdateConversation() {
         mutationFn,
         onMutate: () => loadingToast(),
         onSuccess: ({ data: conversation }) => {
-            queryClient.setQueryData(['conversations', `${conversation?.id}`], conversation);
+            queryClient.setQueryData(['conversations', `${conversation?.walk_id}`], conversation);
             successToast("Updated successfully.")
         },
         onError: (error) => {
@@ -134,8 +150,8 @@ export function useUpdateMessage() {
     return useMutation({
         mutationFn,
         onMutate: () => loadingToast(),
-        onSuccess: ({ data: message }) => {
-            queryClient.invalidateQueries({ queryKey: ['messages', `${message?.id}`] });
+        onSuccess: (_, message) => {
+            queryClient.invalidateQueries({ queryKey: ['messages', `${message?.conversation_id}`] });
             successToast("Updated successfully.")
         },
         onError: (error) => {
