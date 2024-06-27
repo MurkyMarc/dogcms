@@ -129,10 +129,18 @@ export function useUploadDogImage() {
 
 export function useDeleteDogImage() {
     const client = useSupabase();
+    const queryClient = useQueryClient();
 
-    const mutationFn = async ({ filePath }: { filePath: string }) => {
-        return await deleteDogImage(client, filePath);
+    const mutationFn = async (dog: Tables<'dogs'>) => {
+        if (!dog.image) return;
+        deleteDogImage(client, dog.image);
+        return await updateDog(client, { id: dog.id, image: "" });
     }
 
-    return useMutation({ mutationFn });
+    return useMutation({
+        mutationFn,
+        onSuccess: (_, dog) => {
+            queryClient.setQueryData(['dogs', `${dog?.id}`], {...dog, image: ""});
+        }
+    });
 }

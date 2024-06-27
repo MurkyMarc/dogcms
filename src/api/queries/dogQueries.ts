@@ -54,6 +54,8 @@ export async function getDogsByOwnerId(client: TypedSupabaseClient, id: string) 
 }
 
 export async function getDogImageURL(client: TypedSupabaseClient, path: string) {
+    if (!path) return { url: null, error: null };
+
     const { data, error } = await client.storage.from('dogs').download(path);
     if (error || data == null) return { url: null, error }
 

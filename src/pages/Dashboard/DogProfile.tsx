@@ -7,12 +7,15 @@ import { Button } from '../../components/ui/button';
 import { DogCard } from './components/DogCard';
 import { CardPlaceholder } from './components/CardPlaceholder';
 import { DogProfileForm } from '../../components/forms/DogProfileForm';
-import { errorToast, fileTypeSupported, generateFilePath, successToast } from '../../utils/helpers';
+import { errorToast, fileTypeSupported, generateFilePath } from '../../utils/helpers';
 import { useDeleteDogImage, useGetDogById, useUpdateDog, useUploadDogImage } from '../../api/hooks/useDog';
+import { deleteDogImage } from '../../api/queries/dogQueries';
+import useSupabase from '../../api/hooks/useSupabase';
 
 export const DogProfile = () => {
     // todo - handle fake ids being passed in such as abc or just for ids that dont exist
     const { id } = useParams();
+    const supabase = useSupabase();
     const isMutating = !!useIsMutating();
     const { data: dog, isFetched } = useGetDogById(id || "");
     const uploadDogImageQuery = useUploadDogImage();
@@ -26,6 +29,12 @@ export const DogProfile = () => {
             if (fileTypeSupported(event)) updateDogImage(event);
         } catch (error) {
             errorToast(error);
+        }
+    }
+
+    function handleDeleteDogImage() {
+        if (dog) {
+            deleteDogImageQuery.mutate(dog);
         }
     }
 
@@ -43,12 +52,11 @@ export const DogProfile = () => {
 
                 const { error: updateError } = await updateDogQuery.mutateAsync(newDog);
                 if (updateError) {
-                    deleteDogImageQuery.mutateAsync({ filePath });
+                    deleteDogImage(supabase, filePath);
                     throw updateError;
                 }
 
-                deleteDogImageQuery.mutateAsync({ filePath: oldImage });
-                successToast("Image was updated successfully");
+                deleteDogImage(supabase, oldImage);
             }
         } catch (error) {
             errorToast(error);
@@ -62,8 +70,7 @@ export const DogProfile = () => {
                 <div className="items-center">
                     {dog ?
                         <DogCard
-                            id={`${dog.id}`}
-                            key={dog?.name}
+                            key={`${dog.id}-${dog.image}`}
                             image={dog.image}
                             name={dog.name}
                             itemId={dog.id}
@@ -72,8 +79,11 @@ export const DogProfile = () => {
                         : <CardPlaceholder className="aspect-[3/4] min-w-[8rem] w-[8rem] md:w-[9.5rem] lg:w-[15rem] rounded-md mb-4" loading={true} />
                     }
                     <label className="relative cursor-pointer" htmlFor="dogImageUploadInput" title="Click to upload a new picture">
-                        <Button className="" size="sm" variant="outline" disabled={!isFetched && !isMutating} onClick={handleUploadImageButton}>
+                        <Button className="mr-2" size="sm" variant="outline" disabled={!isFetched && !isMutating} onClick={handleUploadImageButton}>
                             Upload a photo
+                        </Button>
+                        <Button size="sm" variant="destructive" disabled={!isFetched && !isMutating} onClick={handleDeleteDogImage}>
+                            {deleteDogImageQuery.isPending ? "Deleting..." : "Delete photo"}
                         </Button>
                         <Input className="hidden"
                             id="dogImageUploadInput"
