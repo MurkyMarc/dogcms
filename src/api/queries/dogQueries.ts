@@ -85,8 +85,11 @@ export async function deleteDogImage(client: TypedSupabaseClient, url: string) {
 export async function getDogImageURLs(client: TypedSupabaseClient, paths: string[]) {
     const fetchPromises = paths.map(async (path) => {
         try {
+            if (!path) return { path, objectUrl: "", error: null };
+
             const { data, error } = await client.storage.from('dogs').download(path);
             if (error) throw new Error(error.message);
+
             const objectUrl = URL.createObjectURL(data);
             return { path, objectUrl, error: null };
         } catch (error) {

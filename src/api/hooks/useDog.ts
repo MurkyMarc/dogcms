@@ -140,7 +140,7 @@ export function useDeleteDogImage() {
     return useMutation({
         mutationFn,
         onSuccess: (_, dog) => {
-            queryClient.setQueryData(['dogs', `${dog?.id}`], {...dog, image: ""});
+            queryClient.setQueryData(['dogs', `${dog?.id}`], { ...dog, image: "" });
         }
     });
 }

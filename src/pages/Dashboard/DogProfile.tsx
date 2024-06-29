@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
 import { Header } from './components/Header';
 import { Input } from '../../components/ui/input';
@@ -11,6 +11,7 @@ import { errorToast, fileTypeSupported, generateFilePath } from '../../utils/hel
 import { useDeleteDogImage, useGetDogById, useUpdateDog, useUploadDogImage } from '../../api/hooks/useDog';
 import { deleteDogImage } from '../../api/queries/dogQueries';
 import useSupabase from '../../api/hooks/useSupabase';
+import { ConfirmationDialog } from '../../components/ConfirmationAlert';
 
 export const DogProfile = () => {
     // todo - handle fake ids being passed in such as abc or just for ids that dont exist
@@ -21,8 +22,9 @@ export const DogProfile = () => {
     const uploadDogImageQuery = useUploadDogImage();
     const updateDogQuery = useUpdateDog();
     const deleteDogImageQuery = useDeleteDogImage();
+    const [showModal, setShowModal] = useState(false);
 
-    const handleUploadImageButton = async () => document.getElementById('dogImageUploadInput')!.click();
+    const handleUploadImageButton = () => document.getElementById('dogImageUploadInput')!.click();
 
     function handleOnImageUploaded(event: ChangeEvent<HTMLInputElement>) {
         try {
@@ -33,10 +35,15 @@ export const DogProfile = () => {
     }
 
     function handleDeleteDogImage() {
-        if (dog) {
-            deleteDogImageQuery.mutate(dog);
-        }
+        if (dog && dog.image) setShowModal(true);
     }
+
+    const handleModalConfirm = () => {
+        if (dog && dog.image) deleteDogImageQuery.mutate(dog);
+        setShowModal(false);
+    };
+
+    const handleModalCancel = () => setShowModal(false);
 
     async function updateDogImage(event: ChangeEvent<HTMLInputElement>) {
         try {
@@ -66,6 +73,7 @@ export const DogProfile = () => {
     return (
         <>
             <Header title={dog?.name ? dog.name : ""} />
+            <ConfirmationDialog text="Are you sure you want to delete this image?" onConfirm={handleModalConfirm} onCancel={handleModalCancel} isOpen={showModal} />
             <div className="p-6 max-w-3xl space-y-8">
                 <div className="items-center">
                     {dog ?
@@ -82,7 +90,7 @@ export const DogProfile = () => {
                         <Button className="mr-2" size="sm" variant="outline" disabled={!isFetched && !isMutating} onClick={handleUploadImageButton}>
                             Upload a photo
                         </Button>
-                        <Button size="sm" variant="destructive" disabled={!isFetched && !isMutating} onClick={handleDeleteDogImage}>
+                        <Button size="sm" variant="destructive" disabled={!isFetched && !isMutating && !deleteDogImageQuery.isPending} onClick={handleDeleteDogImage}>
                             {deleteDogImageQuery.isPending ? "Deleting..." : "Delete photo"}
                         </Button>
                         <Input className="hidden"
