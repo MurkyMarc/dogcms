@@ -18,5 +18,3 @@ const BackButton = ({ text }: { text?: string }) => {
 };
 
 export default BackButton;
-
-
