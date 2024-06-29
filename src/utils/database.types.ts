@@ -203,6 +203,7 @@ export type Database = {
           created_at: string
           deleted_at: string | null
           id: number
+          pic: string
           sender_id: string
         }
         Insert: {
@@ -211,6 +212,7 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           id?: number
+          pic?: string
           sender_id: string
         }
         Update: {
@@ -219,6 +221,7 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           id?: number
+          pic?: string
           sender_id?: string
         }
         Relationships: [
