@@ -79,6 +79,7 @@ export async function uploadDogImage(client: TypedSupabaseClient, url: string, f
 }
 
 export async function deleteDogImage(client: TypedSupabaseClient, url: string) {
+    if (!url) return;
     return client.storage.from('dogs').remove([url]);
 }
 

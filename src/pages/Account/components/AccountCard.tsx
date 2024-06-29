@@ -33,12 +33,16 @@ export function AccountCard({
     }, [profile, supabase])
 
     useEffect(() => {
-        if (profile.image) downloadImage();
+        if (profile.image) {
+            downloadImage();
+        } else {
+            setLoading(false);
+        }
     }, [profile.image, downloadImage])
 
     return (
         <div className={cn(className)} {...props}>
-            {loading ? <CardPlaceholder className={className} loading={true} /> :
+            {loading ? <CardPlaceholder className={className} loading={loading} /> :
                 <img
                     src={imageUrl}
                     alt={profile.f_name || ""}

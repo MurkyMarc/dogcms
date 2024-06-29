@@ -45,6 +45,8 @@ export function DogCard({
             setImageUrl(image);
         } else if (!localImage && image) {
             downloadImage(image);
+        } else {
+            setLoading(false);
         }
     }, [image, downloadImage, localImage])
 

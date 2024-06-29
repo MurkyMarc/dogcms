@@ -44,7 +44,8 @@ export async function uploadProfileAvatar(client: TypedSupabaseClient, url: stri
 }
 
 export async function deleteAvatar(client: TypedSupabaseClient, url: string) {
-    return await client.storage.from('avatars').remove([url]);
+    if (!url) return;
+    return client.storage.from('avatars').remove([url]);
 }
 
 export async function getProfileAvatarURLs(client: TypedSupabaseClient, paths: string[]) {

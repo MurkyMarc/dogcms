@@ -62,10 +62,17 @@ export function useUploadAvatar() {
 
 export function useDeleteAvatar() {
     const client = useSupabase();
+    const queryClient = useQueryClient();
 
-    const mutationFn = async ({ filePath }: { filePath: string }) => {
-        return await deleteAvatar(client, filePath);
+    const mutationFn = async (profile: Tables<'profiles'>) => {
+        deleteAvatar(client, profile.image);
+        return await updateProfile(client, { id: profile.id, image: "" });
     }
 
-    return useMutation({ mutationFn });
+    return useMutation({
+        mutationFn,
+        onSuccess: (_, profile) => {
+            queryClient.setQueryData(['myprofile'], { ...profile, image: "" });
+        }
+    });
 }
