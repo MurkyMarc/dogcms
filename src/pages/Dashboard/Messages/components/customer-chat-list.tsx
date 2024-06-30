@@ -36,7 +36,7 @@ export function CustomerChatList({
         <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col max-h-[44.5rem]">
             <div
                 ref={messagesContainerRef}
-                className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col"
+                className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col border-b border-gray-200"
             >
                 {messages.map((message, index) => {
                     const isYourMessage = message.sender_id == session?.user.id;
@@ -50,7 +50,7 @@ export function CustomerChatList({
                         >
                             <div className="flex gap-3 items-center">
                                 {!isYourMessage && conversationUsers?.other && <ProfileCircleIcon profile={conversationUsers.other.user} />}
-                                <span className={cn("bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg", isYourMessage ? "rounded-tr-none" : "rounded-tl-none")}>
+                                <span className={cn("border border-gray-200 bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg", isYourMessage ? "rounded-tr-none" : "rounded-tl-none")}>
                                     {message.content}
                                 </span>
                                 {isYourMessage && conversationUsers?.me  && <ProfileCircleIcon profile={conversationUsers.me.user} />}

@@ -23,7 +23,7 @@ export default function Walk() {
     // todo: if not authorized, reroute to dashboard with an error message
 
     return (
-        <div className="p-6 space-y-8">
+        <div className="p-4 md:p-6 space-y-8">
             <div className="items-center">
                 <WalkNav />
                 <Separator className="my-6" />
