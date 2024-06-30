@@ -7,11 +7,13 @@ import { createDogWalksByDogIds, deleteDogWalkById, deleteDogWalksByDogIds, getD
 
 export async function useGetDogWalkById(id: string) {
     const client = useSupabase();
+    if (!id) return;
     return await getDogWalkById(client, id);
 }
 
 export async function useGetDogWalksByWalkId(walkId: number) {
     const client = useSupabase();
+    if (!walkId) return;
     return await getDogWalksByWalkId(client, walkId);
 }
 
@@ -20,6 +22,7 @@ export function useCreateDogWalks() {
     const queryClient = useQueryClient();
 
     const mutationFn = async ({ walkId, dogIds }: { dogIds: number[], walkId: number }) => {
+        if (!walkId) return;
         return await createDogWalksByDogIds(client, walkId, dogIds);
     };
 
@@ -38,7 +41,11 @@ export function useDeleteDogWalkById() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (id: string) => await deleteDogWalkById(client, id);
+    const mutationFn = async (id: string) => {
+        if (!id) return;
+        return await deleteDogWalkById(client, id)
+    };
+
     return useMutation({
         mutationFn,
         onSuccess: () => {
@@ -52,6 +59,7 @@ export function useDeleteDogWalksByWalkDogIds() {
     const queryClient = useQueryClient();
 
     const mutationFn = async ({ walkId, dogIds }: { walkId: number, dogIds: number[] }) => {
+        if (!walkId) return;
         return await deleteDogWalksByDogIds(client, walkId, dogIds);
     };
 
