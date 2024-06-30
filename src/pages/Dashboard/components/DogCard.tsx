@@ -36,8 +36,9 @@ export function DogCard({
             if (url) setImageUrl(url);
         } catch (error) {
             errorToast(error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [supabase])
 
     useEffect(() => {
@@ -48,7 +49,7 @@ export function DogCard({
         } else {
             setLoading(false);
         }
-    }, [image, downloadImage, localImage])
+    }, [image, downloadImage, localImage]);
 
     return (
         <div className={cn(className)} {...props}>

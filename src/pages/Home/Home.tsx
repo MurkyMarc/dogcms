@@ -13,7 +13,7 @@ export const Home = () => {
     useEffect(() => {
         if (!api) return;
 
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             if (api.selectedScrollSnap() + 1 === api.scrollSnapList().length) {
                 setCurrent(0);
                 api.scrollTo(0);
@@ -22,6 +22,8 @@ export const Home = () => {
                 setCurrent(current + 1);
             }
         }, 3000);
+
+        return () => clearTimeout(timer);
     }, [api, current]);
 
     return (

@@ -33,8 +33,9 @@ export function WalkScrollImage({
             if (url) setImageUrl(url);
         } catch (error) {
             errorToast(error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [supabase])
 
     useEffect(() => {

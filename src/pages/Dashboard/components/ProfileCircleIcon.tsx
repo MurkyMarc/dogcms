@@ -25,16 +25,20 @@ export function ProfileCircleIcon({
     const [loading, setLoading] = useState<boolean>(false);
 
     const downloadImage = useCallback(async () => {
-        if (!profile) return;
+        let isMounted = true;
+        if (!profile?.image) return;
+
         try {
             setLoading(true);
-            const { url } = await getProfileAvatarUrl(supabase, profile);
-            if (url) setImageUrl(url);
+            const { url } = await getProfileAvatarUrl(supabase, profile.image);
+            if (isMounted && url) setImageUrl(url);
         } catch (error) {
-            errorToast(error);
+            isMounted && errorToast(error);
+        } finally {
+            isMounted && setLoading(false);
         }
-        setLoading(false);
-    }, [supabase, profile])
+        return () => { isMounted = false; };
+    }, [profile?.image, supabase]);
 
     useEffect(() => {
         if (profile?.image) downloadImage();

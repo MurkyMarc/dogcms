@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Header } from "./components/Header"
 import { useNavigate } from "react-router-dom";
 import WalkTable from "./components/WalkTable";
@@ -28,12 +28,12 @@ export default function Walks() {
 
     const hasDogs = (dogs && dogs.length > 0) || false;
 
-    function combineWalks(array1: Tables<'walks_with_dogs'>[], array2: Tables<'walks_with_dogs'>[]) {
+    const combineWalks = useCallback((array1: Tables<'walks_with_dogs'>[], array2: Tables<'walks_with_dogs'>[]) => {
         const map = new Map();
         array1.forEach(item => map.set(item.id, item));
         array2.forEach(item => map.set(item.id, item));
         return Array.from(map.values());
-    }
+    }, []);
 
     const handleLoadMore = () => {
         setNumWeeks(numWeeks => numWeeks + 1);
@@ -42,7 +42,7 @@ export default function Walks() {
 
     useEffect(() => {
         if (walks) setWalksArray(items => combineWalks(items, walks));
-    }, [walks]);
+    }, [combineWalks, walks]);
 
     const walkTable = useMemo(() => {
         return <WalkTable isLoading={isLoading} error={error} walks={walksArray} />

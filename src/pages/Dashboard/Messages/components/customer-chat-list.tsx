@@ -22,9 +22,13 @@ export function CustomerChatList({
     const conversationUsers = identifyConversationUsers(conversation!, session!.user.id);
 
     useEffect(() => {
-        if (messagesContainerRef.current) {
-            messagesContainerRef.current.scrollTop =
-                messagesContainerRef.current.scrollHeight;
+        const container = messagesContainerRef.current;
+        if (!container) return;
+
+        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50; // Check if user is near the bottom
+
+        if (isAtBottom) {
+            container.scrollTop = container.scrollHeight; // Scroll to bottom if user is near the bottom
         }
     }, [messages]);
 

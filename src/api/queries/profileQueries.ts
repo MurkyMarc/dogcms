@@ -9,7 +9,7 @@ export async function updateProfile(
     client: TypedSupabaseClient,
     profile: Partial<Tables<'profiles'>>
 ) {
-    const {id, ...data} = profile;
+    const { id, ...data } = profile;
     return await client
         .from('profiles')
         .update({ ...data })
@@ -28,11 +28,10 @@ export async function getProfileById(client: TypedSupabaseClient, profileId: str
         .single();
 }
 
-export async function getProfileAvatarUrl(client: TypedSupabaseClient, profile: Tables<'profiles'>) {
-    if (!profile.image) {
-        return { url: null, error: new Error(`profile: ${profile.id} does not have an image`) }
-    }
-    const { data, error } = await client.storage.from('avatars').download(profile.image);
+export async function getProfileAvatarUrl(client: TypedSupabaseClient, image: string) {
+    if (!image) return { url: null }
+
+    const { data, error } = await client.storage.from('avatars').download(image);
     if (error || data == null) return { url: null, error }
 
     const objectUrl = URL.createObjectURL(data);

@@ -24,21 +24,30 @@ export function AccountCard({
     const downloadImage = useCallback(async () => {
         try {
             setLoading(true);
-            const { url } = await getProfileAvatarUrl(supabase, profile);
+            const { url } = await getProfileAvatarUrl(supabase, profile.image);
             if (url) setImageUrl(url);
         } catch (error) {
             errorToast(error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [profile, supabase])
 
     useEffect(() => {
-        if (profile.image) {
-            downloadImage();
-        } else {
-            setLoading(false);
-        }
-    }, [profile.image, downloadImage])
+        let isMounted = true;
+
+        const loadImage = async () => {
+            if (profile.image && isMounted) {
+                await downloadImage();
+            } else if (isMounted) {
+                setLoading(false);
+            }
+        };
+
+        loadImage();
+
+        return () => { isMounted = false};
+    }, [profile.image, downloadImage]);
 
     return (
         <div className={cn(className)} {...props}>

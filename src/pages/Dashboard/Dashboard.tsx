@@ -1,15 +1,17 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { useSession } from "../../api/hooks/useAuth";
 import { Sidebar } from "./components/Sidebar"
-import { redirect } from "react-router-dom";
 
 export default function Dashboard() {
+    const navigate = useNavigate();
     const { data: session, isFetched} = useSession();
 
     useEffect(() => {
-        if (isFetched && !session) redirect("/login");
-    }, [session, isFetched]);
+        if (isFetched && !session) {
+            navigate("/login");
+        }
+    }, [session, isFetched, navigate]);
 
     return (
         <div className="block bg-background">

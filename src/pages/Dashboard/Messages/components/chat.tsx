@@ -12,7 +12,7 @@ export function Chat({ selectedUser, isMobile }: ChatProps) {
     const [messages, setMessages] = useState<Message[]>(selectedUser.messages);
 
     const sendMessage = (newMessage: Message) => {
-        setMessages([...messages, newMessage]);
+        setMessages(prevMessages => [...prevMessages, newMessage]);
     };
 
     useEffect(() => {
