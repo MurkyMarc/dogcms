@@ -1,9 +1,7 @@
 import { cn } from "../../../utils/cn"
-import { Link } from "react-router-dom"
-import { Menu, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { Input } from "../../../components/ui/input"
-import { Button } from "../../../components/ui/button"
-import { MenuDrawer } from "../../../components/ui/menu-drawer"
+import { MenuButton } from "./MenuButton"
 
 interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
@@ -14,13 +12,7 @@ interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Header({ className, title, handleSearch, showSearch = false }: HeaderProps) {
     return (
         <header className={cn("flex h-16 items-center gap-4 border-b bg-gray-50 px-6", className)}>
-            <Link className="lg:hidden" to="#">
-                <MenuDrawer>
-                    <Button className="px-2 lg:hidden h-auto" variant={"ghost"}>
-                        <Menu className="h-6 w-6" />
-                    </Button>
-                </MenuDrawer>
-            </Link>
+            <MenuButton />
             <div className="flex-1">
                 <h1 className="font-semibold text-lg">{title}</h1>
             </div>

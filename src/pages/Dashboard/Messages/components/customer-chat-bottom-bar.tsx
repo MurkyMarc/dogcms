@@ -1,17 +1,14 @@
-import {
-    FileImage,
-    SendHorizontal,
-    ThumbsUp,
-    X,
-} from "lucide-react";
+import { FileImage, SendHorizontal, ThumbsUp, X } from "lucide-react";
 import { EmojiPicker } from "./emoji-picker";
-import { SetStateAction, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "../../../../utils/cn";
 import { buttonVariants } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
 import { Tables, TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
+import { useUploadMessageImage } from "../../../../api/hooks/useMessages";
+import { errorToast, generateFilePath } from "../../../../utils/helpers";
 
 interface ChatBottombarProps {
     conversation: Tables<'conversations'>;
@@ -24,9 +21,11 @@ export default function ChatBottombar({
     const { data: session } = useSession();
     const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const [selectedImage, setSelectedImage] = useState<SetStateAction<null> | File | null>(null);
+    const [selectedImageName, setSelectedImageName] = useState("");
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const uploadMessageImageQuery = useUploadMessageImage();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMessage(event.target.value);
@@ -37,7 +36,8 @@ export default function ChatBottombar({
     };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event?.target?.files?.[0];
+        const { file, filePath } = generateFilePath(event);
+
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -45,13 +45,8 @@ export default function ChatBottombar({
             };
             reader.readAsDataURL(file);
             setSelectedImage(file);
+            setSelectedImageName(filePath);
         }
-    };
-
-    const handleUpload = () => {
-        // Implement upload logic here
-        setSelectedImage(null);
-        setPreviewUrl(null);
     };
 
     const handleRemoveImage = () => {
@@ -72,18 +67,36 @@ export default function ChatBottombar({
         setMessage("");
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (message.trim()) {
-            const newMessage: TablesInsert<'messages'> = {
-                content: message.trim(),
-                conversation_id: conversation.id,
-                sender_id: session!.user.id
-            };
-            sendMessage(newMessage);
-            setMessage("");
+            let noUploadErrors = true;
+            if (selectedImage && selectedImageName) {
+                try {
+                    await uploadMessageImageQuery.mutateAsync({ filePath: selectedImageName, file: selectedImage });
+                } catch (error) {
+                    errorToast(error);
+                    noUploadErrors = false;
+                }
+            }
 
-            if (inputRef.current) {
-                inputRef.current.focus();
+            if (noUploadErrors) {
+                const newMessage: TablesInsert<'messages'> = {
+                    content: message.trim(),
+                    conversation_id: conversation.id,
+                    sender_id: session!.user.id,
+                    pic: selectedImageName
+                };
+
+                sendMessage(newMessage);
+
+                setMessage("");
+                setSelectedImage(null);
+                setPreviewUrl(null);
+                setSelectedImageName("");
+
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
             }
         }
     };
@@ -123,7 +136,7 @@ export default function ChatBottombar({
                             type="file"
                             accept="image/*"
                             onChange={handleImageChange}
-                            style={{ display: 'none' }}
+                            className="hidden"
                         />
                         <div
                             className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-9 w-9 cursor-pointer")}
@@ -132,13 +145,7 @@ export default function ChatBottombar({
                             <FileImage size={20} className="text-muted-foreground" />
                         </div>
                     </div>
-                    {selectedImage && (
-                        <>
-                            <button onClick={handleUpload}>Upload</button>
-                        </>
-                    )}
                 </div>
-
                 <div key="input" className="w-full relative">
                     <Textarea
                         autoComplete="off"

@@ -4,25 +4,6 @@ import { SidebarNav } from './components/SidebarNav'
 import { useEffect } from 'react'
 import { useSession } from '../../api/hooks/useAuth'
 
-const sidebarNavItems = [
-    {
-        title: "Account",
-        href: "/account",
-    },
-    {
-        title: "Profile",
-        href: "/account/profile",
-    },
-    {
-        title: "Address",
-        href: "/account/address",
-    },
-    {
-        title: "Notifications",
-        href: "/account/notifications",
-    } // todo - remove notifications page or update the mobile sidebar menu
-]
-
 export const Account = () => {
     const navigate = useNavigate();
     const { data: session, isFetched } = useSession();
@@ -42,7 +23,7 @@ export const Account = () => {
             <Separator className="my-6" />
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
                 <aside className="lg:w-1/5">
-                    <SidebarNav items={sidebarNavItems} />
+                    <SidebarNav />
                 </aside>
                 <Outlet />
             </div>

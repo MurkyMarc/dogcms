@@ -17,7 +17,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export function ProfileCircleIcon({
     profile,
     className,
-    imageStyles = "rounded-full w-12 h-12 cursor-default",
+    imageStyles = "rounded-full w-10 h-10 sm:w-12 sm:h-12 cursor-default",
     ...props
 }: Props) {
     const supabase = useSupabase();

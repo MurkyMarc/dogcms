@@ -18,16 +18,16 @@ export default function EditWalk() {
     // todo: if not authorized, reroute to dashboard with an error message
 
     return (
-        <div className="p-6 space-y-8">
+        <div className="p-4 md:p-6 space-y-8">
             <div className="items-center">
-                <div className="inline-flex items-center gap-2">
-                    <BackButton />
+                <div className="flex items-center justify-between">
                     <div className="ml-2">
                         <h3 className="text-lg font-medium">Edit Walk</h3>
                         <p className="text-sm text-muted-foreground">
                             Update the details of your walk.
                         </p>
                     </div>
+                    <BackButton />
                 </div>
                 <Separator className="my-6" />
                 {walk ? <EditWalkForm walk={walk} /> : null}

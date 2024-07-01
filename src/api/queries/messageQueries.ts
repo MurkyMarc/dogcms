@@ -151,3 +151,17 @@ export async function updateMessage(client: TypedSupabaseClient, message: Tables
         .single()
         .throwOnError();
 }
+
+export async function uploadMessageImage(client: TypedSupabaseClient, url: string, file: Blob | File) {
+    return await client.storage.from('message_pics').upload(url, file);
+}
+
+export async function getMessageImageURL(client: TypedSupabaseClient, image: string) {
+    if (!image) return { url: null }
+
+    const { data, error } = await client.storage.from('message_pics').download(image);
+    if (error || data == null) return { url: null, error }
+
+    const objectUrl = URL.createObjectURL(data);
+    return { url: objectUrl, error }
+}

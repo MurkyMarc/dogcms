@@ -392,16 +392,9 @@ export function showDateRange(startDate: Date, endDate: Date = new Date()) {
 
 export function identifyConversationUsers(conversation: Tables<'conversations'>, userId: string) {
     if (!conversation || !userId) return null;
+    const user1 = { user: conversation.employee, unreadCount: conversation.employee_unread_count, lastViewedAt: conversation.employee_last_viewed_at };
+    const user2 = { user: conversation.customer, unreadCount: conversation.customer_unread_count, lastViewedAt: conversation.customer_last_viewed_at };
 
-    if (conversation.employee?.id === userId) {
-        return {
-            me: { user: conversation.employee, unreadCount: conversation.employee_unread_count, lastViewedAt: conversation.employee_last_viewed_at },
-            other: { user: conversation.customer, unreadCount: conversation.customer_unread_count, lastViewedAt: conversation.customer_last_viewed_at }
-        }
-    } else {
-        return {
-            me: { user: conversation.customer, unreadCount: conversation.customer_unread_count, lastViewedAt: conversation.customer_last_viewed_at },
-            other: { user: conversation.employee, unreadCount: conversation.employee_unread_count, lastViewedAt: conversation.employee_last_viewed_at }
-        }
-    }
+    if (conversation.employee?.id === userId) return { me: user1, other: user2 }
+    return { me: user2, other: user1}
 }

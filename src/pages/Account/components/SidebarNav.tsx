@@ -2,15 +2,29 @@ import { cn } from "../../../utils/cn"
 import { Link, useLocation } from "react-router-dom"
 import { buttonVariants } from "../../../components/ui/button"
 
-interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
-    items: {
-        href: string
-        title: string
-    }[]
-}
+interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 
-export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
+export function SidebarNav({ className, ...props }: SidebarNavProps) {
     const { pathname } = useLocation();
+
+    const links = [
+        {
+            title: "Account",
+            href: "/account",
+        },
+        {
+            title: "Profile",
+            href: "/account/profile",
+        },
+        {
+            title: "Address",
+            href: "/account/address",
+        },
+        {
+            title: "Notifications",
+            href: "/account/notifications",
+        }
+    ]
 
     return (
         <nav
@@ -20,7 +34,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
             )}
             {...props}
         >
-            {items.map((item) => (
+            {links.map((item) => (
                 <Link
                     key={item.href}
                     to={item.href}

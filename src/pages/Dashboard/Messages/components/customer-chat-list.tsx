@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
-import { cn } from "../../../../utils/cn";
-import ChatBottombar from "./customer-chat-bottom-bar";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { Tables, TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
-import { ProfileCircleIcon } from "../../components/ProfileCircleIcon";
 import { identifyConversationUsers } from "../../../../utils/helpers";
+import { Message } from "./message";
+import ChatBottombar from "./customer-chat-bottom-bar";
 
 interface ChatListProps {
     messages: Tables<'messages'>[];
@@ -12,52 +11,97 @@ interface ChatListProps {
     sendMessage: (newMessage: TablesInsert<'messages'>) => void;
 }
 
-export function CustomerChatList({
-    messages,
-    conversation,
-    sendMessage,
-}: ChatListProps) {
+export function CustomerChatList({ messages, conversation, sendMessage }: ChatListProps) {
     const { data: session } = useSession();
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-    const conversationUsers = identifyConversationUsers(conversation!, session!.user.id);
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const conversationUsers = identifyConversationUsers(conversation, session?.user.id || "");
+    const otherUserName = `${conversationUsers?.other?.user?.f_name} ${conversationUsers?.other?.user?.l_name?.charAt(0) || ''}`;
+
+    const scrollToBottom = useCallback((smooth = true, delay = 0) => {
+        if (messagesContainerRef.current) {
+            setTimeout(() => {
+                messagesContainerRef?.current?.scrollTo({
+                    top: messagesContainerRef.current.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'smooth'
+                });
+            }, delay);
+        }
+    }, []);
+
+    const checkImagesAndScroll = useCallback(() => {
+        const images = messagesContainerRef.current?.querySelectorAll('img') || [];
+        let loadedImages = 0;
+        const totalImages = images.length;
+
+        if (totalImages === 0) {
+            scrollToBottom(false);
+            return;
+        }
+
+        const imageLoaded = () => {
+            loadedImages++;
+            if (loadedImages === totalImages) {
+                scrollToBottom(false);
+            }
+        };
+
+        images.forEach((img) => {
+            if (img.complete) {
+                imageLoaded();
+            } else {
+                img.addEventListener('load', imageLoaded);
+                img.addEventListener('error', imageLoaded);
+            }
+        });
+
+        // Fallback: scroll after a timeout even if not all images have loaded
+        setTimeout(() => scrollToBottom(false), 2000);
+    }, [scrollToBottom]);
+
+    useEffect(() => {
+        if (isFirstLoad) {
+            checkImagesAndScroll();
+            scrollToBottom(true, 500); // Add delay only on first load
+            setIsFirstLoad(false);
+        } else {
+            scrollToBottom();
+        }
+    }, [messages, isFirstLoad, checkImagesAndScroll, scrollToBottom]);
 
     useEffect(() => {
         const container = messagesContainerRef.current;
         if (!container) return;
 
-        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50; // Check if user is near the bottom
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    checkImagesAndScroll();
+                }
+            });
+        });
 
-        if (isAtBottom) {
-            container.scrollTop = container.scrollHeight; // Scroll to bottom if user is near the bottom
-        }
-    }, [messages]);
+        observer.observe(container, { childList: true, subtree: true });
+
+        return () => observer.disconnect();
+    }, [checkImagesAndScroll]);
 
     return (
-        <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col max-h-[44.5rem]">
+        <div className="w-full h-full flex flex-col max-h-[80vh]">
             <div
                 ref={messagesContainerRef}
                 className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col border-b border-gray-200"
             >
-                {messages.map((message, index) => {
-                    const isYourMessage = message.sender_id == session?.user.id;
-                    return (
-                        <div
-                            key={index}
-                            className={cn(
-                                "flex flex-col gap-2 p-2 whitespace-pre-wrap",
-                                message.sender_id == session?.user.id ? "items-end" : "items-start"
-                            )}
-                        >
-                            <div className="flex gap-3 items-center">
-                                {!isYourMessage && conversationUsers?.other && <ProfileCircleIcon profile={conversationUsers.other.user} />}
-                                <span className={cn("border border-gray-200 bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg", isYourMessage ? "rounded-tr-none" : "rounded-tl-none")}>
-                                    {message.content}
-                                </span>
-                                {isYourMessage && conversationUsers?.me  && <ProfileCircleIcon profile={conversationUsers.me.user} />}
-                            </div>
-                        </div>
-                    )
-                })}
+                {messages.map((message) => (
+                    <Message
+                        key={message.id}
+                        message={message}
+                        isYourMessage={message.sender_id === session?.user.id}
+                        otherUserName={otherUserName}
+                        otherUserProfile={conversationUsers?.other?.user}
+                        yourProfile={conversationUsers?.me?.user}
+                    />
+                ))}
             </div>
             <ChatBottombar sendMessage={sendMessage} conversation={conversation} />
         </div>
