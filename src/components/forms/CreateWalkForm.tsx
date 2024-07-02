@@ -23,6 +23,7 @@ import { WalkScrollImage } from "../../pages/Dashboard/components/WalkScrollImag
 import { useState } from "react"
 import { useCreateDogWalks } from "../../api/hooks/useDogWalks"
 import { useNavigate } from "react-router-dom";
+import { useCreateConversation } from "../../api/hooks/useMessages"
 
 const createWalkFormSchema = z.object({
     date: z.date(),
@@ -55,8 +56,9 @@ interface CreateWalkFormProps {
 export function CreateWalkForm({ profile }: CreateWalkFormProps) {
     const navigate = useNavigate();
     const isMutating = !!useIsMutating()
-    const createWalkQuery = useCreateWalk();
-    const createDogWalksQuery = useCreateDogWalks();
+    const createWalkHook = useCreateWalk();
+    const createDogWalksHook = useCreateDogWalks();
+    const conversationHook = useCreateConversation();
     const { data: session } = useSession();
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
     const [selectedDogIds, setSelectedDogIds] = useState<number[]>([]);
@@ -96,8 +98,12 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             description: `${profile.f_name} ${profile.l_name} - status: unscheduled`
         }
 
-        const newWalk = await createWalkQuery.mutateAsync(data);
-        if (newWalk) await createDogWalksQuery.mutateAsync({ walkId: newWalk.id, dogIds: selectedDogIds });
+        const newWalk = await createWalkHook.mutateAsync(data);
+        
+        if (newWalk) {
+            conversationHook.mutateAsync({ walk_id: newWalk.id, customer: profile.id } );
+            await createDogWalksHook.mutateAsync({ walkId: newWalk.id, dogIds: selectedDogIds });
+        }
         navigate('/dashboard/walks');
     }
 
