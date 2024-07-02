@@ -4,6 +4,7 @@ import { useSession } from "../../../../api/hooks/useAuth";
 import { identifyConversationUsers } from "../../../../utils/helpers";
 import { Message } from "./message";
 import ChatBottombar from "./customer-chat-bottom-bar";
+import { cn } from "../../../../utils/cn";
 
 interface ChatListProps {
     messages: Tables<'messages'>[];
@@ -87,12 +88,12 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
     }, [checkImagesAndScroll]);
 
     return (
-        <div className="w-full h-full flex flex-col max-h-[80vh]">
+        <div className="w-full flex flex-col h-[80vh]">
             <div
                 ref={messagesContainerRef}
-                className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col border-b border-gray-200"
+                className={cn("w-full overflow-y-auto overflow-x-hidden flex flex-col border-b border-gray-200 h-[80vh] ", messages.length == 0 && "justify-center")}
             >
-                {messages.map((message) => (
+                {messages.length > 0 ? messages.map((message) => (
                     <Message
                         key={message.id}
                         message={message}
@@ -101,7 +102,13 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
                         otherUserProfile={conversationUsers?.other?.user}
                         yourProfile={conversationUsers?.me?.user}
                     />
-                ))}
+                )) :
+                    <div className="text-center">
+                        <h1 className="text-xl font-bold">No messages yet</h1>
+                        <p className="text-sm text-muted-foreground">
+                            Send a message to start chatting.
+                        </p>
+                    </div>}
             </div>
             <ChatBottombar sendMessage={sendMessage} conversation={conversation} />
         </div>
