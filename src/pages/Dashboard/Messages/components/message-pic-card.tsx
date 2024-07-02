@@ -4,10 +4,11 @@ import { getMessageImageURL } from "../../../../api/queries/messageQueries";
 import { cn } from "../../../../utils/cn";
 import { errorToast } from "../../../../utils/helpers";
 import { CardPlaceholder } from "../../components/CardPlaceholder";
+import { Dialog, DialogContent } from "../../../../components/ui/dialog";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    image: string
-    children?: React.ReactNode
+    image: string;
+    children?: React.ReactNode;
 }
 
 export function MessagePicCard({
@@ -19,6 +20,7 @@ export function MessagePicCard({
     const supabase = useSupabase();
     const [imageUrl, setImageUrl] = useState("/placeholder.svg");
     const [loading, setLoading] = useState<boolean>(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const downloadImage = useCallback(async () => {
         try {
@@ -30,7 +32,7 @@ export function MessagePicCard({
         } finally {
             setLoading(false);
         }
-    }, [image, supabase])
+    }, [image, supabase]);
 
     useEffect(() => {
         let isMounted = true;
@@ -45,20 +47,32 @@ export function MessagePicCard({
 
         loadImage();
 
-        return () => { isMounted = false};
+        return () => { isMounted = false };
     }, [image, downloadImage]);
+
+    const openPopup = () => setIsOpen(true);
 
     return (
         <div className={cn(className)} {...props}>
-            {loading ? <CardPlaceholder className={className} loading={loading} /> :
+            {loading ? (
+                <CardPlaceholder className={className} loading={loading} />
+            ) : (
                 <img
                     src={imageUrl}
-                    className={cn(
-                        "rounded-md object-cover transition-all", className
-                    )}
+                    alt="Message Pic"
+                    className={cn("rounded-lg object-cover transition-all cursor-pointer", className)}
+                    onClick={openPopup}
                 />
-            }
+            )}
             {children}
+
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent className="bg-white shadow-lg">
+                    <div className="flex justify-center items-center p-4">
+                        <img src={imageUrl} alt="Enlarged Message Pic" className="max-w-90vw max-h-90vh" />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
-    )
+    );
 }

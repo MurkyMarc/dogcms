@@ -18,9 +18,7 @@ export function Message({ message, isYourMessage, otherUserName, otherUserProfil
                 {!isYourMessage && otherUserProfile && <ProfileCircleIcon profile={otherUserProfile} />}
                 <div>
                     {message.pic && (
-                        <div className="flex justify-end">
-                            <MessagePicCard className="rounded-md max-w-60 pb-1" image={message.pic} />
-                        </div>
+                        <MessagePicCard className="flex justify-end max-w-60 mb-1" image={message.pic} />
                     )}
                     <div className={cn("flex", isYourMessage ? "flex-row-reverse" : "")}>
                         <div className={cn(
