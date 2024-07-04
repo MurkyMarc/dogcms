@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { CustomerChatList } from "./components/customer-chat-list";
 import { useGetConversationByWalkId, useGetConversationMessages, useSendMessage, useUpdateConversationUnreadCountAndLastViewedAt } from "../../../api/hooks/useMessages";
 import { TablesInsert } from "../../../utils/database.types";
@@ -26,15 +26,25 @@ export function CustomerChat({ walkId }: CustomerChatProps) {
         }
     }, 5000);
 
+    const sortedMessages = useMemo(() => {
+        return [...messages || []].sort((a, b) => a.created_at.localeCompare(b.created_at));
+    }, [messages]);
+
+    const messagesList = useMemo(() => {
+        return (
+            <CustomerChatList
+                sendMessage={sendMessage}
+                messages={sortedMessages}
+                conversation={conversation!}
+            />
+        );
+    }, [conversation, sortedMessages, sendMessage]);
+
     if (conversationLoading || messagesLoading) return <p>Loading...</p>;
 
     return (
         <div className="flex flex-col w-full h-full">
-            <CustomerChatList
-                sendMessage={sendMessage}
-                messages={messages || []}
-                conversation={conversation!}
-            />
+            {messagesList}
         </div>
     );
 }

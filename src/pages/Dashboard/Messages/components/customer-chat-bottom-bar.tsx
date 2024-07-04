@@ -3,12 +3,13 @@ import { EmojiPicker } from "./emoji-picker";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "../../../../utils/cn";
-import { buttonVariants } from "../../../../components/ui/button";
+import { Button, buttonVariants } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
 import { Tables, TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
 import { useUploadMessageImage } from "../../../../api/hooks/useMessages";
 import { errorToast, generateFilePath } from "../../../../utils/helpers";
+import { LoadingSpinner } from "../../../../components/ui/LoadingSpinner";
 
 interface ChatBottombarProps {
     conversation: Tables<'conversations'>;
@@ -25,7 +26,7 @@ export default function ChatBottombar({
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const uploadMessageImageQuery = useUploadMessageImage();
+    const uploadMessageImage = useUploadMessageImage();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMessage(event.target.value);
@@ -72,7 +73,7 @@ export default function ChatBottombar({
             let noUploadErrors = true;
             if (selectedImage && selectedImageName) {
                 try {
-                    await uploadMessageImageQuery.mutateAsync({ filePath: selectedImageName, file: selectedImage });
+                    await uploadMessageImage.mutateAsync({ filePath: selectedImageName, file: selectedImage });
                 } catch (error) {
                     errorToast(error);
                     noUploadErrors = false;
@@ -130,21 +131,20 @@ export default function ChatBottombar({
             </div>
             <div className="my-4 md:my-6 flex justify-between w-full items-center gap-2">
                 <div className="flex">
-                    <div>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="hidden"
-                        />
-                        <div
-                            className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-9 w-9 cursor-pointer")}
-                            onClick={handleIconClick}
-                        >
-                            <FileImage size={20} className="text-muted-foreground" />
-                        </div>
-                    </div>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                    />
+                    <Button
+                        className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "p-0 bg-white h-9 w-9 cursor-pointer")}
+                        disabled={uploadMessageImage.isPending}
+                        onClick={handleIconClick}
+                    >
+                        {uploadMessageImage.isPending ? <LoadingSpinner className="h-5 w-5" /> : <FileImage size={20} className="text-muted-foreground" />}
+                    </Button>
                 </div>
                 <div key="input" className="w-full relative">
                     <Textarea
@@ -177,13 +177,12 @@ export default function ChatBottombar({
                         <SendHorizontal size={20} className="text-muted-foreground" />
                     </Link>
                 ) : (
-                    <Link
-                        to=""
-                        className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-9 w-9 shrink-0")}
+                    <Button
+                        className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "p-0 bg-white h-9 w-9 shrink-0")}
                         onClick={handleThumbsUp}
                     >
                         <ThumbsUp size={20} className="text-muted-foreground" />
-                    </Link>
+                    </Button>
                 )}
             </div>
         </div>

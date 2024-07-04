@@ -63,7 +63,7 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
     useEffect(() => {
         if (isFirstLoad) {
             checkImagesAndScroll();
-            scrollToBottom(true, 500); // Add delay only on first load
+            scrollToBottom(true, 1000); // Add delay only on first load
             setIsFirstLoad(false);
         } else {
             scrollToBottom();
