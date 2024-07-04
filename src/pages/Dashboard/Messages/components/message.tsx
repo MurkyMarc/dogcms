@@ -22,7 +22,7 @@ export function Message({ message, isYourMessage, otherUserName, otherUserProfil
                     )}
                     <div className={cn("flex", isYourMessage ? "flex-row-reverse" : "")}>
                         <div className={cn(
-                            "w-fit justify-center border border-gray-200 bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg",
+                            "w-fit justify-center border border-gray-200 bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg whitespace-pre-wrap",
                             isYourMessage ? "rounded-br-none" : "rounded-bl-none"
                         )}>
                             {!isYourMessage && <div className="font-bold text-xs capitalize">{otherUserName}</div>}
