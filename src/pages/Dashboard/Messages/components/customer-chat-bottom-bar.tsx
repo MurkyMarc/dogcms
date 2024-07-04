@@ -8,7 +8,7 @@ import { Textarea } from "../../../../components/ui/textarea";
 import { Tables, TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
 import { useUploadMessageImage } from "../../../../api/hooks/useMessages";
-import { errorToast, generateFilePath } from "../../../../utils/helpers";
+import { errorToast, fileTypeSupported, generateFilePath } from "../../../../utils/helpers";
 import { LoadingSpinner } from "../../../../components/ui/LoadingSpinner";
 
 interface ChatBottombarProps {
@@ -37,16 +37,27 @@ export default function ChatBottombar({
     };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { file, filePath } = generateFilePath(event);
+        try {
+            const isFileTypeSupported = fileTypeSupported(event);
+            if (!isFileTypeSupported ) return;
 
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result);
-            };
-            reader.readAsDataURL(file);
-            setSelectedImage(file);
-            setSelectedImageName(filePath);
+            const { file, filePath } = generateFilePath(event);
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setPreviewUrl(reader.result);
+                };
+                reader.readAsDataURL(file);
+                setSelectedImage(file);
+                setSelectedImageName(filePath);
+            }
+        } catch (error) {
+            errorToast(error);
+        } finally {
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ""; // Reset the file input value
+            }
         }
     };
 

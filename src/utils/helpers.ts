@@ -115,7 +115,7 @@ function calculateDynamicQuality(width: number, height: number, fileSize: number
 }
 
 export function fileTypeSupported(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target?.files) return
+    if (!event.target?.files) return false
     if (event.target.files?.length > 1) throw new Error("Please only select one file");
 
     const file = event.target.files[0];
@@ -123,10 +123,13 @@ export function fileTypeSupported(event: ChangeEvent<HTMLInputElement>) {
     const allowedTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp"];
 
     if (!allowedTypes.includes(fileType)) {
-        throw new Error("Only PNG, JPEG, HEIF, HEIC, and WebP files are allowed");
+        throw new Error("Only PNG, JPEG, HEIF, HEIC, and WebP files are allowed.");
     }
 
-    // Todo - add a filesize check? and other checks like making sure they only select on image etc
+    if (file.size > (1024 * 1024)) {
+        throw new Error("File size must be less than 1MB.");
+    }
+
     return true
 }
 
