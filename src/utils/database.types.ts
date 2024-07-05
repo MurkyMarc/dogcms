@@ -384,7 +384,7 @@ export type Database = {
         Row: {
           admin_notes: string
           city: string
-          customer: string
+          customer: Tables<'profiles'>
           description: string
           dogs: Tables<'dogs'>[]
           end: string
@@ -399,7 +399,7 @@ export type Database = {
           subtitle: string
           title: string
           walk_id: number
-          walker: string | null
+          walker: Tables<'profiles'> | null
           zip: string
         }
         Relationships: [

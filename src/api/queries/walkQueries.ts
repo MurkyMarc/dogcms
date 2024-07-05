@@ -64,7 +64,13 @@ export async function getWalksByWalkerIdAndDateRange(client: TypedSupabaseClient
 export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
     return await client
         .from('walks_with_dogs')
-        .select(`*`)
+        .select(`*,
+            walker (
+                f_name,
+                l_name,
+                image
+            )
+        `)
         .eq('customer', id)
         .order('start', { ascending: true })
         .gte('start', startDate)

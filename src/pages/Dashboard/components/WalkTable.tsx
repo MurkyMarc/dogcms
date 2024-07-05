@@ -48,7 +48,7 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
                                             )
                                         })}
                                     </TableCell>
-                                    <TableCell className="hidden md:table-cell">{walk.walker || "Not assigned"}</TableCell>
+                                    <TableCell className="hidden md:table-cell capitalize">{walk.walker ? `${walk.walker?.f_name} ${walk.walker?.l_name.charAt(0)}` : "Not assigned"}</TableCell>
                                     <TableCell>{walk.status}</TableCell>
                                 </TableRow>
                             ))}
