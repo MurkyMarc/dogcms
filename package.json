@@ -9,7 +9,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/utils/database.types.ts'",
-    "sblink": "dotenv -e .env -- sh -c 'supabase link --project-ref $SUPABASE_PROJECT_ID'"
+    "sblink": "dotenv -e .env -- sh -c 'supabase link --project-ref $SUPABASE_PROJECT_ID'",
+    "sbpull": "supabase db pull"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
