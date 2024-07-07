@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "types": "npx supabase gen types typescript --project-id sooidwzbyislrflyclgg --schema public > src/utils/database.types.ts"
+    "types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/utils/database.types.ts'",
+    "sblink": "dotenv -e .env -- sh -c 'supabase link --project-ref $SUPABASE_PROJECT_ID'"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
@@ -47,6 +48,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.4.0",
+    "dotenv": "^16.4.5",
     "embla-carousel-react": "^8.0.2",
     "emoji-mart": "^5.5.2",
     "js-cookie": "^3.0.5",
