@@ -22,6 +22,7 @@ import CreateWalk from './pages/Dashboard/components/CreateWalk';
 import EditWalk from './pages/Dashboard/components/EditWalk';
 import Walk from './pages/Dashboard/components/Walk';
 import WalkChat from './pages/Dashboard/components/WalkChat';
+import Packages from './pages/Dashboard/Packages/Packages';
 
 export const App = () => {
   return (
@@ -50,6 +51,7 @@ export const App = () => {
           <Route path="/dashboard/walk/:id/chat" element={<WalkChat />} />
           <Route path="/dashboard/schedules" element={<Schedules />} />
           <Route path="/dashboard/messages" element={<EmployeeChat />} />
+          <Route path="/dashboard/packages" element={<Packages />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

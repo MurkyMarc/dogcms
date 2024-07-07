@@ -48,13 +48,12 @@ export function Sidebar({ className }: SidebarProps) {
                                 Customers
                             </Button>
                         </Link>
-                        <Link to="/dashboard">
+                        <Link to="/dashboard/packages">
                             <Button variant="ghost" className="w-full justify-start px-3">
                                 <Package className="h-5 w-5 mr-3 stroke-black" />
-                                Services
+                                Packages
                             </Button>
                         </Link>
-
                         <Link to="/dashboard">
                             <Button variant="ghost" className="w-full justify-start px-3">
                                 <LineChart className="h-5 w-5 mr-3 stroke-black" />
