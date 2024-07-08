@@ -207,7 +207,7 @@ export type Database = {
           sender_id: string
         }
         Insert: {
-          content: string
+          content?: string
           conversation_id: number
           created_at?: string
           deleted_at?: string | null
@@ -246,6 +246,7 @@ export type Database = {
           bio: string
           city: string
           created_at: string
+          credits: number
           emergency_phone_1: string
           emergency_phone_2: string
           f_name: string
@@ -263,6 +264,7 @@ export type Database = {
           bio?: string
           city?: string
           created_at?: string
+          credits?: number
           emergency_phone_1?: string
           emergency_phone_2?: string
           f_name?: string
@@ -280,6 +282,7 @@ export type Database = {
           bio?: string
           city?: string
           created_at?: string
+          credits?: number
           emergency_phone_1?: string
           emergency_phone_2?: string
           f_name?: string
