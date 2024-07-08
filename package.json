@@ -10,7 +10,11 @@
     "preview": "vite preview",
     "types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/utils/database.types.ts'",
     "sblink": "dotenv -e .env -- sh -c 'supabase link --project-ref $SUPABASE_PROJECT_ID'",
-    "sbpull": "supabase db pull"
+    "sbpull": "supabase db pull",
+    "sbstart": "supabase start",
+    "sbstop": "supabase stop",
+    "sbreset": "supabase db reset",
+    "sbdump": "supabase db dump --data-only -f supabase/seed.sql"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
