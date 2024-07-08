@@ -14,7 +14,8 @@
     "sbstart": "supabase start",
     "sbstop": "supabase stop",
     "sbreset": "supabase db reset",
-    "sbdump": "supabase db dump --data-only -f supabase/seed.sql"
+    "sbdump": "supabase db dump --data-only -f supabase/seed.sql",
+    "sbdeploy1": "supabase functions deploy fetchCreditPackages --no-verify-jwt"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
