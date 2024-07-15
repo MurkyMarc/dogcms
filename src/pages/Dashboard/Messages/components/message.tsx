@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { cn } from "../../../../utils/cn";
 import { Tables } from "../../../../utils/database.types";
 import { ProfileCircleIcon } from "../../components/ProfileCircleIcon";
@@ -7,15 +8,19 @@ type MessageProps = {
     message: Tables<'messages'>;
     isYourMessage: boolean;
     otherUserName: string;
+    yourName: string;
     otherUserProfile?: Tables<'profiles'> | null;
     yourProfile?: Tables<'profiles'> | null;
 };
 
-export function Message({ message, isYourMessage, otherUserName, otherUserProfile, yourProfile }: MessageProps) {
+export function Message({ message, isYourMessage, otherUserName, otherUserProfile, yourProfile, yourName }: MessageProps) {
+    const otherUserIcon = useMemo(() => <ProfileCircleIcon image={otherUserProfile?.image} name={otherUserName} />, [otherUserProfile, otherUserName]);
+    const yourIcon = useMemo(() => <ProfileCircleIcon className="flex justify-end" image={yourProfile?.image} name={yourName} />, [yourProfile, yourName]);
+
     return (
         <div className={cn("flex flex-col gap-2 p-2", isYourMessage ? "items-end" : "items-start")}>
             <div className="flex gap-3 items-end">
-                {!isYourMessage && otherUserProfile && <ProfileCircleIcon profile={otherUserProfile} />}
+                {!isYourMessage && otherUserProfile && otherUserIcon}
                 <div>
                     {message.pic && (
                         <MessagePicCard className="flex justify-end max-w-60 mb-1" image={message.pic} />
@@ -30,7 +35,7 @@ export function Message({ message, isYourMessage, otherUserName, otherUserProfil
                         </div>
                     </div>
                 </div>
-                {isYourMessage && yourProfile && <ProfileCircleIcon className="flex justify-end" profile={yourProfile} />}
+                {isYourMessage && yourProfile && yourIcon}
             </div>
         </div>
     );

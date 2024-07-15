@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button } from "../../../components/ui/button"
 import { BellIcon, CalendarDays, Dog, LineChart, MessageSquareMore, Package, PawPrint, Users } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../../components/ui/card";
+// import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../../components/ui/card";
 import { cn } from "../../../utils/cn";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
@@ -62,19 +62,19 @@ export function Sidebar({ className }: SidebarProps) {
                         </Link>
                     </nav>
                 </div>
-                <div className="p-4 mt-72">
+                {/* <div className="p-4 mt-72">
                     <Card>
                         <CardHeader className="pb-4">
-                            <CardTitle>Upgrade to Pro</CardTitle>
-                            <CardDescription>Unlock all features and get unlimited access to our support team</CardDescription>
+                            <CardTitle>Buy Credits</CardTitle>
+                            <CardDescription>Purchase credits to schedule walks</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Button className="w-full" size="sm">
-                                Upgrade
+                                Buy Credits
                             </Button>
                         </CardContent>
                     </Card>
-                </div>
+                </div> */}
             </div>
         </div>
     )

@@ -5,7 +5,7 @@ import { Sidebar } from "./components/Sidebar"
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const { data: session, isFetched} = useSession();
+    const { data: session, isFetched } = useSession();
 
     useEffect(() => {
         if (isFetched && !session) {

@@ -44,6 +44,27 @@ export async function getConversationByWalkId(client: TypedSupabaseClient, id: s
         .throwOnError()
 }
 
+export async function getConversationsByWalkerId(client: TypedSupabaseClient, id: string) {
+    return await client
+        .from('conversations')
+        .select(`*,
+            employee (
+                id,
+                f_name,
+                l_name,
+                image
+            ),
+            customer (
+                id,
+                f_name,
+                l_name,
+                image
+            )`)
+        .eq('employee', id)
+        .order('last_message', { ascending: false })
+        .throwOnError() || [];
+}
+
 export async function updateUnreadCountAndLastViewedAt(client: TypedSupabaseClient, conversation: Tables<'conversations'>, userId: string) {
     let params;
     const time = new Date().toLocaleString();

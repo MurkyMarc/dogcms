@@ -27,7 +27,7 @@ export const Home = () => {
     }, [api, current]);
 
     return (
-        <div>
+        <div className="w-full">
             <section className="py-24 lg:py-24 xl:py-36 bg-blue-100" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.30)), url(${dogImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="container px-4 md:px-6">
                     <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">

@@ -1,7 +1,6 @@
 import { cn } from "../../../utils/cn"
-import { Tables } from "../../../utils/database.types"
 import useSupabase from "../../../api/hooks/useSupabase"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { CardPlaceholder } from "./CardPlaceholder"
 import { errorToast } from "../../../utils/helpers"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
@@ -9,13 +8,15 @@ import { CircleIconFallback } from "../../../components/ui/icons/CircleIconFallb
 import { getProfileAvatarUrl } from "../../../api/queries/profileQueries"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    profile: Tables<'profiles'> | null
+    image?: string;
+    name?: string;
     children?: React.ReactNode
     imageStyles?: string
 }
 
 export function ProfileCircleIcon({
-    profile,
+    image,
+    name,
     className,
     imageStyles = "rounded-full w-10 h-10 sm:w-12 sm:h-12 cursor-default",
     ...props
@@ -26,11 +27,11 @@ export function ProfileCircleIcon({
 
     const downloadImage = useCallback(async () => {
         let isMounted = true;
-        if (!profile?.image) return;
+        if (!image) return;
 
         try {
             setLoading(true);
-            const { url } = await getProfileAvatarUrl(supabase, profile.image);
+            const { url } = await getProfileAvatarUrl(supabase, image);
             if (isMounted && url) setImageUrl(url);
         } catch (error) {
             isMounted && errorToast(error);
@@ -38,11 +39,19 @@ export function ProfileCircleIcon({
             isMounted && setLoading(false);
         }
         return () => { isMounted = false; };
-    }, [profile?.image, supabase]);
+    }, [image, supabase]);
 
     useEffect(() => {
-        if (profile?.image) downloadImage();
-    }, [profile?.image, downloadImage])
+        if (image) downloadImage();
+    }, [image, downloadImage])
+
+    const tooltipText = useMemo(() => {
+        return (
+            <TooltipContent>
+                <p>{name}</p>
+            </TooltipContent>
+        )
+    }, [name]);
 
     return (
         <div className={cn(className, " min-w-max")} {...props}>
@@ -53,16 +62,14 @@ export function ProfileCircleIcon({
                             imageUrl ?
                                 <img
                                     src={imageUrl}
-                                    alt={profile?.f_name || ""}
+                                    alt={name || ""}
                                     className={cn(
                                         "rounded-md object-cover transition-all", imageStyles
                                     )}
-                                /> : <CircleIconFallback text={profile?.f_name || ""} imageStyles={imageStyles} />
+                                /> : <CircleIconFallback text={name || ""} imageStyles={imageStyles} />
                         }
                     </TooltipTrigger>
-                    <TooltipContent>
-                        <p>{profile?.f_name || ""}</p>
-                    </TooltipContent>
+                    {tooltipText}
                 </Tooltip>
             </TooltipProvider>
         </div>

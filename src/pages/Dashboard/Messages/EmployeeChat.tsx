@@ -1,64 +1,46 @@
-import { useEffect, useState } from "react";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../../components/ui/resizable";
-import { Sidebar } from "./components/sidebar";
-import { cn } from "../../../utils/cn";
-import { Chat } from "./components/chat";
-import { User, userData } from "./data";
-import Cookies from "js-cookie";
+import { useState, useMemo } from "react";
+import { Search } from "lucide-react";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
+import { useGetConversationsByWalkerId } from "../../../api/hooks/useMessages";
+import { useSession } from "../../../api/hooks/useAuth";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { ConversationCard } from "./components/conversation-card";
 
 export function EmployeeChat() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<User>(userData[0]);
-    const [isMobile, setIsMobile] = useState(false);
+    const { data: session } = useSession();
+    const [searchTerm, setSearchTerm] = useState('');
+    const { data: conversations } = useGetConversationsByWalkerId(session?.user.id || "");
 
-    useEffect(() => {
-        const checkScreenWidth = () => setIsMobile(window.innerWidth <= 768);
-        checkScreenWidth();
-        window.addEventListener("resize", checkScreenWidth);
-
-        return () => window.removeEventListener("resize", checkScreenWidth);
-    }, []);
+    const filteredConversations = useMemo(() => {
+        if (!conversations) return [];
+        return conversations.filter(
+            conv => conv.customer.f_name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [conversations, searchTerm]);
 
     return (
-        <ResizablePanelGroup
-            direction="horizontal"
-            onLayout={(sizes: number[]) => {
-                Cookies.set("react-resizable-panels:layout", JSON.stringify(sizes));
-            }}
-            className="overflow-x-visible min-h-[50rem]"
-        >
-            <ResizablePanel
-                defaultSize={isMobile? 8 : 30}
-                collapsedSize={8}
-                collapsible={true}
-                minSize={8}
-                maxSize={isMobile ? 8 : 30}
-                onCollapse={() => {
-                    setIsCollapsed(true);
-                    Cookies.set("react-resizable-panels:collapsed", "true");
-                }}
-                onExpand={() => {
-                    setIsCollapsed(false);
-                    Cookies.set("react-resizable-panels:collapsed", "false");
-                }}
-                className={cn(
-                    isCollapsed && "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out",
-                )}
-            >
-                <Sidebar
-                    isCollapsed={isCollapsed || isMobile}
-                    users={userData}
-                    selectedUser={selectedUser}
-                    setSelectedUser={setSelectedUser}
+        <div className="flex flex-col h-full w-full p-8 md:max-h-[calc(100vh-3rem)]">
+            <h1 className="text-2xl font-bold mb-4">Your Conversations</h1>
+
+            <form className="mb-4 flex flex-shrink">
+                <Input
+                    type="text"
+                    placeholder="Search by name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="mr-2"
                 />
-            </ResizablePanel>
-            <ResizableHandle withHandle disabled={isMobile} />
-            <ResizablePanel>
-                <Chat
-                    selectedUser={selectedUser}
-                    isMobile={isMobile}
-                />
-            </ResizablePanel>
-        </ResizablePanelGroup>
+                <Button type="submit">
+                    <Search className="mr-2 h-4 w-4" /> Search
+                </Button>
+            </form>
+
+            <ScrollArea className="rounded-md px-4 flex flex-1 border" type="always">
+                {filteredConversations.map((conv) => (
+                    <ConversationCard key={conv.id} conversation={conv} />
+                ))}
+            </ScrollArea>
+        </div>
     );
 }

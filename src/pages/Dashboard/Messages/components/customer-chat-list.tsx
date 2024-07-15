@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { Tables, TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
-import { identifyConversationUsers } from "../../../../utils/helpers";
+import { calculateName, identifyConversationUsers } from "../../../../utils/helpers";
 import { Message } from "./message";
 import ChatBottombar from "./customer-chat-bottom-bar";
 import { cn } from "../../../../utils/cn";
@@ -17,7 +17,8 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const conversationUsers = identifyConversationUsers(conversation, session?.user.id || "");
-    const otherUserName = `${conversationUsers?.other?.user?.f_name} ${conversationUsers?.other?.user?.l_name?.charAt(0) || ''}`;
+    const otherUserName = calculateName(conversationUsers?.other?.user?.f_name, conversationUsers?.other?.user?.l_name);
+    const yourName = calculateName(conversationUsers?.me?.user?.f_name, conversationUsers?.me?.user?.l_name);
 
     const scrollToBottom = useCallback((smooth = true, delay = 0) => {
         if (messagesContainerRef.current) {
@@ -57,7 +58,7 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
         });
 
         // Fallback: scroll after a timeout even if not all images have loaded
-        setTimeout(() => scrollToBottom(false), 2000);
+        // setTimeout(() => scrollToBottom(false), 2000);
     }, [scrollToBottom]);
 
     useEffect(() => {
@@ -101,6 +102,7 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
                         otherUserName={otherUserName}
                         otherUserProfile={conversationUsers?.other?.user}
                         yourProfile={conversationUsers?.me?.user}
+                        yourName={yourName}
                     />
                 )) :
                     <div className="text-center">

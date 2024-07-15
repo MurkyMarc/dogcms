@@ -401,3 +401,10 @@ export function identifyConversationUsers(conversation: Tables<'conversations'>,
     if (conversation.employee?.id === userId) return { me: user1, other: user2 }
     return { me: user2, other: user1}
 }
+
+export function calculateName(firstName: string | undefined, lastName: string | undefined) {
+    if (!firstName && !lastName) return "";
+    if (!firstName && lastName) return lastName;
+    if (!lastName && firstName) return firstName;
+    return `${firstName} ${lastName}`
+}
