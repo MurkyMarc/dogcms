@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Header } from "./components/Header"
 import { useNavigate } from "react-router-dom";
 import WalkTable from "./components/WalkTable";
 import { Button } from "../../components/ui/button"
@@ -49,33 +48,30 @@ export default function Walks() {
     }, [walksArray, isLoading, error]);
 
     return (
-        <>
-            <Header title="Walks" showSearch={hasDogs} />
-            <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-                {hasDogs ?
-                    <>
-                        <div className="flex items-center">
-                            <h1 className="font-semibold text-lg md:text-2xl">Upcoming Walks</h1>
-                            <h2 className="hidden sm:block text-lg ml-4 py-1 px-2 bg-accent rounded-md">{showDateRange(new Date(), getDateInNumWeeks({ date: new Date(), weeks: numWeeks }))}</h2>
-                            {isLoading && <LoadingSpinner className="ml-2" />}
-                            <Button className="ml-auto" size="sm" disabled={!hasDogs} onClick={() => navigate("/dashboard/walks/new")}>
-                                Schedule new walk
-                            </Button>
-                        </div>
-                        {walkTable}
-                    </> :
-                    <div className="text-center lg:text-left">
-                        <h1 className="font-semibold text-3xl">No dogs found!</h1>
-                        <p className="text-muted-foreground pt-1">
-                            You will need to add a dog to your profile before you can schedule walks.
-                        </p>
-                        <Button className="mt-4" size="sm" onClick={() => navigate("/dashboard/dogs/new")}>
-                            Add a new dog
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+            {hasDogs ?
+                <>
+                    <div className="flex items-center">
+                        <h1 className="font-semibold text-lg md:text-2xl">Upcoming Walks</h1>
+                        <h2 className="hidden sm:block text-lg ml-4 py-1 px-2 bg-accent rounded-md">{showDateRange(new Date(), getDateInNumWeeks({ date: new Date(), weeks: numWeeks }))}</h2>
+                        {isLoading && <LoadingSpinner className="ml-2" />}
+                        <Button className="ml-auto" size="sm" disabled={!hasDogs} onClick={() => navigate("/dashboard/walks/new")}>
+                            Schedule new walk
                         </Button>
                     </div>
-                }
-                <Button className="w-full" onClick={handleLoadMore}>Load more</Button>
-            </main>
-        </>
+                    {walkTable}
+                </> :
+                <div className="text-center lg:text-left">
+                    <h1 className="font-semibold text-3xl">No dogs found!</h1>
+                    <p className="text-muted-foreground pt-1">
+                        You will need to add a dog to your profile before you can schedule walks.
+                    </p>
+                    <Button className="mt-4" size="sm" onClick={() => navigate("/dashboard/dogs/new")}>
+                        Add a new dog
+                    </Button>
+                </div>
+            }
+            <Button className="w-full" onClick={handleLoadMore}>Load more</Button>
+        </main>
     )
 }

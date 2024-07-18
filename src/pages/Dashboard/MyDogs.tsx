@@ -1,7 +1,6 @@
 import { DogCard } from "./components/DogCard";
 import { useGetDogsByOwner } from "../../api/hooks/useDog";
 import { CardPlaceholder } from "./components/CardPlaceholder";
-import { Header } from "./components/Header";
 import { Button } from "../../components/ui/button";
 import { useSession } from "../../api/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +12,6 @@ export default function MyDogs() {
 
     return (
         <>
-            <Header title="My Dogs" />
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
                 <div className="flex items-center">
                     <h1 className="font-semibold text-lg md:text-2xl">Dog Profiles</h1>

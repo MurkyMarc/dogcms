@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
-import { Header } from './components/Header';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { DogCard } from './components/DogCard';
@@ -72,7 +71,6 @@ export const DogProfile = () => {
 
     return (
         <>
-            <Header title={dog?.name ? dog.name : ""} />
             <ConfirmationDialog text="Are you sure you want to delete this image?" onConfirm={handleModalConfirm} onCancel={handleModalCancel} isOpen={showModal} />
             <div className="p-6 max-w-3xl space-y-8">
                 <div className="items-center">
