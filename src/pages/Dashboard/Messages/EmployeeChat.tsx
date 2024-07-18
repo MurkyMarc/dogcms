@@ -16,7 +16,11 @@ export function EmployeeChat() {
         if (!conversations) return [];
         return conversations.filter(
             conv => conv.customer.f_name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        ).sort((a, b) => {
+            const dateA = a?.last_message_at ?? '';
+            const dateB = b?.last_message_at ?? '';
+            return dateB.localeCompare(dateA);
+        });
     }, [conversations, searchTerm]);
 
     return (

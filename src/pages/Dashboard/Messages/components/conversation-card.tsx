@@ -12,12 +12,13 @@ interface ConversationCardProps {
 export function ConversationCard({ conversation }: ConversationCardProps) {
     const session = useSession();
     const isYourMessage = session?.data?.user.id === conversation.last_message_sender;
+    const otherUserProfile = conversation.employee?.id === session?.data?.user.id ? conversation.customer : conversation.employee;
 
     return (
         <Link to={`/dashboard/walk/${conversation.walk_id}/chat`}>
             <Card key={conversation.id} className="my-4 flex items-center p-4 hover:bg-gray-50 transition-colors hover:cursor-pointer">
                 <div className="relative mr-4">
-                    <ProfileCircleIcon className="flex justify-end" image={conversation.customer.image} name={conversation.customer.f_name} />
+                    <ProfileCircleIcon className="flex justify-end" image={otherUserProfile?.image} name={otherUserProfile?.f_name} />
                     {conversation.employee_unread_count > 0 && (
                         <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                             {conversation.employee_unread_count}
@@ -26,7 +27,7 @@ export function ConversationCard({ conversation }: ConversationCardProps) {
                 </div>
                 <div className="flex-grow">
                     <CardHeader className="p-0">
-                        <CardTitle className="text-lg">{conversation.customer.f_name}</CardTitle>
+                        <CardTitle className="text-lg">{otherUserProfile?.f_name}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-0 mt-1 flex flex-shrink">
                         <p className="text-sm text-gray-500">
