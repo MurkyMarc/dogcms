@@ -22,6 +22,7 @@ export type Database = {
           id: number
           last_message: string
           last_message_at: string | null
+          last_message_sender: string | null
           walk_id: number
         }
         Insert: {
@@ -36,6 +37,7 @@ export type Database = {
           id?: number
           last_message?: string
           last_message_at?: string | null
+          last_message_sender?: string | null
           walk_id: number
         }
         Update: {
@@ -50,6 +52,7 @@ export type Database = {
           id?: number
           last_message?: string
           last_message_at?: string | null
+          last_message_sender?: string | null
           walk_id?: number
         }
         Relationships: [
