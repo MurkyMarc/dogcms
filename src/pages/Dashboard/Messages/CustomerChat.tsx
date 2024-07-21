@@ -4,6 +4,7 @@ import { useGetConversationByWalkId, useGetConversationMessages, useSendMessage,
 import { TablesInsert } from "../../../utils/database.types";
 import { useSession } from "../../../api/hooks/useAuth";
 import useInterval from "../../../api/hooks/useInterval";
+import ChatBottombar from "./components/customer-chat-bottom-bar";
 
 type CustomerChatProps = {
     walkId: string;
@@ -32,11 +33,14 @@ export function CustomerChat({ walkId }: CustomerChatProps) {
 
     const messagesList = useMemo(() => {
         return (
-            <CustomerChatList
-                sendMessage={sendMessage}
-                messages={sortedMessages}
-                conversation={conversation!}
-            />
+            <div className="w-full flex flex-col h-[80vh]">
+                <CustomerChatList
+                    sendMessage={sendMessage}
+                    messages={sortedMessages}
+                    conversation={conversation!}
+                />
+                {conversation ? <ChatBottombar sendMessage={sendMessage} conversationId={conversation?.id} /> : null}
+            </div>
         );
     }, [conversation, sortedMessages, sendMessage]);
 

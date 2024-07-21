@@ -31,7 +31,7 @@ export default function WalkNav({ className }: React.HTMLAttributes<HTMLElement>
     const chatLinkStyles = isChatPath ? "lg:underline bg-white" : "text-muted-foreground lg:text-black bg-slate-100 lg:bg-inherit";
 
     return (
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex justify-center items-center gap-4 mb-6">
             <MenuButton className="flex-shrink" />
             <div className={cn(className, "flex flex-auto gap-4 p-1.5 bg-slate-100 rounded-lg lg:p-0 lg:bg-white")}>
                 <Button

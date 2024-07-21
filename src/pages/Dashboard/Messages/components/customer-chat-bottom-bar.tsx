@@ -5,19 +5,19 @@ import { Link } from "react-router-dom";
 import { cn } from "../../../../utils/cn";
 import { Button, buttonVariants } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
-import { Tables, TablesInsert } from "../../../../utils/database.types";
+import { TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
 import { useUploadMessageImage } from "../../../../api/hooks/useMessages";
 import { errorToast, fileTypeSupported, generateFilePath } from "../../../../utils/helpers";
 import { LoadingSpinner } from "../../../../components/ui/LoadingSpinner";
 
 interface ChatBottombarProps {
-    conversation: Tables<'conversations'>;
+    conversationId: number;
     sendMessage: (newMessage: TablesInsert<'messages'>) => void;
 }
 
 export default function ChatBottombar({
-    sendMessage, conversation
+    sendMessage, conversationId
 }: ChatBottombarProps) {
     const { data: session } = useSession();
     const [message, setMessage] = useState("");
@@ -72,7 +72,7 @@ export default function ChatBottombar({
     const handleThumbsUp = () => {
         const newMessage: TablesInsert<'messages'> = {
             content: "👍",
-            conversation_id: conversation.id,
+            conversation_id: conversationId,
             sender_id: session!.user.id
         };
         sendMessage(newMessage);
@@ -94,7 +94,7 @@ export default function ChatBottombar({
             if (noUploadErrors) {
                 const newMessage: TablesInsert<'messages'> = {
                     content: message.trim(),
-                    conversation_id: conversation.id,
+                    conversation_id: conversationId,
                     sender_id: session!.user.id,
                     pic: selectedImageName
                 };

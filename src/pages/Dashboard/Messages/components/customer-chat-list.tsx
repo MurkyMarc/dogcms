@@ -3,8 +3,7 @@ import { Tables, TablesInsert } from "../../../../utils/database.types";
 import { useSession } from "../../../../api/hooks/useAuth";
 import { calculateName, identifyConversationUsers } from "../../../../utils/helpers";
 import { Message } from "./message";
-import ChatBottombar from "./customer-chat-bottom-bar";
-import { cn } from "../../../../utils/cn";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
 
 interface ChatListProps {
     messages: Tables<'messages'>[];
@@ -12,27 +11,29 @@ interface ChatListProps {
     sendMessage: (newMessage: TablesInsert<'messages'>) => void;
 }
 
-export function CustomerChatList({ messages, conversation, sendMessage }: ChatListProps) {
+export function CustomerChatList({ messages, conversation }: ChatListProps) {
     const { data: session } = useSession();
-    const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
     const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const prevMessagesLengthRef = useRef(messages.length);
     const conversationUsers = identifyConversationUsers(conversation, session?.user.id || "");
     const otherUserName = calculateName(conversationUsers?.other?.user?.f_name, conversationUsers?.other?.user?.l_name);
     const yourName = calculateName(conversationUsers?.me?.user?.f_name, conversationUsers?.me?.user?.l_name);
 
-    const scrollToBottom = useCallback((smooth = true, delay = 0) => {
-        if (messagesContainerRef.current) {
-            setTimeout(() => {
-                messagesContainerRef?.current?.scrollTo({
-                    top: messagesContainerRef.current.scrollHeight,
-                    behavior: smooth ? 'smooth' : 'smooth'
+    const scrollToBottom = useCallback((smooth = true) => {
+        if (scrollAreaRef.current) {
+            const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+            if (scrollContainer) {
+                scrollContainer.scrollTo({
+                    top: scrollContainer.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'auto'
                 });
-            }, delay);
+            }
         }
     }, []);
 
     const checkImagesAndScroll = useCallback(() => {
-        const images = messagesContainerRef.current?.querySelectorAll('img') || [];
+        const images = scrollAreaRef.current?.querySelectorAll('img') || [];
         let loadedImages = 0;
         const totalImages = images.length;
 
@@ -56,63 +57,39 @@ export function CustomerChatList({ messages, conversation, sendMessage }: ChatLi
                 img.addEventListener('error', imageLoaded);
             }
         });
-
-        // Fallback: scroll after a timeout even if not all images have loaded
-        // setTimeout(() => scrollToBottom(false), 2000);
     }, [scrollToBottom]);
 
     useEffect(() => {
         if (isFirstLoad) {
             checkImagesAndScroll();
-            scrollToBottom(true, 1000); // Add delay only on first load
+            scrollToBottom(true);
             setIsFirstLoad(false);
-        } else {
+        } else if (messages.length > prevMessagesLengthRef.current) {
             scrollToBottom();
         }
+        prevMessagesLengthRef.current = messages.length;
     }, [messages, isFirstLoad, checkImagesAndScroll, scrollToBottom]);
 
-    useEffect(() => {
-        const container = messagesContainerRef.current;
-        if (!container) return;
-
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                    checkImagesAndScroll();
-                }
-            });
-        });
-
-        observer.observe(container, { childList: true, subtree: true });
-
-        return () => observer.disconnect();
-    }, [checkImagesAndScroll]);
-
     return (
-        <div className="w-full flex flex-col h-[80vh]">
-            <div
-                ref={messagesContainerRef}
-                className={cn("w-full overflow-y-auto overflow-x-hidden flex flex-col border-b border-gray-200 h-[80vh] ", messages.length == 0 && "justify-center")}
-            >
-                {messages.length > 0 ? messages.map((message) => (
-                    <Message
-                        key={message.id}
-                        message={message}
-                        isYourMessage={message.sender_id === session?.user.id}
-                        otherUserName={otherUserName}
-                        otherUserProfile={conversationUsers?.other?.user}
-                        yourProfile={conversationUsers?.me?.user}
-                        yourName={yourName}
-                    />
-                )) :
-                    <div className="text-center">
-                        <h1 className="text-xl font-bold">No messages yet</h1>
-                        <p className="text-sm text-muted-foreground">
-                            Send a message to start chatting.
-                        </p>
-                    </div>}
-            </div>
-            <ChatBottombar sendMessage={sendMessage} conversation={conversation} />
-        </div>
+        <ScrollArea type="always" ref={scrollAreaRef} className="flex-1 w-full px-4 border rounded-md">
+            {messages.length > 0 ? messages.map((message) => (
+                <Message
+                    key={message.id}
+                    message={message}
+                    isYourMessage={message.sender_id === session?.user.id}
+                    otherUserName={otherUserName}
+                    otherUserProfile={conversationUsers?.other?.user}
+                    yourProfile={conversationUsers?.me?.user}
+                    yourName={yourName}
+                />
+            )) : (
+                <div className="text-center mt-60">
+                    <h1 className="text-lg font-bold">No messages yet</h1>
+                    <p className="text-sm text-muted-foreground">
+                        Send a message to start chatting.
+                    </p>
+                </div>
+            )}
+        </ScrollArea>
     );
 }

@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { Separator } from "../../../components/ui/separator";
 import { useGetWalkById } from "../../../api/hooks/useWalks";
 import WalkNav from "./WalkNav";
 import { CustomerChat } from "../Messages/CustomerChat";
@@ -18,7 +17,6 @@ export default function WalkChat() {
         <div className="p-4 md:p-6 space-y-8">
             <div className="items-center">
                 <WalkNav />
-                <Separator className="mt-6" />
                 <div>
                     {id ? <CustomerChat walkId={id} /> : <div>Loading...</div>}
                 </div>
