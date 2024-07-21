@@ -7,8 +7,8 @@ export const PageContainer = () => {
         <>
             <Header />
             <div className="">
-                    <Outlet />
-                </div>
+                <Outlet />
+            </div>
             <Footer />
         </>
     )
