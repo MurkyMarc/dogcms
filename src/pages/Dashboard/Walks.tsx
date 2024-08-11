@@ -9,6 +9,7 @@ import { useGetMyProfileById } from "../../api/hooks/useProfile";
 import { useGetWalksByCustomerIdAndDateRange } from "../../api/hooks/useWalks";
 import { getBeginningOfDay, getDateInNumWeeks, getEndOfDay, showDateRange } from "../../utils/helpers";
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
+import { MenuButton } from "./components/MenuButton";
 
 export default function Walks() {
     const navigate = useNavigate();
@@ -52,6 +53,7 @@ export default function Walks() {
             {hasDogs ?
                 <>
                     <div className="flex items-center">
+                        <MenuButton className="mr-4" />
                         <h1 className="font-semibold text-lg md:text-2xl">Upcoming Walks</h1>
                         <h2 className="hidden sm:block text-lg ml-4 py-1 px-2 bg-accent rounded-md">{showDateRange(new Date(), getDateInNumWeeks({ date: new Date(), weeks: numWeeks }))}</h2>
                         {isLoading && <LoadingSpinner className="ml-2" />}

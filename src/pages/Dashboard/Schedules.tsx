@@ -1,11 +1,13 @@
 import { Button } from "../../components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table"
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "../../components/ui/pagination"
+import { MenuButton } from "./components/MenuButton"
 
 export default function Schedules() {
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
             <div className="flex items-center">
+                <MenuButton className="mr-4" />
                 <h1 className="font-semibold text-lg md:text-2xl">Upcoming Walks</h1>
                 <Button className="ml-auto" size="sm">
                     Schedule new walk

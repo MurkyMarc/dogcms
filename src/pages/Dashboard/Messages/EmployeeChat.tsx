@@ -6,6 +6,7 @@ import { useGetConversationsByWalkerId } from "../../../api/hooks/useMessages";
 import { useSession } from "../../../api/hooks/useAuth";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { ConversationCard } from "./components/conversation-card";
+import { MenuButton } from "../components/MenuButton";
 
 export function EmployeeChat() {
     const { data: session } = useSession();
@@ -25,7 +26,10 @@ export function EmployeeChat() {
 
     return (
         <div className="flex flex-col w-full p-8 max-h-[calc(100vh-3rem)]">
-            <h1 className="text-2xl font-bold mb-4">Your Conversations</h1>
+            <div className="flex items-center mb-4">
+                <MenuButton className="mr-4" />
+                <h1 className="text-xl md:text-2xl font-bold">Your Conversations</h1>
+            </div>
 
             <form className="mb-4 flex flex-shrink">
                 <Input
