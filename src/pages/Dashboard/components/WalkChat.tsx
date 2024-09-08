@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useGetWalkById } from "../../../api/hooks/useWalks";
 import WalkNav from "./WalkNav";
-import { CustomerChat } from "../Messages/CustomerChat";
+import { Conversation } from "../Messages/Conversation";
 
 export default function WalkChat() {
     const { id } = useParams();
@@ -18,7 +18,7 @@ export default function WalkChat() {
             <div className="items-center">
                 <WalkNav />
                 <div>
-                    {id ? <CustomerChat walkId={id} /> : <div>Loading...</div>}
+                    {id ? <Conversation walkId={id} /> : <div>Loading...</div>}
                 </div>
             </div>
         </div>

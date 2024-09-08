@@ -1,78 +1,95 @@
-import { useEffect, useRef } from "react";
-import { Message, UserData } from "../data";
-import { cn } from "../../../../utils/cn";
-import { Avatar, AvatarImage } from "../../../../components/ui/avatar";
-import ChatBottombar from "./chat-bottombar";
+import { useEffect, useRef, useCallback, useState } from "react";
+import { Tables, TablesInsert } from "../../../../utils/database.types";
+import { useSession } from "../../../../api/hooks/useAuth";
+import { calculateName, identifyConversationUsers } from "../../../../utils/helpers";
+import { Message } from "./message";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
 
 interface ChatListProps {
-    selectedUser: UserData;
-    messages: Message[];
-    sendMessage: (newMessage: Message) => void;
-    isMobile: boolean;
+    messages: Tables<'messages'>[];
+    conversation: Tables<'conversations'>;
+    sendMessage: (newMessage: TablesInsert<'messages'>) => void;
 }
 
-export function ChatList({
-    selectedUser,
-    messages,
-    sendMessage,
-    isMobile,
-}: ChatListProps) {
-    const messagesContainerRef = useRef<HTMLDivElement>(null);
+export function ChatList({ messages, conversation }: ChatListProps) {
+    const { data: session } = useSession();
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const prevMessagesLengthRef = useRef(messages.length);
+    const conversationUsers = identifyConversationUsers(conversation, session?.user.id || "");
+    const otherUserName = calculateName(conversationUsers?.other?.user?.f_name, conversationUsers?.other?.user?.l_name);
+    const yourName = calculateName(conversationUsers?.me?.user?.f_name, conversationUsers?.me?.user?.l_name);
+
+    const scrollToBottom = useCallback((smooth = true) => {
+        if (scrollAreaRef.current) {
+            const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+            if (scrollContainer) {
+                scrollContainer.scrollTo({
+                    top: scrollContainer.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'auto'
+                });
+            }
+        }
+    }, []);
+
+    const checkImagesAndScroll = useCallback(() => {
+        const images = scrollAreaRef.current?.querySelectorAll('img') || [];
+        let loadedImages = 0;
+        const totalImages = images.length;
+
+        if (totalImages === 0) {
+            scrollToBottom(false);
+            return;
+        }
+
+        const imageLoaded = () => {
+            loadedImages++;
+            if (loadedImages === totalImages) {
+                scrollToBottom(false);
+            }
+        };
+
+        images.forEach((img) => {
+            if (img.complete) {
+                imageLoaded();
+            } else {
+                img.addEventListener('load', imageLoaded);
+                img.addEventListener('error', imageLoaded);
+            }
+        });
+    }, [scrollToBottom]);
 
     useEffect(() => {
-        const container = messagesContainerRef.current;
-        if (!container) return;
-
-        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50; // Check if user is near the bottom
-
-        if (isAtBottom) {
-            container.scrollTop = container.scrollHeight; // Scroll to bottom if user is near the bottom
+        if (isFirstLoad) {
+            checkImagesAndScroll();
+            scrollToBottom(true);
+            setIsFirstLoad(false);
+        } else if (messages.length > prevMessagesLengthRef.current) {
+            scrollToBottom();
         }
-    }, [messages]);
+        prevMessagesLengthRef.current = messages.length;
+    }, [messages, isFirstLoad, checkImagesAndScroll, scrollToBottom]);
 
     return (
-        <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col max-h-[44.5rem]">
-            <div
-                ref={messagesContainerRef}
-                className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col"
-            >
-                {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={cn(
-                            "flex flex-col gap-2 p-4 whitespace-pre-wrap",
-                            message.name == "You" ? "items-end" : "items-start"
-                        )}
-                    >
-                        <div className="flex gap-3 items-center">
-                            {message.name == selectedUser.name && (
-                                <Avatar className="flex justify-center items-center">
-                                    <AvatarImage
-                                        src={message.avatar}
-                                        alt={message.name}
-                                        width={6}
-                                        height={6}
-                                    />
-                                </Avatar>
-                            )}
-                            <span className={cn("bg-accent py-2 px-3 rounded-lg max-w-xs sm:max-w-lg", message.name == "You" ? "rounded-tr-none" : "rounded-tl-none")}>
-                                {message.message}
-                            </span>
-                            {message.name !== selectedUser.name && (
-                                <Avatar className="flex justify-center items-center">
-                                    <AvatarImage
-                                        src={message.avatar}
-                                        alt={message.name}
-                                        width={6}
-                                        height={6}
-                                    />
-                                </Avatar>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <ChatBottombar sendMessage={sendMessage} isMobile={isMobile} />
-        </div>
+        <ScrollArea type="always" ref={scrollAreaRef} className="flex-1 w-full px-4 border rounded-md">
+            {messages.length > 0 ? messages.map((message) => (
+                <Message
+                    key={message.id}
+                    message={message}
+                    isYourMessage={message.sender_id === session?.user.id}
+                    otherUserName={otherUserName}
+                    otherUserProfile={conversationUsers?.other?.user}
+                    yourProfile={conversationUsers?.me?.user}
+                    yourName={yourName}
+                />
+            )) : (
+                <div className="text-center mt-60">
+                    <h1 className="text-lg font-bold">No messages yet</h1>
+                    <p className="text-sm text-muted-foreground">
+                        Send a message to start chatting.
+                    </p>
+                </div>
+            )}
+        </ScrollArea>
     );
 }

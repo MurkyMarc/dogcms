@@ -1,16 +1,16 @@
 import { useCallback, useMemo } from "react";
-import { CustomerChatList } from "./components/customer-chat-list";
+import { ChatList } from "./components/chat-list";
 import { useGetConversationByWalkId, useGetConversationMessages, useSendMessage, useUpdateConversationUnreadCountAndLastViewedAt } from "../../../api/hooks/useMessages";
 import { TablesInsert } from "../../../utils/database.types";
 import { useSession } from "../../../api/hooks/useAuth";
 import useInterval from "../../../api/hooks/useInterval";
-import ChatBottombar from "./components/customer-chat-bottom-bar";
+import ChatBottombar from "./components/chat-bottom-bar";
 
-type CustomerChatProps = {
+type ConversationProps = {
     walkId: string;
 }
 
-export function CustomerChat({ walkId }: CustomerChatProps) {
+export function Conversation({ walkId }: ConversationProps) {
     const { data: session } = useSession();
     const sendMessageHook = useSendMessage();
     const { data: conversation, isLoading: conversationLoading } = useGetConversationByWalkId(walkId);
@@ -34,7 +34,7 @@ export function CustomerChat({ walkId }: CustomerChatProps) {
     const messagesList = useMemo(() => {
         return (
             <div className="w-full flex flex-col h-[80vh]">
-                <CustomerChatList
+                <ChatList
                     sendMessage={sendMessage}
                     messages={sortedMessages}
                     conversation={conversation!}
