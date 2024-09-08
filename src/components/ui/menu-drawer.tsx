@@ -45,10 +45,10 @@ export function MenuDrawer({ children }: Props) {
                                 </Link>
                             </DrawerClose>
                             <DrawerClose asChild>
-                                <Link className={"w-full"} to="/dashboard/messages">
+                                <Link className={"w-full"} to="/dashboard/conversations">
                                     <Button variant="ghost" className="w-full justify-start">
                                         <MessageSquareMore size={20} className="mr-2 stroke-black" />
-                                        Messages
+                                        Conversations
                                     </Button>
                                 </Link>
                             </DrawerClose>

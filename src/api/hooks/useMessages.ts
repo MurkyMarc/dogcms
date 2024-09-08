@@ -83,7 +83,7 @@ export function useDeleteConversationById() {
         onMutate: () => loadingToast(),
         onSuccess: (_, id) => {
             queryClient.removeQueries({ queryKey: ['conversations', `${id}`] });
-            if (location.pathname.startsWith('/dashboard/messages/')) {
+            if (location.pathname.startsWith('/dashboard/conversations/')) {
                 navigate('/dashboard');
             }
             successToast("Deleted successfully.");

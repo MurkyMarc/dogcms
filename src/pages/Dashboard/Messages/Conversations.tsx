@@ -8,7 +8,7 @@ import { ScrollArea } from "../../../components/ui/scroll-area";
 import { ConversationCard } from "./components/conversation-card";
 import { MenuButton } from "../components/MenuButton";
 
-export function EmployeeChat() {
+export function Conversations() {
     const { data: session } = useSession();
     const [searchTerm, setSearchTerm] = useState('');
     const { data: conversations } = useGetConversationsByWalkerId(session?.user.id || "");

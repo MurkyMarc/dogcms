@@ -71,7 +71,7 @@ export default function Walk() {
 
                         <div className="">
                             <Button onClick={() => navigate(`/dashboard/walk/${id}/edit`)} variant={"outline"}>Edit Walk</Button>
-                            <Button className="ml-4" onClick={handleDeleteWalk} variant={"destructive"}>Delete Walk</Button>
+                            <Button className="ml-4" onClick={handleDeleteWalk} variant={"destructive"}>Cancel Walk</Button>
                         </div>
                     </>
                 }

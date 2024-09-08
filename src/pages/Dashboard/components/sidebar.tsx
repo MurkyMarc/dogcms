@@ -36,10 +36,10 @@ export function Sidebar({ className }: SidebarProps) {
                                 Schedules
                             </Button>
                         </Link>
-                        <Link to="/dashboard/messages">
+                        <Link to="/dashboard/conversations">
                             <Button variant="ghost" className="w-full justify-start px-3">
                                 <MessageSquareMore size={20} className="mr-3 stroke-black" />
-                                Messages
+                                Conversations
                             </Button>
                         </Link>
                         <Link to="/dashboard">

@@ -42,7 +42,7 @@ export default function Header() {
                                 <Link to="/dashboard/schedule" className="block w-full">Schedule</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <Link to="/dashboard/messages" className="block w-full">Messages</Link>
+                                <Link to="/dashboard/conversations" className="block w-full">Conversations</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <Link to="/dashboard/purchase" className="block w-full">Purchase</Link>
