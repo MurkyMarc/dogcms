@@ -16,12 +16,13 @@ export default function MyDogs() {
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
                 <div className="flex items-center">
                     <MenuButton className="mr-4" />
-                    <h1 className="font-semibold text-lg md:text-2xl">Dog Profiles</h1>
+                    <h1 className="font-semibold text-md md:text-2xl">Dog Profiles</h1>
                     <Button className="ml-auto" size="sm" onClick={() => navigate("/dashboard/dogs/new")}>
-                        Create new profile
+                        <span className="hidden sm:inline">Create new profile</span>
+                        <span className="sm:hidden">Create</span>
                     </Button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-w-7xl mx-auto">
                     {dogs ? dogs.map((dog) => (
                         <DogCard
                             id={`${dog.id}`}
