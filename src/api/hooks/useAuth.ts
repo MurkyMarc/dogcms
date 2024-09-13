@@ -58,8 +58,20 @@ export function useSignOut() {
     return signOut;
 }
 
-// TODO - when someone updates their profile - revalidate session
-
 export function useProfile() {
     return useQuery<Tables<"profiles"> | null, Error>({ queryKey: ['myprofile'] });
+}
+
+export async function useRevalidateSession() {
+    const supabase = useSupabase();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        const { data: user, error } = await supabase.auth.refreshSession();
+        if (error) {
+            console.error('Error refreshing session:', error);
+            return null;
+        }
+        return user;
+    }
+    return null;
 }
