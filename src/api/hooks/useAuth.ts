@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfileById } from "../queries/profileQueries";
 import { Session } from "@supabase/supabase-js";
+import { Tables } from "../../utils/database.types";
 
 export function AuthStateListener() {
     const supabase = useSupabase();
@@ -58,3 +59,7 @@ export function useSignOut() {
 }
 
 // TODO - when someone updates their profile - revalidate session
+
+export function useProfile() {
+    return useQuery<Tables<"profiles"> | null, Error>({ queryKey: ['myprofile'] });
+}
