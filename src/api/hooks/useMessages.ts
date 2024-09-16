@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createConversation, deleteConversationById, deleteMessageById, getConversationByWalkId, getConversationMessages, getConversationsByWalkerId, sendMessage, updateConversation, updateMessage, updateUnreadCountAndLastViewedAt, uploadMessageImage } from "../queries/messageQueries";
+import { createConversation, deleteConversationById, deleteMessageById, getConversationByWalkId, getConversationMessages, getConversations, sendMessage, updateConversation, updateMessage, updateUnreadCountAndLastViewedAt, uploadMessageImage } from "../queries/messageQueries";
 import useSupabase from "./useSupabase";
 import { Tables, TablesInsert } from "../../utils/database.types";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Role } from "../types";
 
 export function useGetConversationByWalkId(id: string) {
     const client = useSupabase();
@@ -19,13 +20,13 @@ export function useGetConversationByWalkId(id: string) {
     return useQuery({ queryKey, queryFn });
 }
 
-export function useGetConversationsByWalkerId(id: string) {
+export function useGetConversations(id: string, role: Role) {
     const client = useSupabase();
-    const queryKey = ['conversations', 'walker_id', id];
+    const queryKey = ['conversations', role, id];
 
     const queryFn = async () => {
         if (!id) return null;
-        return await getConversationsByWalkerId(client, id).then(
+        return await getConversations(client, id, role).then(
             (result) => result.data
         );
     };

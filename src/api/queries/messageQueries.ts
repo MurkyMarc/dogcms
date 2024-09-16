@@ -1,6 +1,7 @@
 import { Tables, TablesUpdate } from './../../utils/database.types';
 import { TablesInsert } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
+import { Role } from '../types';
 
 export async function getConversationById(client: TypedSupabaseClient, id: string) {
     return await client
@@ -44,7 +45,7 @@ export async function getConversationByWalkId(client: TypedSupabaseClient, id: s
         .throwOnError()
 }
 
-export async function getConversationsByWalkerId(client: TypedSupabaseClient, id: string) {
+export async function getConversations(client: TypedSupabaseClient, id: string, role: Role) {
     return await client
         .from('conversations')
         .select(`*,
@@ -60,7 +61,7 @@ export async function getConversationsByWalkerId(client: TypedSupabaseClient, id
                 l_name,
                 image
             )`)
-        .eq('employee', id)
+        .eq(role, id)
         .order('last_message', { ascending: false })
         .throwOnError() || [];
 }

@@ -2,27 +2,32 @@ import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
-import { useGetConversationsByWalkerId } from "../../../api/hooks/useMessages";
-import { useSession } from "../../../api/hooks/useAuth";
+import { useGetConversations } from "../../../api/hooks/useMessages";
+import { useProfile, useSession } from "../../../api/hooks/useAuth";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { ConversationCard } from "./components/conversation-card";
 import { MenuButton } from "../components/MenuButton";
 
 export function Conversations() {
     const { data: session } = useSession();
+    const { data: profile } = useProfile();
     const [searchTerm, setSearchTerm] = useState('');
-    const { data: conversations } = useGetConversationsByWalkerId(session?.user.id || "");
+    const role = profile?.role === 'customer' ? 'customer' : 'employee';
+    const { data: conversations } = useGetConversations(session?.user.id || "", role);
 
     const filteredConversations = useMemo(() => {
         if (!conversations) return [];
         return conversations.filter(
-            conv => conv.customer.f_name.toLowerCase().includes(searchTerm.toLowerCase())
+            conv => {
+                const otherUser = role === 'customer' ? conv.employee : conv.customer;
+                return otherUser?.f_name.toLowerCase().includes(searchTerm.toLowerCase());
+            }
         ).sort((a, b) => {
             const dateA = a?.last_message_at ?? '';
             const dateB = b?.last_message_at ?? '';
             return dateB.localeCompare(dateA);
         });
-    }, [conversations, searchTerm]);
+    }, [conversations, searchTerm, role]);
 
     return (
         <div className="flex flex-col w-full p-8 max-h-[calc(100vh-3rem)]">
@@ -46,7 +51,7 @@ export function Conversations() {
 
             <ScrollArea className="rounded-md px-4 flex flex-1 border" type="always">
                 {filteredConversations.map((conv) => (
-                    <ConversationCard key={conv.id} conversation={conv} />
+                    <ConversationCard key={conv.id} conversation={conv} role={role} />
                 ))}
             </ScrollArea>
         </div>

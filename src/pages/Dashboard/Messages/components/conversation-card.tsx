@@ -7,21 +7,28 @@ import { useSession } from "../../../../api/hooks/useAuth";
 
 interface ConversationCardProps {
     conversation: Tables<'conversations'>;
+    role: 'customer' | 'employee';
 }
 
-export function ConversationCard({ conversation }: ConversationCardProps) {
+const showUnreadCount = (role: 'customer' | 'employee', conversation: Tables<'conversations'>) => {
+    if (role === 'customer' && conversation.customer_unread_count > 0) return true;
+    if (role === 'employee' && conversation.employee_unread_count > 0) return true;
+    return false;
+}
+
+export function ConversationCard({ conversation, role }: ConversationCardProps) {
     const session = useSession();
     const isYourMessage = session?.data?.user.id === conversation.last_message_sender;
-    const otherUserProfile = conversation.employee?.id === session?.data?.user.id ? conversation.customer : conversation.employee;
+    const otherUserProfile = role === 'customer' ? conversation.employee : conversation.customer;
 
     return (
         <Link to={`/dashboard/walk/${conversation.walk_id}/chat`}>
             <Card key={conversation.id} className="my-4 flex items-center p-4 hover:bg-gray-50 transition-colors hover:cursor-pointer">
                 <div className="relative mr-4">
                     <ProfileCircleIcon className="flex justify-end" image={otherUserProfile?.image} name={otherUserProfile?.f_name} />
-                    {conversation.employee_unread_count > 0 && (
+                    {showUnreadCount(role, conversation) && (
                         <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                            {conversation.employee_unread_count}
+                            {role === 'customer' ? conversation.customer_unread_count : conversation.employee_unread_count}
                         </div>
                     )}
                 </div>
