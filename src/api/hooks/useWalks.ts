@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteWalkById, getWalkById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange } from "../queries/walkQueries";
+import { deleteWalkById, getWalkById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, updateWalkStatus } from "../queries/walkQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 import { createDogWalksByDogIds, deleteDogWalksByDogIds } from "../queries/dogWalksQueries";
+import { WalkStatus } from "../types";
 
 export function useGetWalkById(id: string) {
     const client = useSupabase();
@@ -162,4 +163,25 @@ export function useGetWalksByWalkerIdAndDateRange(id: string, startDate: string,
     };
 
     return useQuery({ queryKey, queryFn });
+}
+
+export function useUpdateWalkStatus() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async ({id, status}: {id: string, status: WalkStatus}) => {
+        return await updateWalkStatus(client, id, status);
+    };
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['walks', variables.id] });
+            successToast("Updated successfully.")
+        },
+        onError: (error) => {
+            errorToast(error)
+        }
+    });
 }

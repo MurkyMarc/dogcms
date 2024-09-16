@@ -1,5 +1,6 @@
 import { Tables, TablesInsert } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
+import { WalkStatus } from "../types";
 
 export async function upsertWalk(client: TypedSupabaseClient, walk: Tables<'walks'>) {
     return await client.from('walks').upsert(walk);
@@ -82,6 +83,16 @@ export async function createWalk(client: TypedSupabaseClient, walk: Partial<Tabl
     return await client
         .from('walks')
         .insert(walk as TablesInsert<'walks'>)
+        .select()
+        .single()
+        .throwOnError();
+}
+
+export async function updateWalkStatus(client: TypedSupabaseClient, id: string, status: WalkStatus) {
+    return await client
+        .from('walks')
+        .update({ status })
+        .eq('id', id)
         .select()
         .single()
         .throwOnError();
