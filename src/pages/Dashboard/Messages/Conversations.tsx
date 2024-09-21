@@ -30,7 +30,7 @@ export function Conversations() {
     }, [conversations, searchTerm, role]);
 
     return (
-        <div className="flex flex-col w-full p-8 max-h-[calc(100vh-3rem)]">
+        <div className="flex flex-col w-full p-8 max-h-[calc(100vh-3rem)] h-full">
             <div className="flex items-center mb-4">
                 <MenuButton className="mr-4" />
                 <h1 className="text-xl md:text-2xl font-bold">Your Conversations</h1>
@@ -49,11 +49,25 @@ export function Conversations() {
                 </Button>
             </form>
 
-            <ScrollArea className="rounded-md px-4 flex flex-1 border" type="always">
-                {filteredConversations.map((conv) => (
-                    <ConversationCard key={conv.id} conversation={conv} role={role} />
-                ))}
-            </ScrollArea>
+            {filteredConversations.length > 0 ?
+                <ScrollArea className="rounded-md px-4 flex flex-1 border h-full" type="always">
+                    {filteredConversations.map((conv) => (
+                        <ConversationCard key={conv.id} conversation={conv} role={role} />
+                    ))}
+                </ScrollArea>
+                :
+                <div className="rounded-md flex border h-full w-full justify-center items-center">
+                    <StatusMessage status="No conversations found" />
+                </div>
+            }
         </div>
     );
+}
+
+const StatusMessage = ({ status }: { status: string }) => {
+    return (
+        <div>
+            <h1 className="text-lg font-bold">{status}</h1>
+        </div>
+    )
 }
