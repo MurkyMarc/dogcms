@@ -13,7 +13,7 @@ type ConversationProps = {
 export function Conversation({ walkId }: ConversationProps) {
     const { data: session } = useSession();
     const sendMessageHook = useSendMessage();
-    const { data: conversation, isLoading: conversationLoading } = useGetConversationByWalkId(walkId);
+    const { data: conversation, isLoading: conversationLoading, isError: conversationError } = useGetConversationByWalkId(walkId);
     const { data: messages, isLoading: messagesLoading } = useGetConversationMessages(conversation?.id.toString() || "");
     const updateConversation = useUpdateConversationUnreadCountAndLastViewedAt();
 
@@ -38,13 +38,13 @@ export function Conversation({ walkId }: ConversationProps) {
                     sendMessage={sendMessage}
                     messages={sortedMessages}
                     conversation={conversation!}
+                    loading={conversationLoading || messagesLoading}
+                    error={conversationError}
                 />
                 {conversation ? <ChatBottombar sendMessage={sendMessage} conversationId={conversation?.id} /> : null}
             </div>
         );
-    }, [conversation, sortedMessages, sendMessage]);
-
-    if (conversationLoading || messagesLoading) return <p>Loading...</p>;
+    }, [conversation, sortedMessages, sendMessage, conversationError, conversationLoading, messagesLoading]);
 
     return (
         <div className="flex flex-col w-full h-full">
