@@ -51,29 +51,6 @@ export function useCreateWalk() {
 }
 
 // todo - restrict this to the owner or an admin
-export function useDeleteWalkById() {
-    const client = useSupabase();
-    const queryClient = useQueryClient();
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const mutationFn = async (id: string) => await deleteWalkById(client, id);
-
-    return useMutation({
-        mutationFn,
-        onMutate: () => loadingToast(),
-        onSuccess: (_, id) => {
-            queryClient.removeQueries({ queryKey: ['walks', `${id}`] });
-            if (location.pathname.startsWith('/dashboard/walks/')) {
-                navigate('/dashboard');
-            }
-            successToast("Deleted successfully.");
-        },
-        onError: (error) => {
-            errorToast(error)
-        }
-    });
-}
 
 type WalkUpdate = {
     id: number;
@@ -183,5 +160,37 @@ export function useUpdateWalkStatus() {
         onError: (error) => {
             errorToast(error)
         }
+    });
+}
+
+export function useDeleteWalkById() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const mutationFn = async (id: string) => await deleteWalkById(client, id);
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: (_, id) => {
+            queryClient.removeQueries({ queryKey: ['conversations', `${id}`] });
+            queryClient.removeQueries({
+                queryKey: ['walks'],
+                exact: false
+            });
+            queryClient.removeQueries({
+                queryKey: ['messages'],
+                exact: false
+            });
+
+            // If on the page of the deleted walk, navigate to the walks page
+            if (location.pathname.startsWith(`/dashboard/walk/${id}`)) {
+                navigate('/dashboard/walks');
+            }
+            successToast("Deleted successfully.");
+        },
+        onError: (error) => errorToast(error)
     });
 }

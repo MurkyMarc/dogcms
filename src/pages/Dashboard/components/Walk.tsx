@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetWalkById, useUpdateWalkStatus } from "../../../api/hooks/useWalks";
+import { useDeleteWalkById, useGetWalkById, useUpdateWalkStatus } from "../../../api/hooks/useWalks";
 import { Button } from "../../../components/ui/button";
 import { Separator } from "../../../components/ui/separator";
 import WalkNav from "./WalkNav";
@@ -14,6 +14,7 @@ export default function Walk() {
     const { data: walk, isLoading, isError, isSuccess } = useGetWalkById(id || "");
     const { data: profile } = useProfile();
     const { mutate: updateWalkStatus } = useUpdateWalkStatus();
+    const { mutate: deleteWalkById } = useDeleteWalkById();
 
     const handleStartWalk = () => {
         id && updateWalkStatus({ id, status: 'active' });
@@ -32,6 +33,9 @@ export default function Walk() {
         id && updateWalkStatus({ id, status: 'not scheduled' });
     }
 
+    const handleDeleteWalk = () => {
+        id && deleteWalkById(id);
+    }
     // todo: if not authorized, reroute to dashboard with an error message
 
     return (
@@ -109,7 +113,8 @@ export default function Walk() {
                                                 <Button className="ml-4" onClick={handleEndWalk} variant={"outline"}>End Walk</Button>
                                             </div>
                                             <div className="flex justify-center sm:justify-start pt-4">
-                                                <Button className="ml-4" onClick={handleSetToNotScheduled} variant={"outline"}>Set To Not Scheduled</Button>
+                                                <Button onClick={handleSetToNotScheduled} variant={"outline"}>Set To Not Scheduled</Button>
+                                                <Button className="ml-4" onClick={handleDeleteWalk} variant={"destructive"}>Delete Walk</Button>
                                             </div>
                                         </>
                                     ) : (
