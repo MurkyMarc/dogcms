@@ -1,4 +1,4 @@
-import { Tables, TablesUpdate } from './../../utils/database.types';
+import { Tables, TablesUpdate } from '../../utils/database.types';
 import { TablesInsert } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 import { Role } from '../types';

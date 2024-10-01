@@ -23,7 +23,7 @@ export type Database = {
           last_message: string
           last_message_at: string | null
           last_message_sender: string | null
-          walk_id: number
+          walk_id: number | null
         }
         Insert: {
           archived?: boolean
@@ -38,7 +38,7 @@ export type Database = {
           last_message?: string
           last_message_at?: string | null
           last_message_sender?: string | null
-          walk_id: number
+          walk_id?: number | null
         }
         Update: {
           archived?: boolean
@@ -53,7 +53,7 @@ export type Database = {
           last_message?: string
           last_message_at?: string | null
           last_message_sender?: string | null
-          walk_id?: number
+          walk_id?: number | null
         }
         Relationships: [
           {

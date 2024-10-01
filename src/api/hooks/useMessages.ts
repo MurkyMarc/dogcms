@@ -22,7 +22,7 @@ export function useGetConversationByWalkId(id: string) {
 
 export function useGetConversations(id: string, role: Role) {
     const client = useSupabase();
-    const queryKey = ['conversations', role, id];
+    const queryKey = ['conversations', id];
 
     const queryFn = async () => {
         if (!id) return null;
