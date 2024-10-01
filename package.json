@@ -19,6 +19,7 @@
     "sbdeploy1": "supabase functions deploy fetchCreditPackages --no-verify-jwt"
   },
   "dependencies": {
+    "@bitnoi.se/react-scheduler": "^0.3.1",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "@hookform/resolvers": "^3.3.4",
@@ -55,6 +56,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.4.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "embla-carousel-react": "^8.0.2",
     "emoji-mart": "^5.5.2",
