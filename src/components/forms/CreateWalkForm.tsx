@@ -83,6 +83,9 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
     async function onSubmit(e: CreateWalkFormValues) {
         const start = calculateDatetimeFromDateAndTime(e.date, e.start);
         const end = calculateEndDatetimeFromDateAndMinutes(start, Number(e.duration));
+        const startTime = formatTimeStringToAmPm(e.start);
+        const endTime = formatDateToAmPmString(end);
+
         const data = {
             customer: profile.id,
             start: start.toLocaleString(),
@@ -94,7 +97,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             notes: e.notes,
             status: 'not scheduled',
             title: `${profile.f_name}`,
-            subtitle: `${formatTimeStringToAmPm(e.start)} - ${formatDateToAmPmString(end)}`,
+            subtitle: `${startTime} - ${endTime}`,
             description: `${profile.f_name} ${profile.l_name} - status: not scheduled`
         }
 
