@@ -52,6 +52,7 @@ export default function Component() {
                 config={{
                     zoom: 0,
                     filterButtonState,
+                    showTooltip: false
                 }}
             />
         </section>
