@@ -1,3 +1,5 @@
+import { Role } from "../api/types"
+
 export type Json =
   | string
   | number
@@ -257,7 +259,7 @@ export type Database = {
           image: string
           l_name: string
           phone: string
-          role: string
+          role: Role
           state: string
           street: string
           updated_at: string
@@ -275,7 +277,7 @@ export type Database = {
           image?: string
           l_name?: string
           phone?: string
-          role?: string
+          role?: Role
           state?: string
           street?: string
           updated_at?: string
@@ -293,7 +295,7 @@ export type Database = {
           image?: string
           l_name?: string
           phone?: string
-          role?: string
+          role?: Role
           state?: string
           street?: string
           updated_at?: string

@@ -20,12 +20,12 @@ export function useGetConversationByWalkId(id: string) {
     return useQuery({ queryKey, queryFn });
 }
 
-export function useGetConversations(id: string, role: Role) {
+export function useGetConversations(id: string, role: Role | null) {
     const client = useSupabase();
     const queryKey = ['conversations', id];
 
     const queryFn = async () => {
-        if (!id) return null;
+        if (!id || !role) return null;
         return await getConversations(client, id, role).then(
             (result) => result.data
         );

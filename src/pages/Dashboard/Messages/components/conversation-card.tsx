@@ -4,13 +4,14 @@ import { Tables } from "../../../../utils/database.types";
 import { formatMonthDayFromDateString } from "../../../../utils/helpers";
 import { ProfileCircleIcon } from "../../components/ProfileCircleIcon";
 import { useSession } from "../../../../api/hooks/useAuth";
+import { Role } from "../../../../api/types";
 
 interface ConversationCardProps {
     conversation: Tables<'conversations'>;
-    role: 'customer' | 'employee';
+    role: Role;
 }
 
-const showUnreadCount = (role: 'customer' | 'employee', conversation: Tables<'conversations'>) => {
+const showUnreadCount = (role: Role, conversation: Tables<'conversations'>) => {
     if (role === 'customer' && conversation.customer_unread_count > 0) return true;
     if (role === 'employee' && conversation.employee_unread_count > 0) return true;
     return false;
