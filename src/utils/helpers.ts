@@ -408,3 +408,21 @@ export function calculateName(firstName: string | undefined, lastName: string | 
     if (!lastName && firstName) return firstName;
     return `${firstName} ${lastName}`
 }
+
+export function idToRgbColor(id: number): string {
+    const colors = [
+        "rgb(255,99,132)",  // Red
+        "rgb(54,162,235)",  // Blue
+        "rgb(255,206,86)",  // Yellow
+        "rgb(75,192,192)",  // Teal
+        "rgb(153,102,255)", // Purple
+        "rgb(255,159,64)",  // Orange
+        "rgb(255,205,210)", // Light Pink
+        "rgb(66,133,244)",  // Google Blue
+        "rgb(219,68,55)",   // Google Red
+        "rgb(244,180,0)"    // Google Yellow
+    ];
+
+    const index = id % colors.length;
+    return colors[index];
+}

@@ -5,6 +5,7 @@ import { useState, useCallback, useMemo, SetStateAction } from "react";
 import isBetween from 'dayjs/plugin/isBetween';
 import { useGetEmployeeWalksInMonth } from "../../api/hooks/useWalks";
 import { useGetEmployees } from "../../api/hooks/useProfile";
+import { idToRgbColor } from "../../utils/helpers";
 
 dayjs.extend(isBetween);
 
@@ -78,7 +79,7 @@ export default function Component() {
                 title: walk.title,
                 subtitle: walk.subtitle,
                 description: walk.description,
-                bgColor: "rgb(254,165,177)"
+                bgColor: idToRgbColor(walk.id)
             });
             return acc;
         }, {});
