@@ -32,4 +32,5 @@ dist-ssr
 .million
 
 # Supabase Migrations
+supabase/migrations
 supabase/migrations/*
