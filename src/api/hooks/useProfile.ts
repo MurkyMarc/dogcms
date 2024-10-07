@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteAvatar, getProfileById, updateProfile, uploadProfileAvatar } from "../queries/profileQueries";
+import { deleteAvatar, getEmployees, getProfileById, updateProfile, uploadProfileAvatar } from "../queries/profileQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
@@ -75,4 +75,16 @@ export function useDeleteAvatar() {
             queryClient.setQueryData(['myprofile'], { ...profile, image: "" });
         }
     });
+}
+
+export function useGetEmployees() {
+    const client = useSupabase();
+
+    const queryFn = async () => {
+        return await getEmployees(client).then(
+            (result) => result.data
+        );
+    };
+
+    return useQuery({ queryKey: ['employees'], queryFn });
 }

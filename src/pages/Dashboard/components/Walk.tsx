@@ -30,7 +30,7 @@ export default function Walk() {
 
 
     const handleSetToNotScheduled = () => {
-        id && updateWalkStatus({ id, status: 'not scheduled' });
+        id && updateWalkStatus({ id, status: 'not assigned' });
     }
 
     const handleDeleteWalk = () => {
@@ -113,7 +113,7 @@ export default function Walk() {
                                                 <Button className="ml-4" onClick={handleEndWalk} variant={"outline"}>End Walk</Button>
                                             </div>
                                             <div className="flex justify-center sm:justify-start pt-4">
-                                                <Button onClick={handleSetToNotScheduled} variant={"outline"}>Set To Not Scheduled</Button>
+                                                <Button onClick={handleSetToNotScheduled} variant={"outline"}>Unassign Walker</Button>
                                                 <Button className="ml-4" onClick={handleDeleteWalk} variant={"destructive"}>Delete Walk</Button>
                                             </div>
                                         </>

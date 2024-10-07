@@ -30,3 +30,6 @@ dist-ssr
 
 # Million Lint
 .million
+
+# Supabase Migrations
+supabase/migrations/*

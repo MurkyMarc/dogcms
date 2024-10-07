@@ -97,3 +97,13 @@ export async function updateWalkStatus(client: TypedSupabaseClient, id: string, 
         .single()
         .throwOnError();
 }
+
+export async function getWalksInDateRange(client: TypedSupabaseClient, startDate: Date, endDate: Date) {
+    return await client
+        .from('walks')
+        .select(`*`)
+        .gte('start', startDate.toLocaleString())
+        .lte('start', endDate.toLocaleString())
+        .order('start', { ascending: true })
+        .throwOnError() || [];
+}

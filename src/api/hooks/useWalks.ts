@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteWalkById, getWalkById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, updateWalkStatus } from "../queries/walkQueries";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteWalkById, getWalkById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, updateWalkStatus, getWalksInDateRange } from "../queries/walkQueries";
 import { Tables } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -193,4 +193,38 @@ export function useDeleteWalkById() {
         },
         onError: (error) => errorToast(error)
     });
+}
+
+export function useGetEmployeeWalksInMonth(months: string[]) {
+    const client = useSupabase();
+
+    // Helper function to fetch walks for a specific month
+    const fetchWalksForMonth = async (month: string) => {
+        const [year, monthNumber] = month.split('-');
+        const startDate = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
+        const endDate = new Date(parseInt(year), parseInt(monthNumber), 0);
+        endDate.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
+
+        return await getWalksInDateRange(client, startDate, endDate).then(result => result.data);
+    };
+
+    // Create an array of query objects, one for each month
+    const queries = months.map((month) => ({
+        queryKey: ['walks', 'month', month],
+        queryFn: () => fetchWalksForMonth(month),
+        refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+    }));
+
+    // Execute multiple queries in parallel and return combined results
+    const results = useQueries({ queries });
+
+    // Combine the data from each query
+    const combinedData = results
+        .map((result) => result.data || [])
+        .flat(); // Flatten the arrays of walks from each month
+
+    // Determine if any query is still loading
+    const isLoading = results.some((result) => result.isLoading);
+
+    return { data: combinedData, isLoading };
 }

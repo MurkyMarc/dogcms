@@ -95,10 +95,10 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             state: e.state,
             zip: e.zip,
             notes: e.notes,
-            status: 'not scheduled',
+            status: 'not assigned',
             title: `${profile.f_name}`,
             subtitle: `${startTime} - ${endTime}`,
-            description: `${profile.f_name} ${profile.l_name} - status: not scheduled`
+            description: `${profile.f_name} ${profile.l_name} - status: not assigned`
         }
 
         const newWalk = await createWalkHook.mutateAsync(data);
