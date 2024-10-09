@@ -1,7 +1,7 @@
 import "@bitnoi.se/react-scheduler/dist/style.css";
 import { Scheduler } from "@bitnoi.se/react-scheduler";
 import dayjs from "dayjs";
-import { useState, useCallback, useMemo, SetStateAction } from "react";
+import { useEffect, useState, useCallback, useMemo, SetStateAction } from "react";
 import isBetween from 'dayjs/plugin/isBetween';
 import { useGetEmployeeWalksInMonth } from "../../api/hooks/useWalks";
 import { useGetEmployees } from "../../api/hooks/useProfile";
@@ -44,13 +44,27 @@ export default function Component() {
 
     const { data: employees, isLoading: isLoadingEmployees } = useGetEmployees();
 
-    
-
     // Generate all the months in the range
     const monthsToFetch = useMemo(() => getMonthsInRange(range.startDate, range.endDate), [range.startDate, range.endDate]);
 
     // Use cached fetches by month for all months in the range
     const { data: walksByMonth, isLoading: isLoadingWalks } = useGetEmployeeWalksInMonth(monthsToFetch);
+
+    const [employeeAvatars, setEmployeeAvatars] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        if (employees && Object.keys(employeeAvatars).length === 0) {
+            const fetchAvatars = async () => {
+                const avatars: Record<string, string> = {};
+                for (const employee of employees) {
+                    const { url } = await getProfileAvatarUrl(supabase, employee.image);
+                    avatars[employee.id] = url || "";
+                }
+                setEmployeeAvatars(avatars);
+            };
+            fetchAvatars();
+        }
+    }, [employees, supabase, employeeAvatars]);
 
     const handleRangeChange = useCallback((newRange: SetStateAction<{ startDate: Date; endDate: Date; }>) => {
         setRange(newRange);
@@ -58,11 +72,6 @@ export default function Component() {
 
     const schedulerData = useMemo(() => {
         if (!employees || !walksByMonth) return [];
-
-        employees.map(async (employee) => {
-            employee.image = (await getProfileAvatarUrl(supabase, employee.image)).url || "";
-            console.log(employee.f_name, "--", employee.image)
-        });
 
         // Combine walks from all fetched months
         const combinedWalks = walksByMonth.flat();
@@ -103,7 +112,7 @@ export default function Component() {
         const schedulerData = Object.entries(groupedWalks).map(([walkerId, walksData]) => ({
             id: walkerId,
             label: {
-                icon: employeesMap[walkerId]?.image || "",
+                icon: employeeAvatars[walkerId] || "",
                 title: walkerId === 'notAssigned' ? "Not Assigned" : `${employeesMap[walkerId]?.f_name} ${employeesMap[walkerId]?.l_name}` || "Unknown",
                 subtitle: ""
             },
@@ -118,7 +127,7 @@ export default function Component() {
         }
 
         return schedulerData;
-    }, [employees, supabase, walksByMonth]);
+    }, [employees, walksByMonth, employeeAvatars]);
 
     return (
         <section>
