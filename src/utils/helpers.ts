@@ -411,16 +411,26 @@ export function calculateName(firstName: string | undefined, lastName: string | 
 
 export function idToRgbColor(id: number): string {
     const colors = [
-        "rgb(255,99,132)",  // Red
-        "rgb(54,162,235)",  // Blue
-        "rgb(255,206,86)",  // Yellow
-        "rgb(75,192,192)",  // Teal
-        "rgb(153,102,255)", // Purple
-        "rgb(255,159,64)",  // Orange
-        "rgb(255,205,210)", // Light Pink
-        "rgb(66,133,244)",  // Google Blue
-        "rgb(219,68,55)",   // Google Red
-        "rgb(244,180,0)"    // Google Yellow
+        "rgb(239,83,80)",   // Soft Red
+        "rgb(66,165,245)",  // Soft Blue
+        "rgb(255,238,88)",  // Soft Yellow
+        "rgb(129,199,132)", // Soft Green
+        "rgb(171,71,188)",  // Soft Purple
+        "rgb(255,183,77)",  // Soft Orange
+        "rgb(244,143,177)", // Light Pink
+        "rgb(100,181,246)", // Light Blue
+        "rgb(77,208,225)",  // Cyan
+        "rgb(174,213,129)", // Light Green
+        "rgb(255,138,101)", // Peach
+        "rgb(186,104,200)", // Light Purple
+        "rgb(255,202,40)",  // Amber
+        "rgb(121,134,203)", // Indigo
+        "rgb(240,98,146)",  // Pink
+        "rgb(144,202,249)", // Sky Blue
+        "rgb(156,204,101)", // Lime Green
+        "rgb(255,112,67)",  // Deep Orange
+        "rgb(255,171,64)",  // Deep Amber
+        "rgb(206,147,216)"  // Lavender
     ];
 
     const index = id % colors.length;

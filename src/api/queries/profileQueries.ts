@@ -29,7 +29,7 @@ export async function getProfileById(client: TypedSupabaseClient, profileId: str
 }
 
 export async function getProfileAvatarUrl(client: TypedSupabaseClient, image: string) {
-    if (!image) return { url: null }
+    if (image == "" || !image) return { url: null }
 
     const { data, error } = await client.storage.from('avatars').download(image);
     if (error || data == null) return { url: null, error }

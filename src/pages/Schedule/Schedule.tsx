@@ -6,6 +6,9 @@ import isBetween from 'dayjs/plugin/isBetween';
 import { useGetEmployeeWalksInMonth } from "../../api/hooks/useWalks";
 import { useGetEmployees } from "../../api/hooks/useProfile";
 import { idToRgbColor } from "../../utils/helpers";
+import { Tables } from "../../utils/database.types";
+import { getProfileAvatarUrl } from "../../api/queries/profileQueries";
+import useSupabase from "../../api/hooks/useSupabase";
 
 dayjs.extend(isBetween);
 
@@ -36,12 +39,12 @@ const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
 };
 
 export default function Component() {
-    const [range, setRange] = useState({
-        startDate: new Date(),
-        endDate: new Date()
-    });
+    const supabase = useSupabase();
+    const [range, setRange] = useState({ startDate: new Date(), endDate: new Date() });
 
     const { data: employees, isLoading: isLoadingEmployees } = useGetEmployees();
+
+    
 
     // Generate all the months in the range
     const monthsToFetch = useMemo(() => getMonthsInRange(range.startDate, range.endDate), [range.startDate, range.endDate]);
@@ -56,12 +59,17 @@ export default function Component() {
     const schedulerData = useMemo(() => {
         if (!employees || !walksByMonth) return [];
 
+        employees.map(async (employee) => {
+            employee.image = (await getProfileAvatarUrl(supabase, employee.image)).url || "";
+            console.log(employee.f_name, "--", employee.image)
+        });
+
         // Combine walks from all fetched months
         const combinedWalks = walksByMonth.flat();
 
         // Create a map of employee IDs to employee names
-        const employeesMap = employees.reduce<Record<string, string>>((acc, employee) => {
-            acc[employee.id] = `${employee.f_name} ${employee.l_name}`;
+        const employeesMap = employees.reduce<Record<string, Partial<Tables<'profiles'>>>>((acc, employee) => {
+            acc[employee.id] = employee;
             return acc;
         }, {});
 
@@ -95,8 +103,8 @@ export default function Component() {
         const schedulerData = Object.entries(groupedWalks).map(([walkerId, walksData]) => ({
             id: walkerId,
             label: {
-                icon: "",
-                title: walkerId === 'notAssigned' ? "Not Assigned" : employeesMap[walkerId] || "Unknown",
+                icon: employeesMap[walkerId]?.image || "",
+                title: walkerId === 'notAssigned' ? "Not Assigned" : `${employeesMap[walkerId]?.f_name} ${employeesMap[walkerId]?.l_name}` || "Unknown",
                 subtitle: ""
             },
             data: walksData
@@ -110,7 +118,7 @@ export default function Component() {
         }
 
         return schedulerData;
-    }, [employees, walksByMonth]);
+    }, [employees, supabase, walksByMonth]);
 
     return (
         <section>
