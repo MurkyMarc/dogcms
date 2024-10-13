@@ -4,7 +4,7 @@ import { getMessageImageURL } from "../../../../api/queries/messageQueries";
 import { cn } from "../../../../utils/cn";
 import { errorToast } from "../../../../utils/helpers";
 import { CardPlaceholder } from "../../components/CardPlaceholder";
-import { Dialog, DialogContent } from "../../../../components/ui/dialog";
+import { Dialog, DialogContent, DialogOverlay } from "../../../../components/ui/dialog";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     image: string;
@@ -67,6 +67,7 @@ export function MessagePicCard({
             {children}
 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogOverlay className="bg-black/80" />
                 <DialogContent className="bg-white shadow-lg">
                     <div className="flex justify-center items-center p-4">
                         <img src={imageUrl} alt="Enlarged Message Pic" className="max-w-90vw max-h-90vh" />

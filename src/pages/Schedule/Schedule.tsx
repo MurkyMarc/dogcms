@@ -1,5 +1,5 @@
 import "@bitnoi.se/react-scheduler/dist/style.css";
-import { Scheduler } from "@bitnoi.se/react-scheduler";
+import { Scheduler, SchedulerProjectData } from "@bitnoi.se/react-scheduler";
 import dayjs from "dayjs";
 import { useEffect, useState, useCallback, useMemo, SetStateAction } from "react";
 import isBetween from 'dayjs/plugin/isBetween';
@@ -9,6 +9,7 @@ import { idToRgbColor } from "../../utils/helpers";
 import { Tables } from "../../utils/database.types";
 import { getProfileAvatarUrl } from "../../api/queries/profileQueries";
 import useSupabase from "../../api/hooks/useSupabase";
+import { WalkInfoModal } from "./components/WalkInfoModal";
 
 dayjs.extend(isBetween);
 
@@ -41,6 +42,9 @@ const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
 export default function Component() {
     const supabase = useSupabase();
     const [range, setRange] = useState({ startDate: new Date(), endDate: new Date() });
+    const [employeeAvatars, setEmployeeAvatars] = useState<Record<string, string>>({});
+    const [selectedWalk, setSelectedWalk] = useState<SchedulerProjectData | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { data: employees, isLoading: isLoadingEmployees } = useGetEmployees();
 
@@ -49,8 +53,6 @@ export default function Component() {
 
     // Use cached fetches by month for all months in the range
     const { data: walksByMonth, isLoading: isLoadingWalks } = useGetEmployeeWalksInMonth(monthsToFetch);
-
-    const [employeeAvatars, setEmployeeAvatars] = useState<Record<string, string>>({});
 
     useEffect(() => {
         if (employees && Object.keys(employeeAvatars).length === 0) {
@@ -135,13 +137,22 @@ export default function Component() {
                 data={schedulerData}
                 isLoading={isLoadingEmployees || isLoadingWalks}
                 onRangeChange={handleRangeChange}
-                onTileClick={(clickedResource) => console.log(clickedResource)}
+                onTileClick={(item) => {
+                    console.log(item);
+                    setSelectedWalk(item);
+                    setIsModalOpen(true);
+                }}
                 onItemClick={(item) => console.log(item)}
                 config={{
                     zoom: 1,
                     showTooltip: false,
                     filterButtonState: -1
                 }}
+            />
+            <WalkInfoModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                walkInfo={selectedWalk}
             />
         </section>
     );
