@@ -5,39 +5,13 @@ import { useEffect, useState, useCallback, useMemo, SetStateAction } from "react
 import isBetween from 'dayjs/plugin/isBetween';
 import { useGetEmployeeWalksInMonth } from "../../api/hooks/useWalks";
 import { useGetEmployees } from "../../api/hooks/useProfile";
-import { idToRgbColor } from "../../utils/helpers";
+import { getMonthsInRange, idToRgbColor } from "../../utils/helpers";
 import { Tables } from "../../utils/database.types";
 import { getProfileAvatarUrl } from "../../api/queries/profileQueries";
 import useSupabase from "../../api/hooks/useSupabase";
 import { WalkInfoModal } from "./components/WalkInfoModal";
 
 dayjs.extend(isBetween);
-
-type SchedulerDataItem = {
-    id: string,
-    startDate: Date,
-    endDate: Date,
-    occupancy: number,
-    title: string,
-    subtitle: string,
-    description: string,
-    bgColor: string
-};
-
-// Utility function to generate all months between two dates
-const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
-    const start = dayjs(startDate).startOf('month');
-    const end = dayjs(endDate).endOf('month');
-    const months = [];
-
-    let current = start;
-    while (current.isBefore(end) || current.isSame(end)) {
-        months.push(current.format('YYYY-MM'));
-        current = current.add(1, 'month');
-    }
-
-    return months;
-};
 
 export default function Schedule() {
     const supabase = useSupabase();
@@ -85,7 +59,7 @@ export default function Schedule() {
         }, {});
 
         // Group walks by walker ID or "notAssigned"
-        const groupedWalks = combinedWalks.reduce<Record<string, SchedulerDataItem[]>>((acc, walk) => {
+        const groupedWalks = combinedWalks.reduce<Record<string, SchedulerProjectData[]>>((acc, walk) => {
             const key = walk.walker || 'notAssigned';
             if (!acc[key]) {
                 acc[key] = [];

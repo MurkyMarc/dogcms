@@ -2,6 +2,7 @@ import { ChangeEvent } from 'react';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 import { Tables } from './database.types';
+import dayjs from 'dayjs';
 
 export const generateFilePath = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) {
@@ -436,3 +437,18 @@ export function idToRgbColor(id: number): string {
     const index = id % colors.length;
     return colors[index];
 }
+
+// Utility function to generate all months between two dates
+export const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
+    const start = dayjs(startDate).startOf('month');
+    const end = dayjs(endDate).endOf('month');
+    const months = [];
+
+    let current = start;
+    while (current.isBefore(end) || current.isSame(end)) {
+        months.push(current.format('YYYY-MM'));
+        current = current.add(1, 'month');
+    }
+
+    return months;
+};

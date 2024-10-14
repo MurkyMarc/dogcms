@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
 import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
 import { useGetConversations } from "../../../api/hooks/useMessages";
 import { useProfile, useSession } from "../../../api/hooks/useAuth";
 import { ScrollArea } from "../../../components/ui/scroll-area";
@@ -44,9 +42,6 @@ export function Conversations() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="mr-2"
                 />
-                <Button type="submit">
-                    <Search className="mr-2 h-4 w-4" /> Search
-                </Button>
             </form>
 
             {filteredConversations.length > 0 ?
