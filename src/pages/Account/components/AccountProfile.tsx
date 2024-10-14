@@ -9,7 +9,7 @@ import { Button } from "../../../components/ui/button";
 import { Separator } from "../../../components/ui/separator"
 import { ProfileForm } from '../../../components/forms/ProfileForms'
 import { CardPlaceholder } from "../../Dashboard/components/CardPlaceholder";
-import { ConfirmationDialog } from "../../../components/ConfirmationAlert";
+import { ConfirmationDialog } from "../../../components/ConfirmationDialogue";
 import { deleteAvatar } from "../../../api/queries/profileQueries";
 import useSupabase from "../../../api/hooks/useSupabase";
 

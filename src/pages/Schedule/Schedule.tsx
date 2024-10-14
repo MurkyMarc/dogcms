@@ -39,7 +39,7 @@ const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
     return months;
 };
 
-export default function Component() {
+export default function Schedule() {
     const supabase = useSupabase();
     const [range, setRange] = useState({ startDate: new Date(), endDate: new Date() });
     const [employeeAvatars, setEmployeeAvatars] = useState<Record<string, string>>({});
@@ -150,6 +150,7 @@ export default function Component() {
                 }}
             />
             <WalkInfoModal
+                key={selectedWalk?.id}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 walkInfo={selectedWalk}

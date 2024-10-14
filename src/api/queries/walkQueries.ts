@@ -44,17 +44,30 @@ export async function getWalkById(client: TypedSupabaseClient, id: string) {
     if (!id) return null;
     return await client
         .from('walks_with_dogs')
-        .select(`*`)
+        .select(`*,
+            walker (
+                id,
+                f_name,
+                l_name,
+                image
+            )
+        `)
         .eq('id', id)
         .throwOnError()
         .single();
 }
 
-// todo - test this query
 export async function getWalksByWalkerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
     return await client
         .from('walks_with_dogs')
-        .select(`*`)
+        .select(`*,
+            walker (
+                id,
+                f_name,
+                l_name,
+                image
+            )
+        `)
         .eq('walker', id)
         .order('start', { ascending: true })
         .gte('start', startDate)
@@ -67,6 +80,7 @@ export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClie
         .from('walks_with_dogs')
         .select(`*,
             walker (
+                id,
                 f_name,
                 l_name,
                 image
@@ -101,7 +115,14 @@ export async function updateWalkStatus(client: TypedSupabaseClient, id: string, 
 export async function getWalksInDateRange(client: TypedSupabaseClient, startDate: Date, endDate: Date) {
     return await client
         .from('walks')
-        .select(`*`)
+        .select(`*,
+            walker (
+                id,
+                f_name,
+                l_name,
+                image
+            )
+        `)
         .gte('start', startDate.toLocaleString())
         .lte('start', endDate.toLocaleString())
         .order('start', { ascending: true })

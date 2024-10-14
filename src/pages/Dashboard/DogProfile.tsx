@@ -10,7 +10,7 @@ import { errorToast, fileTypeSupported, generateFilePath } from '../../utils/hel
 import { useDeleteDogImage, useGetDogById, useUpdateDog, useUploadDogImage } from '../../api/hooks/useDog';
 import { deleteDogImage } from '../../api/queries/dogQueries';
 import useSupabase from '../../api/hooks/useSupabase';
-import { ConfirmationDialog } from '../../components/ConfirmationAlert';
+import { ConfirmationDialog } from '../../components/ConfirmationDialogue';
 
 export const DogProfile = () => {
     // todo - handle fake ids being passed in such as abc or just for ids that dont exist

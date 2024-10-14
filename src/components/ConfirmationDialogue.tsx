@@ -1,5 +1,6 @@
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { cn } from "../utils/cn";
 
 type ConfirmationDialogProps = {
     onConfirm: () => void;
@@ -7,12 +8,15 @@ type ConfirmationDialogProps = {
     text?: string;
     isOpen: boolean;
     title?: string;
+    overlayStyles?: string;
+    containerStyles?: string;
 }
 
-export const ConfirmationDialog = ({ text = "Are you sure?", onConfirm, onCancel, isOpen, title = "Confirmation" }: ConfirmationDialogProps) => {
+export const ConfirmationDialog = ({ text = "Are you sure?", onConfirm, onCancel, isOpen, title = "Confirmation", overlayStyles = "", containerStyles = "" }: ConfirmationDialogProps) => {
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
-            <DialogContent>
+            <DialogOverlay className={cn("bg-black/70", overlayStyles)} />
+            <DialogContent className={containerStyles}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>

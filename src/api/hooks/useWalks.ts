@@ -13,6 +13,7 @@ export function useGetWalkById(id: string) {
     const queryKey = ['walks', id];
 
     const queryFn = async () => {
+        if (!id) return null;
         return await getWalkById(client, id).then(
             (result) => {
                 const walk = result?.data;
@@ -197,6 +198,7 @@ export function useDeleteWalkById() {
 
 export function useGetEmployeeWalksInMonth(months: string[]) {
     const client = useSupabase();
+    const queryClient = useQueryClient();
 
     // Helper function to fetch walks for a specific month
     const fetchWalksForMonth = async (month: string) => {
@@ -219,9 +221,9 @@ export function useGetEmployeeWalksInMonth(months: string[]) {
     const results = useQueries({ queries });
 
     // Combine the data from each query
-    const combinedData = results
-        .map((result) => result.data || [])
-        .flat(); // Flatten the arrays of walks from each month
+    const combinedData = results.map((result) => result.data || []).flat();
+
+    combinedData.map(walk => queryClient.setQueryData(['walks', `${walk.id}`], walk));
 
     // Determine if any query is still loading
     const isLoading = results.some((result) => result.isLoading);
