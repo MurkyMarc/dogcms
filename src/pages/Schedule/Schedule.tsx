@@ -28,19 +28,24 @@ export default function Schedule() {
     // Use cached fetches by month for all months in the range
     const { data: walksByMonth, isLoading: isLoadingWalks } = useGetEmployeeWalksInMonth(monthsToFetch);
 
-    useEffect(() => {
-        if (employees && Object.keys(employeeAvatars).length === 0) {
-            const fetchAvatars = async () => {
-                const avatars: Record<string, string> = {};
-                for (const employee of employees) {
-                    const { url } = await getProfileAvatarUrl(supabase, employee.image);
-                    avatars[employee.id] = url || "";
-                }
-                setEmployeeAvatars(avatars);
-            };
-            fetchAvatars();
-        }
+    const fetchAvatars = useCallback(async () => {
+        if (!employees || Object.keys(employeeAvatars).length) return;
+
+        const avatarEntries = await Promise.all(
+            employees.map(async (employee) => {
+                const { url } = await getProfileAvatarUrl(supabase, employee.image);
+                return [employee.id, url || ""];
+            })
+        );
+
+        const avatars = Object.fromEntries(avatarEntries);
+        setEmployeeAvatars(avatars);
+
     }, [employees, supabase, employeeAvatars]);
+
+    useEffect(() => {
+        fetchAvatars();
+    }, [fetchAvatars]);
 
     const handleRangeChange = useCallback((newRange: SetStateAction<{ startDate: Date; endDate: Date; }>) => {
         setRange(newRange);
