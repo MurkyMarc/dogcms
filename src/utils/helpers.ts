@@ -405,8 +405,8 @@ export function identifyConversationUsers(conversation: Tables<'conversations'>,
 
 export function calculateName(firstName: string | undefined, lastName: string | undefined) {
     if (!firstName && !lastName) return "";
-    if (!firstName && lastName) return lastName;
     if (!lastName && firstName) return firstName;
+    if (!firstName && lastName) return lastName;
     return `${firstName} ${lastName}`
 }
 

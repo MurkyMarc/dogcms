@@ -328,7 +328,7 @@ export type Database = {
           street: string
           subtitle: string
           title: string
-          walker: string | null
+          walker: Tables<'profiles'> | null
           zip: string
         }
         Insert: {
@@ -347,7 +347,7 @@ export type Database = {
           street?: string
           subtitle?: string
           title?: string
-          walker?: string | null
+          walker?: Tables<'profiles'> | null
           zip?: string
         }
         Update: {
@@ -366,7 +366,7 @@ export type Database = {
           street?: string
           subtitle?: string
           title?: string
-          walker?: string | null
+          walker?: Tables<'profiles'> | null
           zip?: string
         }
         Relationships: [

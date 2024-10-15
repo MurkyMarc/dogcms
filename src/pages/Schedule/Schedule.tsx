@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback, useMemo, SetStateAction } from "react
 import isBetween from 'dayjs/plugin/isBetween';
 import { useGetEmployeeWalksInMonth } from "../../api/hooks/useWalks";
 import { useGetEmployees } from "../../api/hooks/useProfile";
-import { getMonthsInRange, idToRgbColor } from "../../utils/helpers";
+import { calculateName, getMonthsInRange, idToRgbColor } from "../../utils/helpers";
 import { Tables } from "../../utils/database.types";
 import { getProfileAvatarUrl } from "../../api/queries/profileQueries";
 import useSupabase from "../../api/hooks/useSupabase";
@@ -58,12 +58,11 @@ export default function Schedule() {
             return acc;
         }, {});
 
-        // Group walks by walker ID or "notAssigned"
+        // Group walks by walker ID or 'Not Assigned'
         const groupedWalks = combinedWalks.reduce<Record<string, SchedulerProjectData[]>>((acc, walk) => {
-            const key = walk.walker || 'notAssigned';
-            if (!acc[key]) {
-                acc[key] = [];
-            }
+            const key = walk?.walker?.id || 'Not Assigned';
+            if (!acc[key]) acc[key] = [];
+
             acc[key].push({
                 id: walk.id.toString(),
                 startDate: new Date(walk.start),
@@ -77,30 +76,23 @@ export default function Schedule() {
             return acc;
         }, {});
 
-        // Ensure every employee is represented, even if they have no walks
+        // Ensure every employee is visible, even if they have no walks
         employees.forEach(employee => {
-            if (!groupedWalks[employee.id]) {
-                groupedWalks[employee.id] = [];
-            }
+            if (!groupedWalks[employee.id]) groupedWalks[employee.id] = [];
         });
 
-        // Build the scheduler data
         const schedulerData = Object.entries(groupedWalks).map(([walkerId, walksData]) => ({
             id: walkerId,
             label: {
                 icon: employeeAvatars[walkerId] || "",
-                title: walkerId === 'notAssigned' ? "Not Assigned" : `${employeesMap[walkerId]?.f_name} ${employeesMap[walkerId]?.l_name}` || "Unknown",
+                title: walkerId = calculateName(employeesMap[walkerId]?.f_name, employeesMap[walkerId]?.l_name) || 'Not Assigned',
                 subtitle: ""
             },
             data: walksData
         }));
 
-        // Ensure "Not Assigned" is always first
-        const notAssignedIndex = schedulerData.findIndex(item => item.id === 'notAssigned');
-        if (notAssignedIndex > 0) {
-            const [notAssigned] = schedulerData.splice(notAssignedIndex, 1);
-            schedulerData.unshift(notAssigned);
-        }
+        // Ensure 'Not Assigned' is always first
+        schedulerData.sort(a => a.id === 'Not Assigned' ? -1 : 0);
 
         return schedulerData;
     }, [employees, walksByMonth, employeeAvatars]);
