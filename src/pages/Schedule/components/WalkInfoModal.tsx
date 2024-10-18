@@ -123,7 +123,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
                 <div className="py-4">
                     <p><strong>Date:</strong> {walkInfo.startDate.getMonth() + 1}/{walkInfo.startDate.getDate()}/{walkInfo.startDate.getFullYear()}</p>
                     <p><strong>Time:</strong> {startTime} - {endTime}</p>
-                    <p><strong>Description:</strong> {walkInfo.description}</p>
+                    <p><strong>Status:</strong> {walk?.status}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-2">

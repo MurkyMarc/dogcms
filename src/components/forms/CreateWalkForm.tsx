@@ -15,7 +15,7 @@ import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, formatDateToAmPmString, formatTimeStringToAmPm, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, calculateName, durationOptions, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { useSession } from "../../api/hooks/useAuth"
 import { useGetDogsByOwner } from "../../api/hooks/useDog"
@@ -83,8 +83,6 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
     async function onSubmit(e: CreateWalkFormValues) {
         const start = calculateDatetimeFromDateAndTime(e.date, e.start);
         const end = calculateEndDatetimeFromDateAndMinutes(start, Number(e.duration));
-        const startTime = formatTimeStringToAmPm(e.start);
-        const endTime = formatDateToAmPmString(end);
 
         const data = {
             customer: profile.id,
@@ -96,9 +94,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             zip: e.zip,
             notes: e.notes,
             status: 'not assigned',
-            title: `${profile.f_name}`,
-            subtitle: `${startTime} - ${endTime}`,
-            description: `${profile.f_name} ${profile.l_name} - status: not assigned`
+            title: calculateName(profile.f_name, profile.l_name),
         }
 
         const newWalk = await createWalkHook.mutateAsync(data);

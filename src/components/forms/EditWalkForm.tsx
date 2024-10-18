@@ -14,7 +14,7 @@ import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, formatDateToAmPmString, getArrayDifferences, getTimeStringFromDatetimeString, getTimeDifferenceInMinutes, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, getArrayDifferences, getTimeStringFromDatetimeString, getTimeDifferenceInMinutes, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { WalkScrollImage } from "../../pages/Dashboard/components/WalkScrollImage"
 import { useRef, useState } from "react"
@@ -87,7 +87,6 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
             state: e.state,
             zip: e.zip,
             notes: e.notes,
-            subtitle: `${formatDateToAmPmString(startDateTime)} - ${formatDateToAmPmString(end)}`
         }
 
         const { added, removed } = getArrayDifferences(originalDogIds.current, selectedDogIds);

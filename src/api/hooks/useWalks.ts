@@ -62,7 +62,6 @@ type WalkUpdate = {
     state: string;
     zip: string;
     notes: string;
-    subtitle: string;
 }
 
 interface UseUpdateWalkParams {

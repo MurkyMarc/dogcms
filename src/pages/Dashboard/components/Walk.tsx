@@ -5,7 +5,7 @@ import { Separator } from "../../../components/ui/separator";
 import WalkNav from "./WalkNav";
 import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { WalkScrollImage } from "./WalkScrollImage";
-import { formatMonthDayFromDateString } from "../../../utils/helpers";
+import { formatDateStringToAmPmString, formatMonthDayFromDateString } from "../../../utils/helpers";
 import { useProfile } from "../../../api/hooks/useAuth";
 
 export default function Walk() {
@@ -69,7 +69,7 @@ export default function Walk() {
                                 <div className="pb-6">
                                     <h2 className="pb-2">Appointment</h2>
                                     <p className="text-sm text-muted-foreground">
-                                        {walk?.start && formatMonthDayFromDateString(walk?.start)} at {walk?.subtitle}
+                                        {walk?.start && formatMonthDayFromDateString(walk?.start)} from {formatDateStringToAmPmString(walk!.start)} - {formatDateStringToAmPmString(walk!.end)}
                                     </p>
                                 </div>
 

@@ -15,7 +15,6 @@ type WalkUpdate = {
     state: string;
     zip: string;
     notes: string;
-    subtitle: string;
 }
 
 export async function updateWalk(

@@ -74,8 +74,7 @@ export default function Schedule() {
                 endDate: new Date(walk.end),
                 occupancy: 0,
                 title: walk.title,
-                subtitle: walk.subtitle,
-                description: walk.description,
+                subtitle: walk.status,
                 bgColor: idToRgbColor(walk.id)
             });
             return acc;
@@ -117,7 +116,8 @@ export default function Schedule() {
                 config={{
                     zoom: 1,
                     showTooltip: false,
-                    filterButtonState: -1
+                    filterButtonState: -1,
+                    showThemeToggle: true
                 }}
             />
             <WalkInfoModal
