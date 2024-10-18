@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useDeleteWalkById, useGetWalkById, useUpdateWalkStatus } from "../../../api/hooks/useWalks";
+import { useDeleteWalkById, useGetWalkWithDogsById, useUpdateWalkStatus } from "../../../api/hooks/useWalks";
 import { Button } from "../../../components/ui/button";
 import { Separator } from "../../../components/ui/separator";
 import WalkNav from "./WalkNav";
@@ -11,7 +11,7 @@ import { useProfile } from "../../../api/hooks/useAuth";
 export default function Walk() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { data: walk, isLoading, isError, isSuccess } = useGetWalkById(id || "");
+    const { data: walk, isLoading, isError, isSuccess } = useGetWalkWithDogsById(id || "");
     const { data: profile } = useProfile();
     const { mutate: updateWalkStatus } = useUpdateWalkStatus();
     const { mutate: deleteWalkById } = useDeleteWalkById();

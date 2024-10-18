@@ -1,20 +1,34 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteWalkById, getWalkById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, updateWalkStatus, getWalksInDateRange } from "../queries/walkQueries";
-import { Tables } from "../../utils/database.types";
+import { deleteWalkById, getWalkWithDogsById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, updateWalkStatus, getWalksInDateRange, updateWalkerByWalkId, getWalkById } from "../queries/walkQueries";
+import { Tables, TablesInsert } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
-import { errorToast, loadingToast, successToast } from "../../utils/helpers";
+import { errorToast, getYearMonthStringFromDateString, loadingToast, successToast } from "../../utils/helpers";
 import { createDogWalksByDogIds, deleteDogWalksByDogIds } from "../queries/dogWalksQueries";
 import { WalkStatus } from "../types";
 
 export function useGetWalkById(id: string) {
+    const client = useSupabase();
+    const queryKey = ['walks', id];
+
+    const queryFn = async () => {
+        if (!id) return null;
+        return await getWalkById(client, id).then(
+            (result) => result?.data
+        );
+    };
+
+    return useQuery({ queryKey, queryFn });
+}
+
+export function useGetWalkWithDogsById(id: string) {
     const client = useSupabase();
     const queryClient = useQueryClient();
     const queryKey = ['walks', id];
 
     const queryFn = async () => {
         if (!id) return null;
-        return await getWalkById(client, id).then(
+        return await getWalkWithDogsById(client, id).then(
             (result) => {
                 const walk = result?.data;
                 walk && (walk.dogs as Array<Tables<'dogs'>>).map(dog => {
@@ -32,7 +46,7 @@ export function useCreateWalk() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (walk: Partial<Tables<'walks'>>) => {
+    const mutationFn = async (walk: Partial<TablesInsert<'walks'>>) => {
         return await createWalk(client, walk).then(
             (result) => result.data
         );
@@ -146,7 +160,7 @@ export function useUpdateWalkStatus() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async ({id, status}: {id: string, status: WalkStatus}) => {
+    const mutationFn = async ({ id, status }: { id: string, status: WalkStatus }) => {
         return await updateWalkStatus(client, id, status);
     };
 
@@ -155,6 +169,28 @@ export function useUpdateWalkStatus() {
         onMutate: () => loadingToast(),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['walks', variables.id] });
+            successToast("Updated successfully.")
+        },
+        onError: (error) => {
+            errorToast(error)
+        }
+    });
+}
+
+export function useUpdateWalkerByWalkId() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async ({ walkId, walkerId }: { walkId: string, walkerId: string | null }) => {
+        return await updateWalkerByWalkId(client, `${walkId}`, walkerId);
+    };
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: ({ data }) => {
+            queryClient.invalidateQueries({ queryKey: ['walks', `${data!.id}`] });
+            queryClient.invalidateQueries({ queryKey: ['walks', 'month', getYearMonthStringFromDateString(data!.start)] });
             successToast("Updated successfully.")
         },
         onError: (error) => {

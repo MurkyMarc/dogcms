@@ -1,14 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { EditWalkForm } from "../../../components/forms/EditWalkForm";
 import { Separator } from "../../../components/ui/separator";
-import { useGetWalkById } from "../../../api/hooks/useWalks";
+import { useGetWalkWithDogsById } from "../../../api/hooks/useWalks";
 import { errorToast } from "../../../utils/helpers";
 import BackButton from "../../../components/ui/icons/BackButton";
 
 export default function EditWalk() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { data: walk, isLoading } = useGetWalkById(id || "");
+    const { data: walk, isLoading } = useGetWalkWithDogsById(id || "");
 
     if (!id && !isLoading) {
         errorToast(new Error("Walk ID not found"));

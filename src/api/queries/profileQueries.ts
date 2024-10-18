@@ -66,7 +66,7 @@ export async function getProfileAvatarURLs(client: TypedSupabaseClient, paths: s
 export async function getEmployees(client: TypedSupabaseClient) {
     return await client
         .from('profiles')
-        .select(`id, f_name, l_name, image, role, street, city, state, zip`)
+        .select(`id, f_name, l_name, image, role, street, city, state, zip, phone`)
         .or('role.eq.admin, role.eq.employee')
         .throwOnError() || [];
 }

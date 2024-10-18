@@ -1,7 +1,7 @@
 import { SchedulerProjectData } from "@bitnoi.se/react-scheduler";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "../../../components/ui/dialog";
-import { useGetWalkById } from "../../../api/hooks/useWalks";
+import { useGetWalkById, useUpdateWalkerByWalkId } from "../../../api/hooks/useWalks";
 import { useGetEmployees } from "../../../api/hooks/useProfile";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { useCallback, useState } from "react";
@@ -9,7 +9,7 @@ import { Edit } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip";
 import { ConfirmationDialog } from "../../../components/ConfirmationDialogue";
-import { Tables } from "../../../utils/database.types";
+import { TablesInsert } from "../../../utils/database.types";
 
 interface WalkInfoModalProps {
     isOpen: boolean;
@@ -20,18 +20,21 @@ interface WalkInfoModalProps {
 export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, walkInfo }) => {
     const { data: employees } = useGetEmployees();
     const { data: walk } = useGetWalkById(walkInfo?.id?.toString() || "");
-    const [selectedWalker, setSelectedWalker] = useState<Partial<Tables<'profiles'>> | null>(walk?.walker || null);
+    const [selectedWalker, setSelectedWalker] = useState<TablesInsert<'profiles'> | null>(walk?.walker || null);
     const [optionSelected, setOptionSelected] = useState<boolean | null>(false);
     const [showConfirmCancelModal, setShowConfirmCancelModal] = useState(false);
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+
+    const { mutate: updateWalkerByWalkId } = useUpdateWalkerByWalkId();
 
     const confirmModalDisplayed = showConfirmCancelModal || showConfirmDeleteModal;
     const startTime = walkInfo?.startDate.toLocaleTimeString("en-US", { hour12: true, hour: "2-digit", minute: "2-digit" });
     const endTime = walkInfo?.endDate.toLocaleTimeString("en-US", { hour12: true, hour: "2-digit", minute: "2-digit" });
 
     const differentWalkerSelected = () => {
-        if(!selectedWalker) return false;
-        if(!walk?.walker) return true;
+        if (selectedWalker === null && walk?.walker) return true;
+        if (!selectedWalker) return false;
+        if (!walk?.walker) return true;
         return selectedWalker?.id !== walk?.walker?.id;
     };
 
@@ -43,13 +46,13 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     };
 
     const handleAssignWalker = () => {
-        // todo - assign the new walker to the walk
+        walk?.id && updateWalkerByWalkId({ walkId: `${walk.id}`, walkerId: selectedWalker?.id || null });
         onClose();
     };
 
     const handleOptionChange = (walkerId: string) => {
         setOptionSelected(true)
-        setSelectedWalker(getWalkerWithId(walkerId));
+        setSelectedWalker(walkerId === "Not Assigned" ? null : getWalkerWithId(walkerId));
     };
 
     const handleEditWalk = () => {
@@ -128,7 +131,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
                 <div className="flex">
                     <div className="flex-2">
                         <Select onValueChange={(value) => handleOptionChange(value)}>
-                            <SelectTrigger className="">
+                            <SelectTrigger>
                                 <SelectValue placeholder={selectedWalker ? `${selectedWalker.f_name} ${selectedWalker.l_name}` : "Select a walker"} />
                             </SelectTrigger>
                             <SelectContent>
@@ -139,6 +142,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
                                             {`${employee.f_name} ${employee.l_name}`}
                                         </SelectItem>
                                     ))}
+                                    <SelectItem className="text-white bg-red-500" value="Not Assigned">Not Assigned</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>

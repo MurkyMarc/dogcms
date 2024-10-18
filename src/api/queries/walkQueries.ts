@@ -1,8 +1,8 @@
-import { Tables, TablesInsert } from "../../utils/database.types";
+import { TablesInsert } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 import { WalkStatus } from "../types";
 
-export async function upsertWalk(client: TypedSupabaseClient, walk: Tables<'walks'>) {
+export async function upsertWalk(client: TypedSupabaseClient, walk: TablesInsert<'walks'>) {
     return await client.from('walks').upsert(walk);
 }
 
@@ -40,6 +40,23 @@ export async function deleteWalkById(client: TypedSupabaseClient, id: string) {
 }
 
 export async function getWalkById(client: TypedSupabaseClient, id: string) {
+    if (!id) return null;
+    return await client
+        .from('walks')
+        .select(`*,
+            walker (
+                id,
+                f_name,
+                l_name,
+                image
+            )
+        `)
+        .eq('id', id)
+        .throwOnError()
+        .single();
+}
+
+export async function getWalkWithDogsById(client: TypedSupabaseClient, id: string) {
     if (!id) return null;
     return await client
         .from('walks_with_dogs')
@@ -107,6 +124,23 @@ export async function updateWalkStatus(client: TypedSupabaseClient, id: string, 
         .update({ status })
         .eq('id', id)
         .select()
+        .single()
+        .throwOnError();
+}
+
+export async function updateWalkerByWalkId(client: TypedSupabaseClient, walkId: string, walkerId: string | null) {
+    return await client
+        .from('walks')
+        .update({ walker: walkerId, status: 'assigned' })
+        .eq('id', walkId)
+        .select(`*,
+            walker (
+                id,
+                f_name,
+                l_name,
+                image
+            )
+        `)
         .single()
         .throwOnError();
 }

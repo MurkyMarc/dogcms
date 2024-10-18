@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import { useGetWalkById } from "../../../api/hooks/useWalks";
+import { useGetWalkWithDogsById } from "../../../api/hooks/useWalks";
 import WalkNav from "./WalkNav";
 import { Conversation } from "../Messages/Conversation";
 
 export default function WalkChat() {
     const { id } = useParams();
-    const { isLoading } = useGetWalkById(id || "");
+    const { isLoading } = useGetWalkWithDogsById(id || "");
 
     if (!id && !isLoading) {
         return <div>{"Walk ID not found"}</div>;

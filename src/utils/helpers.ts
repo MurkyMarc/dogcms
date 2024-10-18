@@ -452,3 +452,8 @@ export const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
 
     return months;
 };
+
+export const getYearMonthStringFromDateString = (date: string) => {
+    const dateObject = new Date(date);
+    return `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}`;
+}
