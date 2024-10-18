@@ -131,7 +131,7 @@ export async function updateWalkStatus(client: TypedSupabaseClient, id: string, 
 export async function updateWalkerByWalkId(client: TypedSupabaseClient, walkId: string, walkerId: string | null) {
     return await client
         .from('walks')
-        .update({ walker: walkerId, status: 'assigned' })
+        .update({ walker: walkerId, status: walkerId ? 'assigned' : 'not assigned' })
         .eq('id', walkId)
         .select(`*,
             walker (
