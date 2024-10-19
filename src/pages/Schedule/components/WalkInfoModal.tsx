@@ -86,7 +86,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     };
 
     const deleteWalk = () => {
-        console.log("Delete Walk");
+        walk?.id && updateWalk({ id: walk.id, status: 'deleted' });
     };
 
     const getWalkerWithId = useCallback((id: string) => {
