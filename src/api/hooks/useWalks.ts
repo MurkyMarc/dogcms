@@ -1,6 +1,6 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteWalkById, getWalkWithDogsById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, updateWalkStatus, getWalksInDateRange, updateWalkerByWalkId, getWalkById } from "../queries/walkQueries";
-import { Tables, TablesInsert } from "../../utils/database.types";
+import { deleteWalkById, getWalkWithDogsById, updateWalk, createWalk, getWalksByCustomerIdAndDateRange, getWalksByWalkerIdAndDateRange, getWalksInDateRange, updateWalkerByWalkId, getWalkById } from "../queries/walkQueries";
+import { Tables, TablesInsert, TablesUpdate } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, getYearMonthStringFromDateString, loadingToast, successToast } from "../../utils/helpers";
@@ -67,33 +67,22 @@ export function useCreateWalk() {
 
 // todo - restrict this to the owner or an admin
 
-type WalkUpdate = {
-    id: number;
-    start: string;
-    end: string;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    notes: string;
-}
-
-interface UseUpdateWalkParams {
-    walk: WalkUpdate;
+interface UseUpdateWalkAndDogWalksParams {
+    walk: TablesUpdate<'walks'>;
     addedDogIds: number[];
     removedDogIds: number[];
 }
 
-export function useUpdateWalk() {
+export function useUpdateWalkAndDogWalks() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async ({ walk, addedDogIds, removedDogIds }: UseUpdateWalkParams) => {
+    const mutationFn = async ({ walk, addedDogIds, removedDogIds }: UseUpdateWalkAndDogWalksParams) => {
         // update walk and create/delete dog_walks in parallel
         const promises = [];
         promises.push(updateWalk(client, walk));
-        if (addedDogIds.length > 0) promises.push(createDogWalksByDogIds(client, walk.id, addedDogIds));
-        if (removedDogIds.length > 0) promises.push(deleteDogWalksByDogIds(client, walk.id, removedDogIds));
+        if (addedDogIds.length > 0 && walk?.id) promises.push(createDogWalksByDogIds(client, walk.id, addedDogIds));
+        if (removedDogIds.length > 0 && walk?.id) promises.push(deleteDogWalksByDogIds(client, walk.id, removedDogIds));
         await Promise.all(promises);
     };
 
@@ -156,12 +145,14 @@ export function useGetWalksByWalkerIdAndDateRange(id: string, startDate: string,
     return useQuery({ queryKey, queryFn });
 }
 
-export function useUpdateWalkStatus() {
+export function useUpdateWalk() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async ({ id, status }: { id: string, status: WalkStatus }) => {
-        return await updateWalkStatus(client, id, status);
+    const mutationFn = async ({ id, status }: { id: string | number, status: WalkStatus }) => {
+        if (!id) return;
+        const idInt = Number(id);
+        return await updateWalk(client, { id: idInt, status });
     };
 
     return useMutation({

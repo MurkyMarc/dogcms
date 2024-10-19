@@ -1,7 +1,7 @@
 import { SchedulerProjectData } from "@bitnoi.se/react-scheduler";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "../../../components/ui/dialog";
-import { useGetWalkById, useUpdateWalkerByWalkId } from "../../../api/hooks/useWalks";
+import { useGetWalkById, useUpdateWalkerByWalkId, useUpdateWalk } from "../../../api/hooks/useWalks";
 import { useGetEmployees } from "../../../api/hooks/useProfile";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { useCallback, useState } from "react";
@@ -25,6 +25,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     const [showConfirmCancelModal, setShowConfirmCancelModal] = useState(false);
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
+    const { mutate: updateWalk } = useUpdateWalk();
     const { mutate: updateWalkerByWalkId } = useUpdateWalkerByWalkId();
 
     const confirmModalDisplayed = showConfirmCancelModal || showConfirmDeleteModal;
@@ -60,6 +61,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     };
 
     const handleCancelWalk = () => {
+        walk?.id && updateWalk({ id: walk.id, status: 'cancelled' });
         setShowConfirmCancelModal(true);
     };
 

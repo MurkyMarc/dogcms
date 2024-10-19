@@ -6,7 +6,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Tables } from "../../utils/database.types"
 import { useIsMutating } from '@tanstack/react-query'
-import { useUpdateWalk } from "../../api/hooks/useWalks"
+import { useUpdateWalkAndDogWalks } from "../../api/hooks/useWalks"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
@@ -51,7 +51,7 @@ interface EditWalkFormProps {
 export function EditWalkForm({ walk }: EditWalkFormProps) {
     const navigate = useNavigate();
     const isMutating = !!useIsMutating()
-    const updateWalkQuery = useUpdateWalk();
+    const updateWalkQuery = useUpdateWalkAndDogWalks();
     const { data: session } = useSession();
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
     const originalDogIds = useRef(walk.dogs.map(dog => dog.id));
@@ -78,7 +78,7 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
     async function onSubmit(e: CreateWalkFormValues) {
         const startDateTime = calculateDatetimeFromDateAndTime(e.date, e.start);
         const end = calculateEndDatetimeFromDateAndMinutes(startDateTime, Number(e.duration));
-        const data = {
+        const newWalk = {
             id: walk.id,
             start: startDateTime.toLocaleString(),
             end: end.toLocaleString(),
@@ -90,7 +90,7 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
         }
 
         const { added, removed } = getArrayDifferences(originalDogIds.current, selectedDogIds);
-        await updateWalkQuery.mutateAsync({walk: data, addedDogIds: added, removedDogIds: removed });
+        await updateWalkQuery.mutateAsync({ walk: newWalk, addedDogIds: added, removedDogIds: removed });
         navigate('/dashboard/walks');
     }
 

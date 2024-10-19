@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useDeleteWalkById, useGetWalkWithDogsById, useUpdateWalkStatus } from "../../../api/hooks/useWalks";
+import { useDeleteWalkById, useGetWalkWithDogsById, useUpdateWalk } from "../../../api/hooks/useWalks";
 import { Button } from "../../../components/ui/button";
 import { Separator } from "../../../components/ui/separator";
 import WalkNav from "./WalkNav";
@@ -13,24 +13,24 @@ export default function Walk() {
     const navigate = useNavigate();
     const { data: walk, isLoading, isError, isSuccess } = useGetWalkWithDogsById(id || "");
     const { data: profile } = useProfile();
-    const { mutate: updateWalkStatus } = useUpdateWalkStatus();
+    const { mutate: updateWalk } = useUpdateWalk();
     const { mutate: deleteWalkById } = useDeleteWalkById();
 
     const handleStartWalk = () => {
-        id && updateWalkStatus({ id, status: 'active' });
+        id && updateWalk({ id, status: 'active' });
     }
 
     const handleEndWalk = () => {
-        id && updateWalkStatus({ id, status: 'completed' });
+        id && updateWalk({ id, status: 'completed' });
     }
 
     const handleCancelWalk = () => {
-        id && updateWalkStatus({ id, status: 'cancelled' });
+        id && updateWalk({ id, status: 'cancelled' });
     }
 
 
     const handleSetToNotScheduled = () => {
-        id && updateWalkStatus({ id, status: 'not assigned' });
+        id && updateWalk({ id, status: 'not assigned' });
     }
 
     const handleDeleteWalk = () => {
