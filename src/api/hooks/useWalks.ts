@@ -220,7 +220,7 @@ export function useDeleteWalkById() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const mutationFn = async (id: string) => await deleteWalkById(client, id);
+    const mutationFn = async (id: string | number) => await deleteWalkById(client, id);
 
     return useMutation({
         mutationFn,

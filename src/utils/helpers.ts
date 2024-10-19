@@ -456,8 +456,6 @@ export const getYearMonthStringFromDateString = (date: string) => {
 
 export const generateTileRGBWithStatus = (status: WalkStatus, id: number) => {
     switch (status) {
-        case 'deleted':
-            return 'rgb(0, 0, 0)';
         case 'cancelled':
             return 'rgb(255, 38, 0)';
         case 'not assigned':

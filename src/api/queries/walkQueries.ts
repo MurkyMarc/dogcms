@@ -19,7 +19,7 @@ export async function updateWalk(
         .throwOnError()
 }
 
-export async function deleteWalkById(client: TypedSupabaseClient, id: string) {
+export async function deleteWalkById(client: TypedSupabaseClient, id: string | number) {
     return await client
         .from('walks')
         .delete()
