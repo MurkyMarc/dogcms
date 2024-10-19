@@ -15,7 +15,7 @@ import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, calculateName, durationOptions, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { useSession } from "../../api/hooks/useAuth"
 import { useGetDogsByOwner } from "../../api/hooks/useDog"
@@ -93,8 +93,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             state: e.state,
             zip: e.zip,
             notes: e.notes,
-            status: 'not assigned',
-            title: calculateName(profile.f_name, profile.l_name),
+            status: 'not assigned'
         }
 
         const newWalk = await createWalkHook.mutateAsync(data);

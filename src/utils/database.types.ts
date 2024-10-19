@@ -317,7 +317,6 @@ export type Database = {
           state: string
           status: string
           street: string
-          title: string
           walker: Tables<'profiles'> | null
           zip: string
         }
@@ -334,7 +333,6 @@ export type Database = {
           state?: string
           status?: string
           street?: string
-          title?: string
           walker?: string | null
           zip?: string
         }
@@ -351,7 +349,6 @@ export type Database = {
           state?: string
           status?: string
           street?: string
-          title?: string
           walker?: string| null
           zip?: string
         }
@@ -389,7 +386,6 @@ export type Database = {
           state: string
           status: string
           street: string
-          title: string
           walk_id: number
           walker: Tables<'profiles'> | null
           zip: string

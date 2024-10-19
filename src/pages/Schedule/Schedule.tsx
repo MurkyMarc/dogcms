@@ -73,7 +73,7 @@ export default function Schedule() {
                 startDate: new Date(walk.start),
                 endDate: new Date(walk.end),
                 occupancy: 0,
-                title: walk.title,
+                title: calculateName(walk.walker?.f_name, walk.walker?.l_name) || "???",
                 subtitle: walk.status,
                 bgColor: idToRgbColor(walk.id)
             });

@@ -160,7 +160,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <a href={`/dashboard/walk/${walk?.id}/edit`} target="_blank">
+                                <a href={`/dashboard/walk/${walk?.id}`} target="_blank">
                                     <Edit onClick={handleEditWalk} className="cursor-pointer hover:text-blue-500" />
                                 </a>
                             </TooltipTrigger>
