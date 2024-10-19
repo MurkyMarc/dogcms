@@ -168,6 +168,30 @@ export function useUpdateWalk() {
     });
 }
 
+export function useUpdateWalkSchedulePage() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async ({ id, status }: { id: string | number, status: WalkStatus }) => {
+        if (!id) return;
+        const idInt = Number(id);
+        return await updateWalk(client, { id: idInt, status });
+    };
+
+    return useMutation({
+        mutationFn,
+        onMutate: () => loadingToast(),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['walks', data?.data?.id || ""] });
+            queryClient.invalidateQueries({ queryKey: ['walks', 'month', getYearMonthStringFromDateString(data?.data?.start || "")] });
+            successToast("Updated successfully.")
+        },
+        onError: (error) => {
+            errorToast(error)
+        }
+    });
+}
+
 export function useUpdateWalkerByWalkId() {
     const client = useSupabase();
     const queryClient = useQueryClient();
