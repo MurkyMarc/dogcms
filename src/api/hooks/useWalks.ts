@@ -46,7 +46,7 @@ export function useCreateWalk() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (walk: Partial<TablesInsert<'walks'>>) => {
+    const mutationFn = async (walk: TablesInsert<'walks'>) => {
         return await createWalk(client, walk).then(
             (result) => result.data
         );

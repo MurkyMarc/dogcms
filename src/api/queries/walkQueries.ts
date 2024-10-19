@@ -97,7 +97,7 @@ export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClie
         .throwOnError() || [];
 }
 
-export async function createWalk(client: TypedSupabaseClient, walk: Partial<TablesInsert<'walks'>>) {
+export async function createWalk(client: TypedSupabaseClient, walk: TablesInsert<'walks'>) {
     return await client
         .from('walks')
         .insert(walk as TablesInsert<'walks'>)

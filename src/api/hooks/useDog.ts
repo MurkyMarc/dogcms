@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createDog, deleteDogById, deleteDogImage, getDogById, getDogsByOwnerId, updateDog, uploadDogImage } from "../queries/dogQueries";
-import { Tables, TablesInsert } from "../../utils/database.types";
+import { Tables, TablesInsert, TablesUpdate } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
@@ -71,7 +71,7 @@ export function useUpdateDog() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (dog: Partial<Tables<'dogs'>>) => {
+    const mutationFn = async (dog: TablesUpdate<'dogs'>) => {
         return await updateDog(client, dog);
     };
 

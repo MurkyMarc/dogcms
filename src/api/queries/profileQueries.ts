@@ -1,4 +1,4 @@
-import { Tables } from "../../utils/database.types";
+import { Tables, TablesUpdate } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function upsertProfile(client: TypedSupabaseClient, updates: Tables<'profiles'>) {
@@ -7,7 +7,7 @@ export async function upsertProfile(client: TypedSupabaseClient, updates: Tables
 
 export async function updateProfile(
     client: TypedSupabaseClient,
-    profile: Partial<Tables<'profiles'>>
+    profile: TablesUpdate<'profiles'>
 ) {
     const { id, ...data } = profile;
     return await client

@@ -1,4 +1,4 @@
-import { Tables, TablesInsert } from "../../utils/database.types";
+import { Tables, TablesInsert, TablesUpdate } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function upsertDog(client: TypedSupabaseClient, dog: Tables<'dogs'>) {
@@ -16,7 +16,7 @@ export async function createDog(client: TypedSupabaseClient, dog: TablesInsert<'
 
 export async function updateDog(
     client: TypedSupabaseClient,
-    updates: Partial<Tables<'dogs'>>
+    updates: TablesUpdate<'dogs'>
 ) {
     const { id, ...data } = updates;
     return await client

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteAvatar, getEmployees, getProfileById, updateProfile, uploadProfileAvatar } from "../queries/profileQueries";
-import { Tables } from "../../utils/database.types";
+import { Tables, TablesUpdate } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
@@ -33,7 +33,7 @@ export function useUpdateProfile() {
     const client = useSupabase();
     const queryClient = useQueryClient();
 
-    const mutationFn = async (profile: Partial<Tables<'profiles'>>) => {
+    const mutationFn = async (profile: TablesUpdate<'profiles'>) => {
         return await updateProfile(client, profile);
     };
 
