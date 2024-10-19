@@ -56,10 +56,6 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
         setSelectedWalker(walkerId === "Not Assigned" ? null : getWalkerWithId(walkerId));
     };
 
-    const handleEditWalk = () => {
-        console.log(walk);
-    };
-
     const handleCancelWalk = () => {
         setShowConfirmCancelModal(true);
     };
@@ -86,7 +82,6 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     };
 
     const cancelWalk = () => {
-        console.log("Cancel Walk");
         walk?.id && updateWalk({ id: walk.id, status: 'cancelled' });
     };
 
@@ -123,7 +118,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
             <DialogOverlay className="bg-black/40" />
             <DialogContent className={confirmModalDisplayed ? "hidden" : ""}>
                 <DialogHeader>
-                    <DialogTitle>Walker: {walkInfo.title}</DialogTitle>
+                    <DialogTitle>Walker: {walkInfo.title === "???" ? "No Walker Assigned" : walkInfo.title}</DialogTitle>
                 </DialogHeader>
                 <div className="py-4">
                     <p><strong>Date:</strong> {walkInfo.startDate.getMonth() + 1}/{walkInfo.startDate.getDate()}/{walkInfo.startDate.getFullYear()}</p>
@@ -161,7 +156,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <a href={`/dashboard/walk/${walk?.id}`} target="_blank">
-                                    <Edit onClick={handleEditWalk} className="cursor-pointer hover:text-blue-500" />
+                                    <Edit className="cursor-pointer hover:text-blue-500" />
                                 </a>
                             </TooltipTrigger>
                             <TooltipContent>

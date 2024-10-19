@@ -5,11 +5,12 @@ import { useEffect, useState, useCallback, useMemo, SetStateAction } from "react
 import isBetween from 'dayjs/plugin/isBetween';
 import { useGetEmployeeWalksInMonth } from "../../api/hooks/useWalks";
 import { useGetEmployees } from "../../api/hooks/useProfile";
-import { calculateName, getMonthsInRange, idToRgbColor } from "../../utils/helpers";
+import { calculateName, generateTileRGBWithStatus, getMonthsInRange } from "../../utils/helpers";
 import { Tables } from "../../utils/database.types";
 import { getProfileAvatarUrl } from "../../api/queries/profileQueries";
 import useSupabase from "../../api/hooks/useSupabase";
 import { WalkInfoModal } from "./components/WalkInfoModal";
+import { WalkStatus } from "../../api/types";
 
 dayjs.extend(isBetween);
 
@@ -75,7 +76,7 @@ export default function Schedule() {
                 occupancy: 0,
                 title: calculateName(walk.walker?.f_name, walk.walker?.l_name) || "???",
                 subtitle: walk.status,
-                bgColor: idToRgbColor(walk.id)
+                bgColor: generateTileRGBWithStatus(walk.status as WalkStatus, walk.id)
             });
             return acc;
         }, {});

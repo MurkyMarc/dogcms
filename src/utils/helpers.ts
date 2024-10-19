@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 import { Tables } from './database.types';
 import dayjs from 'dayjs';
+import { WalkStatus } from '../api/types';
 
 export const generateFilePath = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) {
@@ -412,9 +413,7 @@ export function calculateName(firstName: string | undefined, lastName: string | 
 
 export function idToRgbColor(id: number): string {
     const colors = [
-        "rgb(239,83,80)",   // Soft Red
         "rgb(66,165,245)",  // Soft Blue
-        "rgb(255,238,88)",  // Soft Yellow
         "rgb(129,199,132)", // Soft Green
         "rgb(171,71,188)",  // Soft Purple
         "rgb(255,183,77)",  // Soft Orange
@@ -422,14 +421,11 @@ export function idToRgbColor(id: number): string {
         "rgb(100,181,246)", // Light Blue
         "rgb(77,208,225)",  // Cyan
         "rgb(174,213,129)", // Light Green
-        "rgb(255,138,101)", // Peach
         "rgb(186,104,200)", // Light Purple
-        "rgb(255,202,40)",  // Amber
         "rgb(121,134,203)", // Indigo
         "rgb(240,98,146)",  // Pink
         "rgb(144,202,249)", // Sky Blue
         "rgb(156,204,101)", // Lime Green
-        "rgb(255,112,67)",  // Deep Orange
         "rgb(255,171,64)",  // Deep Amber
         "rgb(206,147,216)"  // Lavender
     ];
@@ -456,4 +452,17 @@ export const getMonthsInRange = (startDate: Date, endDate: Date): string[] => {
 export const getYearMonthStringFromDateString = (date: string) => {
     const dateObject = new Date(date);
     return `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}`;
+}
+
+export const generateTileRGBWithStatus = (status: WalkStatus, id: number) => {
+    switch (status) {
+        case 'deleted':
+            return 'rgb(0, 0, 0)';
+        case 'cancelled':
+            return 'rgb(255, 38, 0)';
+        case 'not assigned':
+            return 'rgb(255, 115, 0)';
+        default:
+            return idToRgbColor(id);
+    }
 }
