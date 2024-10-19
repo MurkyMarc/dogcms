@@ -11,6 +11,8 @@ import { useDeleteDogImage, useGetDogById, useUpdateDog, useUploadDogImage } fro
 import { deleteDogImage } from '../../api/queries/dogQueries';
 import useSupabase from '../../api/hooks/useSupabase';
 import { ConfirmationDialog } from '../../components/ConfirmationDialogue';
+import BackButton from "../../components/ui/icons/BackButton";
+import { MenuButton } from './components/MenuButton';
 
 export const DogProfile = () => {
     // todo - handle fake ids being passed in such as abc or just for ids that dont exist
@@ -72,6 +74,10 @@ export const DogProfile = () => {
     return (
         <>
             <ConfirmationDialog text="Are you sure you want to delete this image?" onConfirm={handleModalConfirm} onCancel={handleModalCancel} isOpen={showModal} />
+            <div className='flex justify-between px-6 pt-6 lg:hidden'>
+                <MenuButton className="mr-4" />
+                <BackButton className="w-min lg:hidden" />
+            </div>
             <div className="p-6 max-w-3xl space-y-8">
                 <div className="items-center">
                     {dog ?

@@ -1,12 +1,13 @@
 import { ChangeEvent, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
-import { Header } from './components/Header';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { DogCard } from './components/DogCard';
 import { CardPlaceholder } from './components/CardPlaceholder';
 import { errorToast, fileTypeSupported } from '../../utils/helpers';
 import { CreateNewDogForm } from '../../components/forms/CreateNewDogForm';
+import BackButton from '../../components/ui/icons/BackButton';
+import { MenuButton } from './components/MenuButton';
 
 export const CreateDogProfile = () => {
     const isMutating = !!useIsMutating();
@@ -39,7 +40,10 @@ export const CreateDogProfile = () => {
 
     return (
         <>
-            <Header title={"Create new dog profile"} />
+            <div className='flex justify-between px-6 pt-6 lg:hidden'>
+                <MenuButton className="mr-4" />
+                <BackButton className="w-min lg:hidden" />
+            </div>
             <div className="p-6 max-w-3xl space-y-8">
                 <div className="items-center">
                     {imagePath ?
