@@ -79,7 +79,7 @@ export async function getWalksByWalkerIdAndDateRange(client: TypedSupabaseClient
         .throwOnError() || [];
 }
 
-export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: string, endDate: string) {
+export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClient, id: string, startDate: Date, endDate: Date) {
     return await client
         .from('walks_with_dogs')
         .select(`*,
@@ -92,8 +92,8 @@ export async function getWalksByCustomerIdAndDateRange(client: TypedSupabaseClie
         `)
         .eq('customer', id)
         .order('start', { ascending: true })
-        .gte('start', startDate)
-        .lte('start', endDate)
+        .gte('start', startDate.toLocaleString())
+        .lte('start', endDate.toLocaleString())
         .throwOnError() || [];
 }
 

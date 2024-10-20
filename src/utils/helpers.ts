@@ -454,6 +454,10 @@ export const getYearMonthStringFromDateString = (date: string) => {
     return `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}`;
 }
 
+export const getYearMonthStringFromDate = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}`;
+}
+
 export const generateTileRGBWithStatus = (status: WalkStatus, id: number) => {
     switch (status) {
         case 'cancelled':
@@ -463,4 +467,24 @@ export const generateTileRGBWithStatus = (status: WalkStatus, id: number) => {
         default:
             return idToRgbColor(id);
     }
+}
+
+export function getBeginningOfMonth(date: Date): Date {
+    const newDate = dayjs(date).startOf('month').toDate();
+    newDate.setHours(0, 0, 0, 0);
+    return newDate;
+}
+
+export function getEndOfMonth(date: Date): Date {
+    const newDate = dayjs(date).endOf('month').toDate();
+    newDate.setHours(23, 59, 59, 999);
+    return newDate;
+}
+
+export function getNextMonth(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+}
+
+export function getPreviousMonth(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth() - 1, 1);
 }

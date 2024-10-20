@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { errorToast, getYearMonthStringFromDateString, loadingToast, successToast } from "../../utils/helpers";
 import { createDogWalksByDogIds, deleteDogWalksByDogIds } from "../queries/dogWalksQueries";
 import { WalkStatus } from "../types";
+import { getBeginningOfMonth, getEndOfMonth } from "../../utils/helpers";
 
 export function useGetWalkById(id: string) {
     const client = useSupabase();
@@ -99,27 +100,37 @@ export function useUpdateWalkAndDogWalks() {
     });
 }
 
-export function useGetWalksByCustomerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' | 'week' | 'month') {
+export function useGetWalksByCustomerIdAndMonth(id: string, months: string[]) {
     const client = useSupabase();
     const queryClient = useQueryClient();
-    const queryKey = ['walks', 'customer', id, periodType, startDate];
 
-    const queryFn = async () => {
-        return await getWalksByCustomerIdAndDateRange(client, id, startDate, endDate).then(
-            (result) => {
-                const walks = result.data || [];
-                walks.map(walk => {
-                    queryClient.setQueryData(['walks', `${walk.id}`], walk);
-                    (walk.dogs as Array<Tables<'dogs'>>).map(dog => {
-                        queryClient.setQueryData(['dogs', `${dog.id}`], dog);
-                    })
+    const queries = months.map(month => ({
+        // eslint-disable-next-line @tanstack/query/exhaustive-deps
+        queryKey: ['walks', 'customer', id, 'month', month],
+        queryFn: async () => {
+            if (!id || months.length === 0) return null;
+            const [year, monthNumber] = month.split('-');
+            const startDate = getBeginningOfMonth(new Date(parseInt(year), parseInt(monthNumber) - 1, 1));
+            const endDate = getEndOfMonth(new Date(parseInt(year), parseInt(monthNumber) - 1, 1));
+            const result = await getWalksByCustomerIdAndDateRange(client, id, startDate, endDate);
+            const walks = result.data || [];
+            walks.forEach(walk => {
+                queryClient.setQueryData(['walks', `${walk.id}`], walk);
+                (walk.dogs as Array<Tables<'dogs'>>).forEach(dog => {
+                    queryClient.setQueryData(['dogs', `${dog.id}`], dog);
                 });
-                return walks;
-            }
-        );
-    };
+            });
+            return walks;
+        },
+        enabled: !!id
+    }));
 
-    return useQuery({ queryKey, queryFn });
+    const results = useQueries({ queries });
+
+    const isLoading = results.some(result => result.isLoading);
+    const flattenedWalks = results.flatMap(result => result.data || []);
+
+    return { data: flattenedWalks, isLoading };
 }
 
 export function useGetWalksByWalkerIdAndDateRange(id: string, startDate: string, endDate: string, periodType: 'day' | 'week' | 'month') {

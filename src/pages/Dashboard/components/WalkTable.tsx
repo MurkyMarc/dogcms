@@ -13,7 +13,7 @@ interface WalkTableProps {
 export default function WalkTable({ isLoading, error, walks = [] }: WalkTableProps) {
     const navigate = useNavigate();
 
-    if (walks.length === 0 && isLoading) return <p>Loading...</p>;
+    if (walks.length === 0 && isLoading) return <p className="pl-6 pt-6">Loading...</p>;
     if (error) return <p>There was an error loading the upcoming walks. Please try again later.</p>;
 
     if (!walks || walks.length === 0) {
@@ -23,9 +23,9 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
     return (
         <div>
             {walks.length > 0 ?
-                <div className="border shadow-sm rounded-lg">
+                <div className="shadow-sm rounded-lg">
                     <Table>
-                        <TableHeader>
+                        <TableHeader className="sticky top-0 bg-slate-50">
                             <TableRow>
                                 <TableHead>Date</TableHead>
                                 <TableHead>Time</TableHead>
@@ -34,7 +34,7 @@ export default function WalkTable({ isLoading, error, walks = [] }: WalkTablePro
                                 <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="bg-white">
                             {walks.map((walk) => (
                                 <TableRow key={walk.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/walk/${walk.id}`)}>
                                     <TableCell>{formatMonthDayFromDateString(walk.start)}</TableCell>
