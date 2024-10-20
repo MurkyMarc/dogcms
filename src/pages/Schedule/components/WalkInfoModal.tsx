@@ -1,7 +1,7 @@
 import { SchedulerProjectData } from "@bitnoi.se/react-scheduler";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "../../../components/ui/dialog";
-import { useDeleteWalkById, useGetWalkById, useUpdateWalkerByWalkId, useUpdateWalkSchedulePage } from "../../../api/hooks/useWalks";
+import { useDeleteWalkByIdSchedulePage, useGetWalkById, useUpdateWalkerByWalkId, useUpdateWalkSchedulePage } from "../../../api/hooks/useWalks";
 import { useGetEmployees } from "../../../api/hooks/useProfile";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { useCallback, useState } from "react";
@@ -25,7 +25,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     const [showConfirmCancelModal, setShowConfirmCancelModal] = useState(false);
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
-    const { mutate: deleteWalkById } = useDeleteWalkById();
+    const { mutate: deleteWalkById } = useDeleteWalkByIdSchedulePage();
     const { mutate: updateWalk } = useUpdateWalkSchedulePage();
     const { mutate: updateWalkerByWalkId } = useUpdateWalkerByWalkId();
 
@@ -87,7 +87,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
     };
 
     const deleteWalk = () => {
-        walk?.id && deleteWalkById(walk.id);
+        walk?.id && deleteWalkById(walk);
     };
 
     const getWalkerWithId = useCallback((id: string) => {

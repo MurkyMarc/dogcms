@@ -224,22 +224,40 @@ export function useDeleteWalkById() {
 
     return useMutation({
         mutationFn,
-        onMutate: () => loadingToast(),
-        onSuccess: (_, id) => {
+        onMutate: (id) => {
+            loadingToast();
+            queryClient.removeQueries({ queryKey: ['walks', `${id}`] });
             queryClient.removeQueries({ queryKey: ['conversations', `${id}`] });
-            queryClient.removeQueries({
-                queryKey: ['walks'],
-                exact: false
-            });
-            queryClient.removeQueries({
-                queryKey: ['messages'],
-                exact: false
-            });
-
+            queryClient.removeQueries({ queryKey: ['messages'], exact: false });
+        },
+        onSuccess: (_, id) => {
             // If on the page of the deleted walk, navigate to the walks page
             if (location.pathname.startsWith(`/dashboard/walk/${id}`)) {
                 navigate('/dashboard/walks');
             }
+            successToast("Deleted successfully.");
+        },
+        onError: (error) => errorToast(error)
+    });
+}
+
+export function useDeleteWalkByIdSchedulePage() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async (walk: Tables<'walks'>) => await deleteWalkById(client, walk.id);
+
+    return useMutation({
+        mutationFn,
+        onMutate: (walk) => {
+            loadingToast();
+            queryClient.removeQueries({ queryKey: ['walks', `${walk.id}`] });
+            queryClient.removeQueries({ queryKey: ['conversations', `${walk.id}`] });
+            queryClient.removeQueries({ queryKey: ['messages'], exact: false });
+        },
+        onSuccess: (_, walk) => {
+            queryClient.invalidateQueries({ queryKey: ['walks', 'month', getYearMonthStringFromDateString(walk.start)] });
+
             successToast("Deleted successfully.");
         },
         onError: (error) => errorToast(error)
