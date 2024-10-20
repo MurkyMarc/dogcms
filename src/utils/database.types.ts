@@ -303,6 +303,48 @@ export type Database = {
         }
         Relationships: []
       }
+      service_prices: {
+        Row: {
+          created_at: string | null
+          credit_cost: number
+          description: string | null
+          duration_minutes: number | null
+          effective_date: string | null
+          expiry_date: string | null
+          id: number
+          is_active: boolean | null
+          is_discounted: boolean | null
+          service_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          credit_cost: number
+          description?: string | null
+          duration_minutes?: number | null
+          effective_date?: string | null
+          expiry_date?: string | null
+          id?: number
+          is_active?: boolean | null
+          is_discounted?: boolean | null
+          service_type?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          credit_cost?: number
+          description?: string | null
+          duration_minutes?: number | null
+          effective_date?: string | null
+          expiry_date?: string | null
+          id?: number
+          is_active?: boolean | null
+          is_discounted?: boolean | null
+          service_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       walks: {
         Row: {
           admin_notes: string
