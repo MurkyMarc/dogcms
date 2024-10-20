@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { Button } from "../../../components/ui/button"
-import { BellIcon, CalendarDays, Dog, LineChart, MessageSquareMore, Package, PawPrint, Users } from 'lucide-react';
+import { NotebookText, BellIcon, CalendarDays, Dog, LineChart, MessageSquareMore, Package, PawPrint, Users } from 'lucide-react';
 // import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../../components/ui/card";
 import { cn } from "../../../utils/cn";
 
@@ -58,6 +58,12 @@ export function Sidebar({ className }: SidebarProps) {
                             <Button variant="ghost" className="w-full justify-start px-3">
                                 <LineChart className="h-5 w-5 mr-3 stroke-black" />
                                 Analytics
+                            </Button>
+                        </Link>
+                        <Link to="/dashboard/transactions">
+                            <Button variant="ghost" className="w-full justify-start px-3">
+                                <NotebookText className="h-5 w-5 mr-3 stroke-black" />
+                                Transactions
                             </Button>
                         </Link>
                     </nav>
