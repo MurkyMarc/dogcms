@@ -15,7 +15,7 @@ type ConfirmationDialogProps = {
 export const ConfirmationDialog = ({ text = "Are you sure?", onConfirm, onCancel, isOpen, title = "Confirmation", overlayStyles = "", containerStyles = "" }: ConfirmationDialogProps) => {
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
-            <DialogOverlay className={cn("bg-black/70", overlayStyles)} />
+            <DialogOverlay className={cn("bg-black/70 -inset-10", overlayStyles)} />
             <DialogContent className={containerStyles}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>

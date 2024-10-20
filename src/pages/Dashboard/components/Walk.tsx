@@ -7,6 +7,8 @@ import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { WalkScrollImage } from "./WalkScrollImage";
 import { formatDateStringToAmPmString, formatMonthDayFromDateString } from "../../../utils/helpers";
 import { useProfile } from "../../../api/hooks/useAuth";
+import { useState } from "react";
+import { ConfirmationDialog } from "../../../components/ConfirmationDialogue";
 
 export default function Walk() {
     const { id } = useParams();
@@ -15,6 +17,8 @@ export default function Walk() {
     const { data: profile } = useProfile();
     const { mutate: updateWalk } = useUpdateWalk();
     const { mutate: deleteWalkById } = useDeleteWalkById();
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const handleStartWalk = () => {
         id && updateWalk({ id, status: 'active' });
@@ -25,17 +29,27 @@ export default function Walk() {
     }
 
     const handleCancelWalk = () => {
-        id && updateWalk({ id, status: 'cancelled' });
-    }
-
+        setShowCancelModal(true);
+    };
 
     const handleSetToNotScheduled = () => {
         id && updateWalk({ id, status: 'not assigned' });
     }
 
     const handleDeleteWalk = () => {
-        id && deleteWalkById(id);
+        setShowDeleteModal(true);
     }
+
+    const confirmCancelWalk = () => {
+        id && updateWalk({ id, status: 'cancelled' });
+        setShowCancelModal(false);
+    };
+
+    const confirmDeleteWalk = () => {
+        id && deleteWalkById(id);
+        setShowDeleteModal(false);
+    };
+
     // todo: if not authorized, reroute to dashboard with an error message
 
     return (
@@ -128,13 +142,27 @@ export default function Walk() {
                             </>
                             : null}
             </div>
+            <ConfirmationDialog
+                title="Cancel Walk"
+                text="Are you sure you want to cancel this walk?"
+                isOpen={showCancelModal}
+                onConfirm={confirmCancelWalk}
+                onCancel={() => setShowCancelModal(false)}
+            />
+            <ConfirmationDialog
+                title="Delete Walk"
+                text="Are you sure you want to delete this walk? This action cannot be undone."
+                isOpen={showDeleteModal}
+                onConfirm={confirmDeleteWalk}
+                onCancel={() => setShowDeleteModal(false)}
+            />
         </div>
     )
 }
 
 const StatusMessage = ({ status }: { status: string }) => {
     return (
-        <div className="text-center mt-60">
+        <div className="text-center">
             <h1 className="text-lg font-bold">{status}</h1>
         </div>
     )

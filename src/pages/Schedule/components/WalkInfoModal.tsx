@@ -100,6 +100,7 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
 
     return (
         <Dialog open={isOpen} onOpenChange={handleModalClose}>
+            <DialogOverlay className="bg-black/40" />
             <ConfirmationDialog
                 overlayStyles="bg-black/50"
                 title="Cancel Walk Confirmation"
@@ -116,7 +117,6 @@ export const WalkInfoModal: React.FC<WalkInfoModalProps> = ({ isOpen, onClose, w
                 onCancel={handleConfirmModalCancel}
                 isOpen={showConfirmDeleteModal}
             />
-            <DialogOverlay className="bg-black/40" />
             <DialogContent className={confirmModalDisplayed ? "hidden" : ""}>
                 <DialogHeader>
                     <DialogTitle>Walker: {walkInfo.title === "???" ? "No Walker Assigned" : walkInfo.title}</DialogTitle>
