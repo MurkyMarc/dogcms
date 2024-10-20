@@ -114,7 +114,7 @@ export function useGetDogsByOwner(ownerId: string) {
         })
     };
 
-    return useQuery({ queryKey: ['mydogs'], queryFn });
+    return useQuery({ queryKey: ['mydogs'], queryFn, enabled: !!ownerId });
 }
 
 export function useUploadDogImage() {
