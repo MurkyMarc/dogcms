@@ -9,7 +9,6 @@ import { useIsMutating } from '@tanstack/react-query'
 import { useCreateWalk } from "../../api/hooks/useWalks"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
-import { Switch } from "../ui/switch"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
@@ -283,28 +282,6 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
                                         <Input type="number" placeholder={"10001"} {...field} />
                                     </FormControl>
                                     <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="max-w-96">
-                        <FormField
-                            control={form.control}
-                            name="group"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Do you allow your dogs to walk with other people's dogs? <br />
-                                    </FormLabel>
-                                    <div className="flex">
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <span className="pl-4 leading-5">{field.value ? "yes" : "no"}</span>
-                                    </div>
                                 </FormItem>
                             )}
                         />
