@@ -305,43 +305,43 @@ export type Database = {
       }
       service_prices: {
         Row: {
-          created_at: string | null
+          created_at: string
           credit_cost: number
-          description: string | null
-          duration_minutes: number | null
-          effective_date: string | null
+          description: string
+          duration_minutes: number
+          effective_date: string
           expiry_date: string | null
           id: number
-          is_active: boolean | null
-          is_discounted: boolean | null
+          is_active: boolean
+          is_discounted: boolean
           service_type: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
-          credit_cost: number
-          description?: string | null
-          duration_minutes?: number | null
-          effective_date?: string | null
+          created_at?: string
+          credit_cost?: number
+          description?: string
+          duration_minutes?: number
+          effective_date?: string
           expiry_date?: string | null
           id?: number
-          is_active?: boolean | null
-          is_discounted?: boolean | null
+          is_active?: boolean
+          is_discounted?: boolean
           service_type?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           credit_cost?: number
-          description?: string | null
-          duration_minutes?: number | null
-          effective_date?: string | null
+          description?: string
+          duration_minutes?: number
+          effective_date?: string
           expiry_date?: string | null
           id?: number
-          is_active?: boolean | null
-          is_discounted?: boolean | null
+          is_active?: boolean
+          is_discounted?: boolean
           service_type?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -394,7 +394,7 @@ export type Database = {
           state?: string
           status?: string
           street?: string
-          walker?: string| null
+          walker?: string | null
           zip?: string
         }
         Relationships: [

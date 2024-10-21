@@ -2,15 +2,28 @@ import { useEffect, useState } from 'react';
 import { useProfile } from '../../api/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Tables } from '../../utils/database.types';
-import useSupabase from '../../api/hooks/useSupabase';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { MenuButton } from './components/MenuButton';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+import { Checkbox } from '../../components/ui/checkbox';
+import { useGetPrices, useUpdatePrice } from '../../api/hooks/usePricing';
+import { Edit, Save, X } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../components/ui/tooltip';
+import { Trash2 } from "lucide-react";
+import { ConfirmationDialog } from "../../components/ConfirmationDialogue";
 
 export default function AdminPricing() {
     const navigate = useNavigate();
-    const supabase = useSupabase();
+    const updatePriceMutation = useUpdatePrice();
     const { data: profile, isFetched: isProfileFetched } = useProfile();
-    const [prices, setPrices] = useState<Tables<'service_prices'>[]>([]);
+    const [servicePrices, setServicePrices] = useState<Tables<'service_prices'>[]>([]);
+    const [editingState, setEditingState] = useState<{
+        id: string | null;
+        values: Tables<'service_prices'> | null;
+    }>({ id: null, values: null });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingPriceId, setDeletingPriceId] = useState<string | null>(null);
 
     useEffect(() => {
         if (isProfileFetched && (!profile || profile.role !== 'admin')) {
@@ -18,22 +31,84 @@ export default function AdminPricing() {
         }
     }, [profile, isProfileFetched, navigate]);
 
+    const { data: pricesData } = useGetPrices();
+
     useEffect(() => {
-        const fetchPrices = async () => {
-            const { data, error } = await supabase
-                .from('service_prices')
-                .select('*')
-                .order('service_type', { ascending: true });
+        if (pricesData) {
+            setServicePrices(pricesData);
+        }
+    }, [pricesData]);
 
-            if (error) {
-                console.error('Error fetching prices:', error);
+    const handleEdit = (price: Tables<'service_prices'>) => {
+        setEditingState({ id: price.id.toString(), values: { ...price } });
+    };
+
+    const handleSave = async () => {
+        if (editingState.id && editingState.values) {
+            updatePriceMutation.mutate(editingState.values as Tables<'service_prices'>);
+            setServicePrices(servicePrices.map(p => p.id.toString() === editingState.id ? { ...p, ...editingState.values } : p));
+            setEditingState({ id: null, values: null });
+        }
+    };
+
+    const handleCancel = () => {
+        setEditingState({ id: null, values: null });
+    };
+
+    const handleChange = (field: keyof Tables<'service_prices'>, value: string | boolean) => {
+        setEditingState(prev => ({
+            ...prev,
+            values: prev.values ? { ...prev.values, [field]: value } : null
+        }));
+    };
+
+    const renderCell = (price: Tables<'service_prices'>, field: keyof Tables<'service_prices'>) => {
+        if (editingState.id === price.id.toString()) {
+            if (typeof field === "boolean") {
+                return (
+                    <Checkbox
+                        checked={editingState.values?.[field] as unknown as boolean}
+                        onCheckedChange={(checked) => handleChange(field, checked)}
+                    />
+                );
             } else {
-                setPrices(data);
+                return (
+                    <Input
+                        type={field === 'credit_cost' || field === 'duration_minutes' ? 'number' : 'text'}
+                        value={editingState.values?.[field] as string}
+                        onChange={(e) => handleChange(field, e.target.value)}
+                    />
+                );
             }
-        };
+        } else {
+            if (field === 'is_discounted' || field === 'is_active') {
+                return price[field] ? 'Yes' : 'No';
+            } else {
+                return price[field];
+            }
+        }
+    };
 
-        fetchPrices();
-    }, [supabase]);
+    const handleDeleteClick = (priceId: string) => {
+        setDeletingPriceId(priceId);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (deletingPriceId) {
+            // Implement the delete logic here
+            console.log(`Deleting price with ID: ${deletingPriceId}`);
+            // After deletion logic, update the state
+            setServicePrices(servicePrices.filter(p => p.id.toString() !== deletingPriceId));
+        }
+        setShowDeleteModal(false);
+        setDeletingPriceId(null);
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+        setDeletingPriceId(null);
+    };
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -44,27 +119,86 @@ export default function AdminPricing() {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Service Type</TableHead>
-                        <TableHead>Credit Cost</TableHead>
-                        <TableHead>Duration (minutes)</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead>Active</TableHead>
-                        <TableHead>Discounted</TableHead>
+                        <TableHead className="w-min">Service Type</TableHead>
+                        <TableHead className="w-min">Credit Cost</TableHead>
+                        <TableHead className="w-min">Duration (min)</TableHead>
+                        <TableHead className="w-min">Description</TableHead>
+                        <TableHead className="w-min">Discounted</TableHead>
+                        <TableHead className="w-min">Active</TableHead>
+                        <TableHead className="w-min">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {prices.map((price) => (
+                    {servicePrices.map((price) => (
                         <TableRow key={price.id}>
-                            <TableCell>{price.service_type}</TableCell>
-                            <TableCell>{price.credit_cost}</TableCell>
-                            <TableCell>{price.duration_minutes}</TableCell>
-                            <TableCell>{price.description}</TableCell>
-                            <TableCell>{price.is_discounted ? 'Yes' : 'No'}</TableCell>
-                            <TableCell>{price.is_active ? 'Yes' : 'No'}</TableCell>
+                            <TableCell className="w-min">{renderCell(price, 'service_type')}</TableCell>
+                            <TableCell className="w-min">{renderCell(price, 'credit_cost')}</TableCell>
+                            <TableCell className="w-min">{renderCell(price, 'duration_minutes')}</TableCell>
+                            <TableCell className="w-min">{renderCell(price, 'description')}</TableCell>
+                            <TableCell className="w-min">{renderCell(price, 'is_discounted')}</TableCell>
+                            <TableCell className="w-min">{renderCell(price, 'is_active')}</TableCell>
+                            <TableCell className="w-min">
+                                <TooltipProvider>
+                                    {editingState.id === price.id.toString() ? (
+                                        <>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button onClick={handleSave} size="icon" variant="ghost">
+                                                        <Save className="h-4 w-4" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Save changes</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button onClick={handleCancel} size="icon" variant="ghost">
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Cancel edit</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button onClick={() => handleEdit(price)} size="icon" variant="ghost">
+                                                        <Edit className="h-4 w-4" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Edit price</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button onClick={() => handleDeleteClick(price.id.toString())} size="icon" variant="ghost">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Delete price</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </>
+                                    )}
+                                </TooltipProvider>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            <ConfirmationDialog
+                title="Delete Price"
+                text="Are you sure you want to delete this price? This action cannot be undone."
+                isOpen={showDeleteModal}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+            />
         </main>
     );
 }
