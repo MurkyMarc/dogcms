@@ -19,7 +19,7 @@ export function useGetWalkById(id: string) {
         );
     };
 
-    return useQuery({ queryKey, queryFn });
+    return useQuery({ queryKey, queryFn, enabled: Boolean(id) });
 }
 
 export function useGetWalkWithDogsById(id: string) {
@@ -40,7 +40,7 @@ export function useGetWalkWithDogsById(id: string) {
         );
     };
 
-    return useQuery({ queryKey, queryFn });
+    return useQuery({ queryKey, queryFn, enabled: !!id });
 }
 
 export function useCreateWalk() {
