@@ -13,7 +13,6 @@ import AccountSettings from './pages/Account/components/AccountSettings';
 import Dashboard from './pages/Dashboard/Dashboard';
 import MyDogs from './pages/Dashboard/MyDogs';
 import MyWalks from './pages/Dashboard/Walks';
-import Schedules from './pages/Dashboard/Schedules';
 import { DogProfile } from './pages/Dashboard/DogProfile';
 import { CreateDogProfile } from './pages/Dashboard/CreateDogProfile';
 import { Conversations } from './pages/Dashboard/Messages/Conversations';
@@ -24,6 +23,7 @@ import Walk from './pages/Dashboard/components/Walk';
 import WalkChat from './pages/Dashboard/components/WalkChat';
 import Packages from './pages/Dashboard/Packages/Packages';
 import Schedule from './pages/Schedule/Schedule';
+import AdminPricing from './pages/Dashboard/AdminPricing';
 
 export const App = () => {
   return (
@@ -51,9 +51,9 @@ export const App = () => {
           <Route path="/dashboard/walk/:id" element={<Walk />} />
           <Route path="/dashboard/walk/:id/edit" element={<EditWalk />} />
           <Route path="/dashboard/walk/:id/chat" element={<WalkChat />} />
-          <Route path="/dashboard/schedules" element={<Schedules />} />
           <Route path="/dashboard/conversations" element={<Conversations />} />
           <Route path="/dashboard/packages" element={<Packages />} />
+          <Route path="/dashboard/pricing" element={<AdminPricing />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

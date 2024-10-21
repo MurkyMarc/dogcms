@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom"
 import { Button } from "../../../components/ui/button"
-import { NotebookText, BellIcon, CalendarDays, Dog, LineChart, MessageSquareMore, Package, PawPrint, Users } from 'lucide-react';
+import { NotebookText, BellIcon, Dog, LineChart, MessageSquareMore, Package, PawPrint, Users, CircleDollarSign } from 'lucide-react';
 // import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../../components/ui/card";
 import { cn } from "../../../utils/cn";
+import { useProfile } from "../../../api/hooks/useAuth";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function Sidebar({ className }: SidebarProps) {
+    const { data: profile } = useProfile();
+
     return (
         <div className={cn(className, "hidden border-r bg-gray-50 lg:block")}>
             <div className="flex flex-col gap-2">
@@ -28,12 +31,6 @@ export function Sidebar({ className }: SidebarProps) {
                             <Button variant="ghost" className="w-full justify-start px-3">
                                 <PawPrint size={20} className="mr-3 stroke-black" />
                                 Walks
-                            </Button>
-                        </Link>
-                        <Link to="/dashboard/schedules">
-                            <Button variant="ghost" className="w-full justify-start px-3">
-                                <CalendarDays size={20} className="mr-3 stroke-black" />
-                                Schedules
                             </Button>
                         </Link>
                         <Link to="/dashboard/conversations">
@@ -66,6 +63,14 @@ export function Sidebar({ className }: SidebarProps) {
                                 Transactions
                             </Button>
                         </Link>
+                        {profile?.role === 'admin' && (
+                            <Link to="/dashboard/pricing">
+                                <Button variant="ghost" className="w-full justify-start px-3">
+                                    <CircleDollarSign className="h-5 w-5 mr-3 stroke-black" />
+                                    Pricing
+                                </Button>
+                            </Link>
+                        )}
                     </nav>
                 </div>
                 {/* <div className="p-4 mt-72">
