@@ -64,10 +64,10 @@ export default function AdminPricing() {
 
     const renderCell = (price: Tables<'service_prices'>, field: keyof Tables<'service_prices'>) => {
         if (editingState.id === price.id.toString()) {
-            if (typeof field === "boolean") {
+            if (typeof price[field] === "boolean") {
                 return (
                     <Checkbox
-                        checked={editingState.values?.[field] as unknown as boolean}
+                        checked={editingState.values?.[field] as boolean}
                         onCheckedChange={(checked) => handleChange(field, checked)}
                     />
                 );
