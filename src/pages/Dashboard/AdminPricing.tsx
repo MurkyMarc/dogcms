@@ -1,17 +1,85 @@
 import { useEffect, useState } from 'react';
 import { useProfile } from '../../api/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Tables } from '../../utils/database.types';
+import { Tables, TablesInsert } from '../../utils/database.types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { MenuButton } from './components/MenuButton';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Checkbox } from '../../components/ui/checkbox';
-import { useGetPrices, useUpdatePrice } from '../../api/hooks/usePricing';
+import { useGetPrices, useUpdatePrice, useAddPrice } from '../../api/hooks/usePricing';
 import { Edit, Save, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../components/ui/tooltip';
 import { Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "../../components/ConfirmationDialogue";
+
+const AddPriceForm = () => {
+    const addPriceMutation = useAddPrice();
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [newPrice, setNewPrice] = useState<TablesInsert<'service_prices'>>({
+        service_type: '',
+        credit_cost: 0,
+        duration_minutes: 0,
+        description: '',
+        is_discounted: false,
+        is_active: true,
+    });
+
+    const handleChange = (field: keyof Tables<'service_prices'>, value: string | number | boolean) => {
+        setNewPrice(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await addPriceMutation.mutateAsync(newPrice as TablesInsert<'service_prices'>);
+        setShowAddForm(false);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+            <Input
+                placeholder="Service Type"
+                value={newPrice.service_type}
+                onChange={(e) => handleChange('service_type', e.target.value)}
+            />
+            <Input
+                type="number"
+                placeholder="Credit Cost"
+                value={newPrice.credit_cost}
+                onChange={(e) => handleChange('credit_cost', Number(e.target.value))}
+            />
+            <Input
+                type="number"
+                placeholder="Duration (minutes)"
+                value={newPrice.duration_minutes}
+                onChange={(e) => handleChange('duration_minutes', Number(e.target.value))}
+            />
+            <Input
+                placeholder="Description"
+                value={newPrice.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+            />
+            <div className="flex items-center space-x-2">
+                <Checkbox
+                    id="is_discounted"
+                    checked={newPrice.is_discounted}
+                    onCheckedChange={(checked) => handleChange('is_discounted', checked)}
+                />
+                <label htmlFor="is_discounted">Is Discounted</label>
+            </div>
+            <div className="flex items-center space-x-2">
+                <Checkbox
+                    id="is_active"
+                    checked={newPrice.is_active}
+                    onCheckedChange={(checked) => handleChange('is_active', checked)}
+                />
+                <label htmlFor="is_active">Is Active</label>
+            </div>
+            <Button type="submit">Add Price</Button>
+            <Button type="button" variant="outline" onClick={() => setShowAddForm(false)}>Cancel</Button>
+        </form>
+    );
+};
 
 export default function AdminPricing() {
     const navigate = useNavigate();
@@ -24,6 +92,7 @@ export default function AdminPricing() {
     }>({ id: null, values: null });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deletingPriceId, setDeletingPriceId] = useState<string | null>(null);
+    const [showAddForm, setShowAddForm] = useState(false);
 
     useEffect(() => {
         if (isProfileFetched && (!profile || profile.role !== 'admin')) {
@@ -199,6 +268,10 @@ export default function AdminPricing() {
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
             />
+            <Button onClick={() => setShowAddForm(true)} className="mt-4">
+                Add New Price
+            </Button>
+            {showAddForm && <AddPriceForm />}
         </main>
     );
 }
