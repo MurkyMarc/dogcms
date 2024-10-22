@@ -1,4 +1,4 @@
-import { TablesUpdate } from "../../utils/database.types";
+import { TablesInsert, TablesUpdate } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../../utils/supabase";
 
 export async function getPrices(client: TypedSupabaseClient) {
@@ -21,3 +21,19 @@ export async function updatePrice(
         .single();
 }
 
+export async function deletePrice(client: TypedSupabaseClient, id: string) {
+    return await client
+        .from('service_prices')
+        .delete()
+        .eq('id', id)
+        .select()
+        .single();
+}
+
+export async function addPrice(client: TypedSupabaseClient, price: TablesInsert<'service_prices'>) {
+    return await client
+        .from('service_prices')
+        .insert(price)
+        .select()
+        .single();
+}
