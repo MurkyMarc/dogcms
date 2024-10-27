@@ -114,103 +114,108 @@ export default function AdminPricing() {
     };
 
     return (
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-            <div className="flex justify-center items-center gap-4 mb-6">
-                <MenuButton className="flex-shrink" />
-                <BackButton className="flex-shrink" />
+        <main className="flex flex-1 flex-col">
+            <div className="p-4 md:p-6 space-y-8">
+                <div className="items-center">
+                    <div className="flex items-center justify-between">
+                        <div className="ml-2 flex items-center">
+                            <MenuButton className="mr-4" />
+                            <h1 className="font-semibold text-lg md:text-2xl">Service Pricing</h1>
+                        </div>
+                        <BackButton />
+                    </div>
+                </div>
             </div>
-            <div className="flex items-center">
-                <MenuButton className="mr-4" />
-                <h1 className="font-semibold text-lg md:text-2xl">Service Pricing</h1>
-            </div>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-min">Credit Cost</TableHead>
-                        <TableHead className="w-min">Duration (min)</TableHead>
-                        <TableHead className="w-min">Description</TableHead>
-                        <TableHead className="w-min">Discounted</TableHead>
-                        <TableHead className="w-min">Active</TableHead>
-                        <TableHead className="w-min">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {servicePrices.map((price) => (
-                        <TableRow key={price.id}>
-                            <TableCell className="w-min">{renderCell(price, 'credit_cost')}</TableCell>
-                            <TableCell className="w-min">{renderCell(price, 'duration_minutes')}</TableCell>
-                            <TableCell className="w-min">{renderCell(price, 'description')}</TableCell>
-                            <TableCell className="w-min">{renderCell(price, 'is_discounted')}</TableCell>
-                            <TableCell className="w-min">{renderCell(price, 'is_active')}</TableCell>
-                            <TableCell className="w-min">
-                                <TooltipProvider>
-                                    {editingState.id === price.id.toString() ? (
-                                        <>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button onClick={handleSave} size="icon" variant="ghost">
-                                                        <Save className="h-4 w-4" />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>Save changes</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button onClick={handleCancel} size="icon" variant="ghost">
-                                                        <X className="h-4 w-4" />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>Cancel edit</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button onClick={() => handleEdit(price)} size="icon" variant="ghost">
-                                                        <Edit className="h-4 w-4" />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>Edit price</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button onClick={() => handleDeleteClick(price.id.toString())} size="icon" variant="ghost">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>Delete price</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </>
-                                    )}
-                                </TooltipProvider>
-                            </TableCell>
+            <div className='p-4 md:p-6'>
+                <Table className='bg-slate-50 border'>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-min">Credit Cost</TableHead>
+                            <TableHead className="w-min">Duration (min)</TableHead>
+                            <TableHead className="w-min">Description</TableHead>
+                            <TableHead className="w-min">Discounted</TableHead>
+                            <TableHead className="w-min">Active</TableHead>
+                            <TableHead className="w-min">Actions</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <ConfirmationDialog
-                title="Delete Price"
-                text="Are you sure you want to delete this price? This action cannot be undone."
-                isOpen={showDeleteModal}
-                onConfirm={handleConfirmDelete}
-                onCancel={handleCancelDelete}
-            />
-            <Button
-                onClick={() => setShowAddForm(true)}
-                className={cn("mt-4", showAddForm && "hidden")}
-            >
-                Add New Price
-            </Button>
-            {showAddForm && <AddPriceForm setShowAddForm={setShowAddForm} />}
+                    </TableHeader>
+                    <TableBody>
+                        {servicePrices.map((price) => (
+                            <TableRow key={price.id}>
+                                <TableCell className="w-min">{renderCell(price, 'credit_cost')}</TableCell>
+                                <TableCell className="w-min">{renderCell(price, 'duration_minutes')}</TableCell>
+                                <TableCell className="w-min">{renderCell(price, 'description')}</TableCell>
+                                <TableCell className="w-min">{renderCell(price, 'is_discounted')}</TableCell>
+                                <TableCell className="w-min">{renderCell(price, 'is_active')}</TableCell>
+                                <TableCell className="w-min">
+                                    <TooltipProvider>
+                                        {editingState.id === price.id.toString() ? (
+                                            <>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button onClick={handleSave} size="icon" variant="ghost">
+                                                            <Save className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Save changes</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button onClick={handleCancel} size="icon" variant="ghost">
+                                                            <X className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Cancel edit</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button onClick={() => handleEdit(price)} size="icon" variant="ghost">
+                                                            <Edit className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Edit price</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button onClick={() => handleDeleteClick(price.id.toString())} size="icon" variant="ghost">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Delete price</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </>
+                                        )}
+                                    </TooltipProvider>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <ConfirmationDialog
+                    title="Delete Price"
+                    text="Are you sure you want to delete this price? This action cannot be undone."
+                    isOpen={showDeleteModal}
+                    onConfirm={handleConfirmDelete}
+                    onCancel={handleCancelDelete}
+                />
+                <Button
+                    onClick={() => setShowAddForm(true)}
+                    className={cn("mt-4 width", showAddForm && "hidden")}
+                >
+                    Add New Price
+                </Button>
+                {showAddForm && <AddPriceForm setShowAddForm={setShowAddForm} />}
+            </div>
         </main>
     );
 }
