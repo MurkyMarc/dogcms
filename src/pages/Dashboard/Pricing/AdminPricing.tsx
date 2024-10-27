@@ -3,7 +3,6 @@ import { useProfile } from '../../../api/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Tables } from '../../../utils/database.types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
-import { MenuButton } from '../components/MenuButton';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
@@ -14,7 +13,7 @@ import { Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "../../../components/ConfirmationDialogue";
 import { AddPriceForm } from './AddPriceForm';
 import { cn } from '../../../utils/cn';
-import BackButton from '../../../components/ui/icons/BackButton';
+import TitleNav from '../../../components/TitleNav';
 
 export default function AdminPricing() {
     const navigate = useNavigate();
@@ -115,17 +114,7 @@ export default function AdminPricing() {
 
     return (
         <main className="flex flex-1 flex-col">
-            <div className="p-4 md:p-6 space-y-8">
-                <div className="items-center">
-                    <div className="flex items-center justify-between">
-                        <div className="ml-2 flex items-center">
-                            <MenuButton className="mr-4" />
-                            <h1 className="font-semibold text-lg md:text-2xl">Service Pricing</h1>
-                        </div>
-                        <BackButton />
-                    </div>
-                </div>
-            </div>
+            <TitleNav title="Service Pricing" />
             <div className='p-4 md:p-6'>
                 <Table className='bg-slate-50 border'>
                     <TableHeader>
