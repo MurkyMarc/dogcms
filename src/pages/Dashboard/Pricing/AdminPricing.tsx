@@ -203,7 +203,7 @@ export default function AdminPricing() {
                 >
                     Add New Price
                 </Button>
-                {showAddForm && <AddPriceForm setShowAddForm={setShowAddForm} />}
+                {showAddForm && <AddPriceForm setShowAddForm={setShowAddForm} containerStyles='mt-6' />}
             </div>
         </main>
     );

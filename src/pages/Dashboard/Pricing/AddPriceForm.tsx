@@ -7,9 +7,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "../../../comp
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { cn } from "../../../utils/cn";
 
 type AddPriceFormProps = {
     setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
+    containerStyles?: string;
 }
 
 const formSchema = z.object({
@@ -21,7 +23,7 @@ const formSchema = z.object({
     is_active: z.boolean(),
 });
 
-export const AddPriceForm = ({ setShowAddForm }: AddPriceFormProps) => {
+export const AddPriceForm = ({ setShowAddForm, containerStyles = "" }: AddPriceFormProps) => {
     const addPriceMutation = useAddPrice();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -42,7 +44,7 @@ export const AddPriceForm = ({ setShowAddForm }: AddPriceFormProps) => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <div className={cn("bg-slate-50 p-6 rounded-lg shadow-lg max-w-2xl mx-auto", containerStyles)}>
             <h2 className="text-2xl font-bold mb-6">Add New Price</h2>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
