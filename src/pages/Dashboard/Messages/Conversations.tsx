@@ -4,7 +4,7 @@ import { useGetConversations } from "../../../api/hooks/useMessages";
 import { useProfile, useSession } from "../../../api/hooks/useAuth";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { ConversationCard } from "./components/conversation-card";
-import { MenuButton } from "../components/MenuButton";
+import TitleNav from "../../../components/TitleNav";
 
 export function Conversations() {
     const { data: session } = useSession();
@@ -28,24 +28,20 @@ export function Conversations() {
     }, [conversations, searchTerm, role]);
 
     return (
-        <div className="flex flex-col w-full p-8 max-h-[calc(100vh-3rem)] h-full">
-            <div className="flex items-center mb-4">
-                <MenuButton className="mr-4" />
-                <h1 className="text-xl md:text-2xl font-bold">Your Conversations</h1>
-            </div>
+        <div className="flex flex-col w-full max-h-[calc(100vh-5rem)] h-full">
+            <TitleNav title="Your Conversations" />
 
-            <form className="mb-4 flex flex-shrink">
+            <form className="mb-2 md:mb-4 flex flex-shrink px-4 md:px-8 py-4">
                 <Input
                     type="text"
                     placeholder="Search by name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="mr-2"
                 />
             </form>
 
             {filteredConversations.length > 0 ?
-                <ScrollArea className="rounded-md px-4 flex flex-1 border h-full" type="always">
+                <ScrollArea className="rounded-md px-4 flex flex-1 border h-full mx-4 md:mx-8" type="always">
                     {filteredConversations.map((conv) => (
                         <ConversationCard key={conv.id} conversation={conv} role={role} />
                     ))}
