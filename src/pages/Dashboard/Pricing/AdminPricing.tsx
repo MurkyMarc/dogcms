@@ -7,7 +7,7 @@ import { MenuButton } from '../components/MenuButton';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
-import { useGetPrices, useUpdatePrice } from '../../../api/hooks/usePricing';
+import { useDeletePrice, useGetPrices, useUpdatePrice } from '../../../api/hooks/usePricing';
 import { Edit, Save, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../components/ui/tooltip';
 import { Trash2 } from "lucide-react";
@@ -18,6 +18,7 @@ import { cn } from '../../../utils/cn';
 export default function AdminPricing() {
     const navigate = useNavigate();
     const updatePriceMutation = useUpdatePrice();
+    const deletePriceMutation = useDeletePrice();
     const { data: profile, isFetched: isProfileFetched } = useProfile();
     const [servicePrices, setServicePrices] = useState<Tables<'service_prices'>[]>([]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -99,9 +100,7 @@ export default function AdminPricing() {
 
     const handleConfirmDelete = () => {
         if (deletingPriceId) {
-            // Implement the delete logic here
-            console.log(`Deleting price with ID: ${deletingPriceId}`);
-            // After deletion logic, update the state
+            deletePriceMutation.mutate(deletingPriceId);
             setServicePrices(servicePrices.filter(p => p.id.toString() !== deletingPriceId));
         }
         setShowDeleteModal(false);
