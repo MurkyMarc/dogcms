@@ -23,7 +23,7 @@ import Walk from './pages/Dashboard/components/Walk';
 import WalkChat from './pages/Dashboard/components/WalkChat';
 import Packages from './pages/Dashboard/Packages/Packages';
 import Schedule from './pages/Schedule/Schedule';
-import AdminPricing from './pages/Dashboard/AdminPricing';
+import AdminPricing from './pages/Dashboard/Pricing/AdminPricing';
 
 export const App = () => {
   return (

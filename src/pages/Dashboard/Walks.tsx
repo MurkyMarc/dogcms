@@ -74,8 +74,8 @@ export default function Walks() {
                 </div>
             }
             <div className="flex justify-between w-full">
-                <Button className="w-1/2 mr-2" onClick={handleLoadPrevious}>Load Previous</Button>
-                <Button className="w-1/2 ml-2" onClick={handleLoadMore}>Load Next</Button>
+                <Button className="w-1/2 mr-2" onClick={handleLoadPrevious}>Previous Month</Button>
+                <Button className="w-1/2 ml-2" onClick={handleLoadMore}>Next Month</Button>
             </div>
         </main>
     )
