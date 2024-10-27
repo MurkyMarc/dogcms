@@ -14,6 +14,7 @@ import { Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "../../../components/ConfirmationDialogue";
 import { AddPriceForm } from './AddPriceForm';
 import { cn } from '../../../utils/cn';
+import BackButton from '../../../components/ui/icons/BackButton';
 
 export default function AdminPricing() {
     const navigate = useNavigate();
@@ -114,6 +115,10 @@ export default function AdminPricing() {
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+            <div className="flex justify-center items-center gap-4 mb-6">
+                <MenuButton className="flex-shrink" />
+                <BackButton className="flex-shrink" />
+            </div>
             <div className="flex items-center">
                 <MenuButton className="mr-4" />
                 <h1 className="font-semibold text-lg md:text-2xl">Service Pricing</h1>
