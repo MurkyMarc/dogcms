@@ -96,7 +96,7 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
 
     return (
         <>
-            <p className="text-m py-6 font-bold">
+            <p className="text-m font-bold">
                 1. Select the dog(s) going on the walk
             </p>
             <ScrollArea className="rounded-md border mb-8 grid max-w-fit">
@@ -108,7 +108,7 @@ export function EditWalkForm({ walk }: EditWalkFormProps) {
                 <ScrollBar orientation="horizontal" />
             </ScrollArea>
 
-            <p className="text-m py-6 font-bold">
+            <p className="text-m pb-6 font-bold">
                 2. Enter the walk details
             </p>
 

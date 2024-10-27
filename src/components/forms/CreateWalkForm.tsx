@@ -106,7 +106,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
 
     return (
         <>
-            <p className="text-m pb-4 font-bold">
+            <p className="text-m font-bold">
                 1. Select the dog(s) going on the walk
             </p>
             <ScrollArea className="rounded-md border mb-8 grid max-w-fit">
