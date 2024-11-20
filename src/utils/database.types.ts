@@ -427,6 +427,7 @@ export type Database = {
           lat: string
           long: string
           notes: string
+          price: number
           start: string
           state: string
           status: string

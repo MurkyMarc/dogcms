@@ -9,6 +9,8 @@ import { formatDateStringToAmPmString, formatMonthDayFromDateString } from "../.
 import { useProfile } from "../../../api/hooks/useAuth";
 import { useState } from "react";
 import { ConfirmationDialog } from "../../../components/ConfirmationDialogue";
+import { useDeductProfileCredits } from "../../../api/hooks/useProfile";
+import { errorToast } from "../../../utils/helpers";
 
 export default function Walk() {
     const { id } = useParams();
@@ -19,13 +21,40 @@ export default function Walk() {
     const { mutate: deleteWalkById } = useDeleteWalkById();
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const { mutateAsync: deductCredits } = useDeductProfileCredits();
 
     const handleStartWalk = () => {
         id && updateWalk({ id, status: 'active' });
     }
 
-    const handleEndWalk = () => {
-        id && updateWalk({ id, status: 'completed' });
+    const handleEndWalk = async () => {
+        if (!walk?.customer || !walk?.price) {
+            errorToast("Unable to complete walk. Missing customer or price information.");
+            return;
+        }
+
+        if (walk.status === 'completed') {
+            errorToast("This walk has already been completed.");
+            return;
+        }
+
+        if (walk.status === 'cancelled') {
+            errorToast("Cannot complete a cancelled walk.");
+            return;
+        }
+
+        try {
+            // First deduct the credits
+            await deductCredits({ 
+                userId: walk.customer as unknown as string, 
+                credits: walk.price 
+            });
+
+            // Then update the walk status
+            id && updateWalk({ id, status: 'completed' });
+        } catch (error) {
+            errorToast("Failed to complete walk. Please try again.");
+        }
     }
 
     const handleCancelWalk = () => {

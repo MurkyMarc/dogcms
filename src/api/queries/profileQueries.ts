@@ -70,3 +70,28 @@ export async function getEmployees(client: TypedSupabaseClient) {
         .or('role.eq.admin, role.eq.employee')
         .throwOnError() || [];
 }
+
+export async function deductCreditsFromProfile(
+    client: TypedSupabaseClient,
+    userId: string,
+    credits: number
+) {
+    // First get current credits to check if sufficient
+    const { data: profile } = await client
+        .from('profiles')
+        .select('credits')
+        .eq('id', userId)
+        .single();
+
+    if (!profile || profile.credits < credits) {
+        throw new Error('Insufficient credits');
+    }
+
+    // Then update credits
+    return await client
+        .from('profiles')
+        .update({ credits: profile.credits - credits })
+        .eq('id', userId)
+        .select('credits')
+        .single();
+}

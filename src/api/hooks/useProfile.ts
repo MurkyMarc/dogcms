@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteAvatar, getEmployees, getProfileById, updateProfile, uploadProfileAvatar } from "../queries/profileQueries";
+import { deleteAvatar, getEmployees, getProfileById, updateProfile, uploadProfileAvatar, deductCreditsFromProfile } from "../queries/profileQueries";
 import { Tables, TablesUpdate } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
@@ -87,4 +87,24 @@ export function useGetEmployees() {
     };
 
     return useQuery({ queryKey: ['employees'], queryFn });
+}
+
+export function useDeductProfileCredits() {
+    const client = useSupabase();
+    const queryClient = useQueryClient();
+
+    const mutationFn = async ({ userId, credits }: { userId: string, credits: number }) => {
+        return await deductCreditsFromProfile(client, userId, credits);
+    };
+
+    return useMutation({
+        mutationFn,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['profile'] });
+        },
+        onError: (error) => {
+            errorToast("Failed to update credits balance.");
+            throw error;
+        }
+    });
 }

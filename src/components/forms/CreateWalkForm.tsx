@@ -83,6 +83,13 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
 
     async function onSubmit(e: CreateWalkFormValues) {
         const selectedPrice = servicePrices?.find(p => p.id === e.price);
+        
+        // Check if user has enough credits
+        if (selectedPrice && profile.credits < selectedPrice.credit_cost) {
+            errorToast("You don't have enough credits for this walk. Please purchase more credits.");
+            return;
+        }
+
         const start = calculateDatetimeFromDateAndTime(e.date, e.start);
         const end = calculateEndDatetimeFromDateAndMinutes(start, selectedPrice?.duration_minutes || 15);
 
@@ -130,6 +137,10 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             <p className="text-m pb-6 font-bold">
                 2. Enter the walk details
             </p>
+
+            <div className="text-md mb-8 p-4 border rounded-lg bg-slate-50">
+                Your credit balance: <span className="font-semibold">{profile.credits}</span>
+            </div>
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

@@ -164,7 +164,8 @@ export function successToast(message: string) {
 }
 
 export function errorToast(error: unknown) {
-    toast.error((error as Error).message, {
+    const message = error instanceof Error ? error.message : String(error);
+    toast.error(message, {
         cancel: {
             label: 'Dismiss',
             onClick: () => { },
