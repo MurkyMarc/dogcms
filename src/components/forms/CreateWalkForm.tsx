@@ -14,7 +14,7 @@ import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "../ui/calendar"
 import { cn } from "../../utils/cn"
-import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, durationOptions, timeOptions, zipRegex } from "../../utils/helpers"
+import { calculateDatetimeFromDateAndTime, calculateEndDatetimeFromDateAndMinutes, errorToast, timeOptions, zipRegex } from "../../utils/helpers"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { useSession } from "../../api/hooks/useAuth"
 import { useGetDogsByOwner } from "../../api/hooks/useDog"
@@ -23,11 +23,12 @@ import { useState } from "react"
 import { useCreateDogWalks } from "../../api/hooks/useDogWalks"
 import { useNavigate } from "react-router-dom";
 import { useCreateConversation } from "../../api/hooks/useMessages"
+import { useGetServicePrices } from "../../api/hooks/useServicePrices";
 
 const createWalkFormSchema = z.object({
     date: z.date(),
     start: z.string(),
-    duration: z.string(),
+    price: z.number(),
     street: z
         .string()
         .min(2, "Street name must be at least 2 characters.")
@@ -61,6 +62,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
     const { data: session } = useSession();
     const { data: dogs } = useGetDogsByOwner(session?.user.id || "");
     const [selectedDogIds, setSelectedDogIds] = useState<number[]>([]);
+    const { data: servicePrices } = useGetServicePrices();
 
     type CreateWalkFormValues = z.infer<typeof createWalkFormSchema>
 
@@ -69,7 +71,7 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
         defaultValues: {
             date: new Date(),
             start: '12:00:00',
-            duration: '15',
+            price: servicePrices?.[0]?.id || 0,
             street: profile.street,
             city: profile.city,
             state: profile.state,
@@ -80,10 +82,11 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
     })
 
     async function onSubmit(e: CreateWalkFormValues) {
+        const selectedPrice = servicePrices?.find(p => p.id === e.price);
         const start = calculateDatetimeFromDateAndTime(e.date, e.start);
-        const end = calculateEndDatetimeFromDateAndMinutes(start, Number(e.duration));
+        const end = calculateEndDatetimeFromDateAndMinutes(start, selectedPrice?.duration_minutes || 15);
 
-        const data = {
+        const newWalkData = {
             customer: profile.id,
             start: start.toLocaleString(),
             end: end.toLocaleString(),
@@ -92,16 +95,22 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
             state: e.state,
             zip: e.zip,
             notes: e.notes,
-            status: 'not assigned'
+            status: 'not assigned',
+            price: selectedPrice?.credit_cost
         }
 
-        const newWalk = await createWalkHook.mutateAsync(data);
-        
-        if (newWalk) {
-            conversationHook.mutateAsync({ walk_id: newWalk.id, customer: profile.id } );
-            await createDogWalksHook.mutateAsync({ walkId: newWalk.id, dogIds: selectedDogIds });
+        let newWalk = null;
+        if (selectedPrice?.credit_cost) {
+            newWalk = await createWalkHook.mutateAsync(newWalkData);
         }
-        navigate('/dashboard/walks');
+
+        if (newWalk) {
+            conversationHook.mutateAsync({ walk_id: newWalk.id, customer: profile.id });
+            await createDogWalksHook.mutateAsync({ walkId: newWalk.id, dogIds: selectedDogIds });
+            navigate('/dashboard/walks');
+        } else {
+            errorToast("Unable to create walk. Please try again later.");
+        }
     }
 
     return (
@@ -188,24 +197,48 @@ export function CreateWalkForm({ profile }: CreateWalkFormProps) {
                                 )}
                             />
                         </div>
-                        <div className="flex-1  max-w-48">
+                        <div className="flex-1 max-w-48">
                             <FormField
                                 control={form.control}
-                                name="duration"
+                                name="price"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Duration</FormLabel>
+                                        <FormLabel>Package</FormLabel>
                                         <FormControl>
-                                            <Select onValueChange={field.onChange}>
+                                            <Select onValueChange={(value) => field.onChange(Number(value))}>
                                                 <SelectTrigger className="w-full">
-                                                    <SelectValue {...field} placeholder="15 minutes" />
+                                                    <SelectValue placeholder="Select package">
+                                                        {servicePrices?.find(p => p.id === field.value)?.duration_minutes + ' minutes'}
+                                                    </SelectValue>
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
-                                                        {durationOptions.map((option, index) => (
-                                                            <SelectItem key={index} value={option.value}>{option.name}</SelectItem>
-                                                        ))}
+                                                        {servicePrices
+                                                            ?.filter(price => !price.is_discounted)
+                                                            .sort((a, b) => a.duration_minutes - b.duration_minutes)
+                                                            .map((price) => (
+                                                                <SelectItem key={price.id} value={price.id.toString()}>
+                                                                    {price.duration_minutes} minutes - {price.credit_cost} credits
+                                                                </SelectItem>
+                                                            ))}
                                                     </SelectGroup>
+                                                    {servicePrices?.some(price => price.is_discounted) && (
+                                                        <>
+                                                            <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                                                                Discounted Packages
+                                                            </div>
+                                                            <SelectGroup>
+                                                                {servicePrices
+                                                                    ?.filter(price => price.is_discounted)
+                                                                    .sort((a, b) => a.duration_minutes - b.duration_minutes)
+                                                                    .map((price) => (
+                                                                        <SelectItem key={price.id} value={price.id.toString()}>
+                                                                            {price.duration_minutes} minutes - {price.credit_cost} credits (Discounted)
+                                                                        </SelectItem>
+                                                                    ))}
+                                                            </SelectGroup>
+                                                        </>
+                                                    )}
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>

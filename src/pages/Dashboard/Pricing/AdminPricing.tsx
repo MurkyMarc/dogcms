@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
-import { useDeletePrice, useGetPrices, useUpdatePrice } from '../../../api/hooks/usePricing';
+import { useDeletePrice, useGetWalkPrices, useUpdatePrice } from '../../../api/hooks/usePricing';
 import { Edit, Save, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../components/ui/tooltip';
 import { Trash2 } from "lucide-react";
@@ -35,7 +35,7 @@ export default function AdminPricing() {
         }
     }, [profile, isProfileFetched, navigate]);
 
-    const { data: pricesData } = useGetPrices();
+    const { data: pricesData } = useGetWalkPrices();
 
     useEffect(() => {
         if (pricesData) {

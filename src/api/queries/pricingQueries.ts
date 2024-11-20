@@ -1,10 +1,12 @@
 import { TablesInsert, TablesUpdate } from "../../utils/database.types";
 import { TypedSupabaseClient } from "../supabase";
 
-export async function getPrices(client: TypedSupabaseClient) {
+export async function getWalkPrices(client: TypedSupabaseClient) {
     return await client
         .from('service_prices')
         .select('*')
+        .eq('is_active', true)
+        .eq('service_type', 'walk')
         .order('service_type', { ascending: true });
 }
 

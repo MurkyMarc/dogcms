@@ -1,15 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addPrice, deletePrice, getPrices, updatePrice } from "../queries/pricingQueries";
+import { addPrice, deletePrice, getWalkPrices, updatePrice } from "../queries/pricingQueries";
 import { TablesInsert, TablesUpdate } from "../../utils/database.types";
 import useSupabase from "./useSupabase";
 import { errorToast, loadingToast, successToast } from "../../utils/helpers";
 
-export function useGetPrices() {
+export function useGetWalkPrices() {
     const client = useSupabase();
     const queryKey = ['prices'];
 
     const queryFn = async () => {
-        return await getPrices(client).then(
+        return await getWalkPrices(client).then(
             (result) => result.data
         );
     };
