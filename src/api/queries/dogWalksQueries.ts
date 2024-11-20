@@ -1,5 +1,5 @@
 import { TablesInsert } from "../../utils/database.types";
-import { TypedSupabaseClient } from "../../utils/supabase";
+import { TypedSupabaseClient } from "../supabase";
 
 export async function createDogWalksByDogIds(client: TypedSupabaseClient, walkId: number, dogIds: number[]) {
     const dogWalks = dogIds.map((dogId) => {

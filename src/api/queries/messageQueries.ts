@@ -1,6 +1,6 @@
 import { Tables, TablesUpdate } from '../../utils/database.types';
 import { TablesInsert } from "../../utils/database.types";
-import { TypedSupabaseClient } from "../../utils/supabase";
+import { TypedSupabaseClient } from "../supabase";
 import { Role } from '../types';
 
 export async function getConversationById(client: TypedSupabaseClient, id: string) {

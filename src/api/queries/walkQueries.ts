@@ -1,5 +1,5 @@
 import { TablesInsert, TablesUpdate } from "../../utils/database.types";
-import { TypedSupabaseClient } from "../../utils/supabase";
+import { TypedSupabaseClient } from "../supabase";
 
 export async function upsertWalk(client: TypedSupabaseClient, walk: TablesInsert<'walks'>) {
     return await client.from('walks').upsert(walk);
